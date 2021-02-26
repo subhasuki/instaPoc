@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <h3>Disease</h3>
+      </div><!-- /.container-fluid -->
+    </section>
+  
+    <!-- Main content -->
+<section class="content">
+            <div class="row" >
+              <div class="col-12 col-sm-6 col-lg-12">
+                <div class="card card-default">   
+                    <div class="card-body">
+                       <div class="row form-group">
+                         <div class="col-8 col-md-4">
+                            <label>Disease</label>
+                            <input type="text" id="Diagnosis" name="Diagnosis"  class="form-control"/> 
+                         </div>
+                         <div class="col-4 col-md-2">                                        
+                            <label>&nbsp;</label><br>
+                            <button type="button" id="saveco"  class="btn btn-success btn-sml">SAVE</button> 
+                         </div>
+                         <div class="col-4 col-md-3">
+                          <label>Count</label>
+                          <input type="text" id="cnt" name="cnt"  class="form-control" readonly/> 
+                       </div>
+                       </div>  
+                       <hr/>
+                       <div class="table-responsive p-0" style="height: 270px;">
+                         <table id="diatable" class="table table-dark danger">
+                           <thead style="text-align:center;font-size:12px;">
+                             <tr>                          
+                               <th>NO</th>                               
+                               <th>Disease</th>
+                               <th>Actions</th>
+                               </tr>
+                           </thead>
+                           <tbody id="diabody" style="font-size:12px;" >  
+                            {% for user in pdltfetch %} 
+                            <tr  id="user-{{user.id}}"> 
+                              <td align="center"  class="userData" >{{user.id}}</td>                                 
+                              <td align="center"  name="Diagnosis" class="userDiagnosis userData" >{{user.diagnosis}}</td> 
+                              <td align="center"><button type="button" onClick="editDiagnosis({{user.id}})" id="editDiagnosis"  class="btn btn-default btn-sml" data-toggle="modal" data-target="#modal-default"><i class="fas fa-edit" style="color:blue"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;
+                              <button type="button" id="deleteDiagnosis" onClick="deleteDiagnosis({{user.id}})"   class="btn btn-default btn-sml"><i class="fas fa-trash-alt" style="color:red"></i></button></td>                          
+                            </tr>
+                            {% endfor %} 
+                           </tbody>
+                         </table>
+                     </div> 
+                     <div class="modal fade" id="modal-default">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title">Edit Disease</h4>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                          <label>ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                           <input type="text" id="form-id" name="snoupt"><br><br>
+                           <label>Disease:&nbsp;&nbsp;&nbsp;</label>
+                           <input type="text" id="form-Diagnosis" name="Diagnosisupdate">
+                          </div>
+                          <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" id="updateDiagnosis" class="btn btn-primary">Update</button>
+                          </div>
+                        </div>            
+                      </div>          
+                    </div>
+                     </div>
+                   </div>
+                      </div>
+                      </div>
+                      
+</section>
+</div>
+
+  {% endblock %}
+  {% block javascript %}
+  <script>
+
+  
+  $("#saveco").click(function(){
+    var Diagnosis = $('input[name="Diagnosis"]').val() //console.log(Diagnosis)
+    if(Diagnosis){
+    $.ajax({
+        url: '{% url "savetokdis" %}',
+        type: 'get',
+        data: {         
+            'Diagnosis': Diagnosis,
+        },
+        dataType: 'json',
+        success: function(data)  { 
+          if (data.user) {             
+            appendToUserTabel(data.user); 
+            swal("Good job!", "Save Successfully", "success")   
+          }    
+          else
+            swal("Oh noes!", "This name already exists!", "error");   
+    }
+    }); 
+  }    
+    else
+      swal("Oh noes!", "Enter the value", "error"); 
+      CountRows1();  
+      document.getElementById("Diagnosis").value="";       
+  });
+
+$(document ).ready(function() {    
+var rowCount1 = $('table#diatable tbody#diabody tr:last').index() + 1; //console.log(rowCount1)
+document.getElementById("cnt").value=rowCount1;  
+} );
+
+function CountRows1() {    
+  var rowCount1 = $('table#diatable tbody#diabody tr:last').index() + 1; //console.log(rowCount1)
+document.getElementById("cnt").value=rowCount1;  
+}  
+
+function appendToUserTabel(user) {  // console.log(user)
+     data2=user; // console.log(data2)
+     $("#diatable > tbody:last-child").append(`
+       <tr id="user-${data2.id}">               
+       <td align="center"class="userData" >${data2.id}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       <td align="center"  name="Diagnosis" class="userDiagnosis userData">${data2.diagnosis}</td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       <td align="center"><button type="button"  
+       class="userDiagnosis userData btn btn-default btn-sml" data-toggle="modal" data-target="#modal-default">
+       <i class="fas fa-edit" style="color:blue" onClick="editDiagnosis(${data2.id})"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;
+       <button type="button"  onClick="deleteDiagnosis(${user.id})" class="deletebtn1 btn btn-default btn-sml">
+       <i class="fas fa-trash-alt" style="color:red"></i></button></td>                          
+       </tr>   
+       `);
+       CountRows1();          
+  }
+
+function editDiagnosis(id) {
+    if (id) {  // alert(value);
+      tr_id = "#user-" + id;   //console.log(tr_id);
+      Diagnosis = $(tr_id).find(".userDiagnosis").text(); //console.log(Diagnosis)
+      $('#form-id').val(id);
+      $('#form-Diagnosis').val(Diagnosis);
+    }
+    }
+
+$("#updateDiagnosis").click(function(){
+      var Diagnosisupdate = $('input[name="Diagnosisupdate"]').val()// console.log(Diagnosisupdate)  
+      var snoupt = $('input[name="snoupt"]').val() // console.log(snoupt) 
+      $.ajax({
+          url: '{% url "updateDisease" %}',
+          type: 'get',
+          data: {         
+              'Diagnosisupdate'  : Diagnosisupdate,   
+              'snoupt'           : snoupt,
+          },
+          dataType: 'json',
+          success: function(data)  {             
+              if (data.to_updatenewdiagnosis) { 
+                var user = data.to_updatenewdiagnosis;//  console.log(user)
+                updateToUserTabel(user);     
+                swal("Good job!", "Update Successfully", "success")   
+            } 
+      }
+      });  
+     
+      $("#Diagnosis").empty();   
+    });
+
+function updateToUserTabel(user){  //console.log(user);     
+    $("#diabody #user-" + user.id).children(".userData").each(function() {
+          var attr = $(this).attr("name");
+          if (attr == "Diagnosis") {
+            $(this).text(user.diagnosis);      
+          } 
+        });
+      }
+
+function deleteDiagnosis(id) { //alert(id)
+    $.ajax({
+        url: 'deleteDisease',
+        data: {'id':id},  
+        dataType: 'json',
+        success: function (data) {
+          if (data.success) { 
+            $("#diatable #user-" + id).remove();
+            swal("Good job!", "Delete Successfully", "success")   
+          } 
+        }
+    });
+    document.getElementById("cnt").value="";    
+    CountRows1();        
+}  
+
+</script> 
+
+{% endblock javascript%}
+

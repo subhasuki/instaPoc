@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <h3>New Admission</h3>
+      </div><!-- /.container-fluid -->
+    </section>
+    <div class="printarea" style="height: 0px;width:0px;overflow:hidden"></div>
+   
+    <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                  <div class="card card-default">   
+                    <div class="card-body">
+                    <div class="row">
+                      <div class="col-8 col-md-4">                                                                
+                        <div class="form-group">
+                        <label>Per.OP.ID:</label> 
+                        <input class="form-control" type="text" name="oldidsearchnm" id="perid" aria-label="Search" required>                        
+                        </div>
+                        </div>
+                        <div class="col-2 col-md-2">                                                                
+                        <div class="form-group">
+                        <label>&nbsp;</label><br>
+                        <button type="submit" id="oldidsearch" class="btn btn-primary btn-sml"><i class="fas fa-search"></i></button>
+                        </div>
+                        </div>
+                        </div>
+                        <div class="col-md-12">
+                        <div class="row">                                          
+                        <div class="col-md-6">                                                                
+                          <div class="form-group">
+                            <label>Doctor Name</label>                                        
+                            <input list="demo4"  class="form-control" id="drtokenid1" name="drtoken1"  required/>
+                            <datalist name="drtoken" id="demo4">
+                            {% for user in docname %} 
+                            <option value="{{user.drname}}">{{user.drname}}</option>
+                            {% endfor %}                                                                                                       
+                            </datalist> 
+                            </div>
+                            <div class="form-group">
+                            <label>IP NO</label>
+                            <input type="text" class="form-control"  id="tokenid1" name="tokenid1" value="{{newip}}"required>
+                            </div>
+                            <div class="form-group">
+                              <label>Name</label>
+                              <input type="text" class="form-control" name="tnname1" id="tnname1" required>
+                              </div>
+                              <div class="row">
+                              <div class="col-md-6"> 
+                              <div class="form-group">
+                              <label>Gender</label>
+                              <input type="text" class="form-control" name="tgenter1" id="tgenter1" required>    
+                              </div>
+                              </div>
+                              <div class="col-md-6">
+                              <div class="form-group">
+                              <label>Age</label>
+                              <input type="text" class="form-control" name="tnage1" id="tnage1" required>
+                              </div> 
+                              </div>
+                              </div>
+                              <div class="form-group">
+                                <label>Address</label>
+                                <input type="textarea" class="form-control" name="tnplace1" id="tnplace1" required>
+                                </div>                             
+                              </div>                          
+                          <div class="col-md-6">                
+                              <div class="form-group">
+                              <label>Room Type</label>                                       
+                              <input list="demo5"  class="form-control" id="roomtype" name="roomtype" required/>
+                            <datalist name="drtoken" id="demo5">
+                            {% for user in roomtype %} 
+                            <option value="{{user.roomtype}}">{{user.roomtype}}</option>
+                            {% endfor %}                                                                                                       
+                            </datalist> 
+                              </div>
+                              <div class="form-group">
+                                <label>Room No</label>                                
+                                <input type="text" class="form-control" name="roomno" id="roomno" onchange="roomvalidate()" required>
+                                </div>
+                                <div class="form-group">
+                                  <label>Advance</label>                                       
+                                  <input type="text" class="form-control" id="adavnce" name="adavnce" required>                                       
+                                  </div>
+                              <div class="form-group">
+                                <label>Mobile</label>
+                                <input type="text" class="form-control" name="tnmobile1" id="tnmobile1">
+                                </div>
+                              <div class="col-md-4">                                                                
+                                <div class="form-group">
+                                <label>&nbsp;</label> 
+                                <button type="submit" id="saveip"  class="btn btn-success form-control">SAVE</button>
+                                </div>
+                                </div>
+                                                             
+                              </form>  
+                        </div>                
+                      </div>
+                      </div>                   
+              </div>
+            </div>                   
+          </div><br>
+         
+    </section>
+</div>
+
+{% endblock %}
+{% block javascript %}
+<script>
+
+$("#oldidsearch").click(function(){     
+    var oldidsearchnm = $('input[name="oldidsearchnm"]').val()  //console.log(oldidsearchnm)         
+    if(oldidsearchnm){
+    $.ajax({
+        url: '{% url "ipoldidsearch" %}',
+        type: 'get',
+        data: {
+            'oldidsearchnm': oldidsearchnm,         
+        },
+        dataType: 'json',
+        success: function(data)  { 
+          if(data.oldlist){ //console.log(data.oldlist);
+            var oldlistgt =  data.oldlist;//console.log(labtbl);console.log(labtbl.length);                    
+            for (var i=0; i<oldlistgt.length; i++) { 
+              var name= oldlistgt[i].name;//  console.log(name)
+              var age = oldlistgt[i].age;// console.log(age)
+              var address = oldlistgt[i].addrs;//   console.log(address)
+              var gender = oldlistgt[i].gender;//    console.log(gender)
+              var dob = oldlistgt[i].dob;//        console.log(dob)
+              var mobileno = oldlistgt[i].mobileno;//  console.log(mobileno)
+            }   
+            document.getElementById("tnname1").value=name;  
+            document.getElementById("tnage1").value=age;  
+            document.getElementById("tgenter1").value=gender; 
+            document.getElementById("tnmobile1").value=mobileno;  
+            document.getElementById("tnplace1").value=address;  
+          }
+          if(data.user1){ //  console.log(data.user1);
+            var user1 =  data.user1;
+            document.getElementById("tokenid1").value = user1;   
+          }
+        }
+        
+    }); 
+  }
+  else
+  {
+    swal("Oh noes!", "Enter Per.op.id ", "error");   
+  }  
+  });
+  
+function roomvalidate() {
+  var roomno = $('input[name="roomno"]').val()  //console.log(roomno)   
+  $.ajax({
+      url: '{% url "roomvalidate" %}',
+      type: 'get',
+      data: {
+        'roomno'  : roomno,
+    },
+      dataType: 'json',       
+      success: function(data) {
+        if(data.exist){ 
+          swal("Oh noes!", "Room not available !", "error");   
+        }        
+    } 
+  });
+};
+
+$("#saveip").click(function(){
+    var oldidsearchnm = $('input[name="oldidsearchnm"]').val()
+    var drtoken1 = $('input[name="drtoken1"]').val()
+    var tokenid1 = $('input[name="tokenid1"]').val()
+    var tnname1 = $('input[name="tnname1"]').val() //console.log(tnname1)
+    var tnage1 = $('input[name="tnage1"]').val() 
+    var adavnce = $('input[name="adavnce"]').val()    
+    var roomtype = $('input[name="roomtype"]').val() 
+    var roomno = $('input[name="roomno"]').val() 
+    var tgenter1 = $('input[name="tgenter1"]').val() 
+    var tnmobile1 = $('input[name="tnmobile1"]').val() 
+    var tnplace1 = $('input[name="tnplace1"]').val() 
+    if(oldidsearchnm!='' && drtoken1!='' && tokenid1!='' && tnname1!='' 
+    && tgenter1!='' && tnage1!='' && adavnce!='' && roomtype!='' && roomno!=''
+    && tnplace1!='' ){
+    $.ajax({
+        url: '{% url "saveip" %}',
+        type: 'get',
+        data: {         
+          'oldidsearchnm' :  oldidsearchnm,
+          'drtoken1'   :  drtoken1,                
+          'tokenid1'   :  tokenid1,
+          'tnname1'    :  tnname1,  
+          'tgenter1'   :  tgenter1,          
+          'tnage1'     :  tnage1,
+          'adavnce'    :  adavnce,
+          'roomtype'   :  roomtype,
+          'roomno'     :  roomno,  
+          'tnplace1'   :  tnplace1,             
+          'tnmobile1'  :  tnmobile1,            
+        },
+        dataType: 'json',
+        success: function(data)  { 
+          if (data.user) {  
+            swal("Good job!", "Save Successfully", "success")  
+            //var user1 =  data.user1;  //console.log(user1);  
+            var ipidget =  data.user;  //console.log(ipidget); 
+            var ipid= ipidget.id;   //console.log(ipid); 
+            $('<iframe>', {src:'/ipthermal/'+ipid ,id:'myFrame',frameborder:0,scrolling:'no'}).appendTo('.printarea');         
+              document.getElementById("drtokenid1").value = "";  
+              document.getElementById("tokenid1").value = "";   
+              document.getElementById("tnname1").value = "";   
+              document.getElementById("tgenter1").value = "";
+              document.getElementById("tnage1").value = "";  
+              document.getElementById("adavnce").value = "";   
+              document.getElementById("roomtype").value = ""; 
+              document.getElementById("roomno").value = "";  
+              document.getElementById("tnplace1").value = "";   
+              document.getElementById("tnmobile1").value = "";   
+              document.getElementById("perid").value = ""; 
+          }    
+          else
+            swal("Oh noes!", "This name already exists!", "error");   
+    }
+    }); 
+  }    
+    else
+      swal("Oh noes!", "Enter the value", "error");      
+  });
+    
+</script> 
+{% endblock javascript%}

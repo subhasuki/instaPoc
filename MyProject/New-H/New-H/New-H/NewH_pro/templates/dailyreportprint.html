@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% load static %}
+<style>
+   body{
+       width:288px;
+       height: auto;
+   } 
+</style>
+</head>
+<body onload=window.print();>
+<div class="content-wrapper">
+<div class="card">        
+        <div class="card-body">
+            <div class="row" >
+              <div class="col-12 col-sm-6 col-lg-12">
+                <div class="card card-default">   
+                    <div class="card-body">
+                        <div id="invoice-POS">      
+                              <div class="info"> 
+                                <h1>S.M HOSPITAL</h1>
+                                <p><b>Anaikarai Street,Tenkasi-627811</b></p>                               
+                              </div><!--End Info-->                            
+                            
+                            <hr/>
+                            <div id="bot">   
+                               <h3>Doctor Report</h3>
+                                           
+                                                <table class="table">
+                                                    <tr>
+                                                        <td style="float: right;">Doctor Name:</td>
+                                                        <td>{{docname}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td  style="float: right;">From Date: </td>
+                                                        <td>{{fromdt}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td  style="float: right;">Total OP: </td>
+                                                        <td>{{oplist}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td  style="float: right;">T.New OP: </td>
+                                                        <td>{{tnewop}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td  style="float: right;">T.Old OP: </td>
+                                                        <td>{{toldop}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td  style="float: right;">T.Appoinment: </td>
+                                                        <td>{{tappoi}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td  style="float: right;">T.Cancel Old: </td>
+                                                        <td>{{cancelold}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td  style="float: right;">T.Cancel New: </td>
+                                                        <td>{{cancelnew}}</td>
+                                                    </tr>
+                                                    <tr>                                                        
+                                                </table>
+                                            <hr/> 
+                                            <table class="table">
+                                                <tr>
+                                                    <td style="float: right;">T.New Normal:</td>
+                                                    <td>{{newnormal}}*120={{mulnewnormal}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="float: right;">Old Normal: </td>
+                                                    <td>{{oldnormal}}*100={{muloldnormal}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td  style="float: right;">T.New Emergency: </td>
+                                                    <td>{{newemgy}}*150={{mulnewemgy}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td  style="float: right;">Old Emer: </td>
+                                                    <td>{{oldemgy}}*150={{muloldemgy}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td  style="float: right;">Old Cancel Norm: </td>
+                                                    <td>{{oldcancelnormal}}*100=-{{muloldcancelnormal}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td  style="float: right;">New Cancel Norm: </td>
+                                                    <td>{{newcancelnormal}}*120=-{{mulnewcancelnormal}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td  style="float: right;">Old Cancel Emer: </td>
+                                                    <td>{{oldcancelemgy}}*150=-{{muloldcancelemgy}}</td>
+                                                </tr>
+                                                <tr>
+                                                      <td  style="float: right;">New Cancel Emer: </td>
+                                                    <td>{{newcancelemgy}}*150=-{{mulnewcancelemgy}}</td>
+                                                </tr>
+                                                <tr>                                                        
+                                            </table>   
+                                            <hr/>                                     
+                                            <label>Total:{{total}}</label>
+                              </div>
+                     </div>
+                   </div>
+                      </div>
+                      </div>
+                      </div>
+        </div>
+
+</div>
+</div>
+        
+
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+.content-wrapper{
+  background-image: url('/static/dist/img/newdoc1.jpg');
+  background-repeat: no-repeat;
+  background-size: cover; 
+}
+</style>
+<div class="content-wrapper">  
+  <div class="content-header">
+    <div class="container-fluid">  
+      <h1 class="text-center" style="color:rgb(12, 11, 85);font-size:40px;"><b>{{user.hosname}}</b></h1>     
+    </div>
+  </div>
+
+  <!-- <section class="content">
+    <div class="container-fluid"><br>
+      
+    </div>
+  </section> -->
+</div>
+
+<footer class="main-footer">
+  <strong>Copyright &copy; 2020 <a href="http://www.smhospital.co/">SM Hopital.io</a>.</strong>
+  All rights reserved.
+  <div class="float-right d-none d-sm-inline-block">
+    <b>Version</b> 3.0.1
+  </div>
+</footer>
+{% endblock %}
+
+
+
+<!-- Control Sidebar -->

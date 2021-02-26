@@ -1,0 +1,405 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  .overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;    
+    /*transition: opacity 500ms;*/
+    visibility: hidden;
+    opacity: -1;
+  }
+  .overlay:target {
+    visibility: visible;
+    opacity: 1;
+  }
+  .popup {
+    margin: 70px auto;
+    padding: 20px;
+    background: rgb(201, 198, 198);
+    border-radius: 5px;
+    width: 50%;
+    position: relative;
+    transition: all 2s ease-in-out;
+  }
+  .popup .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    transition: all 200ms;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+  }
+  .popup .content {
+    max-height: 50%;
+    /*overflow: auto;*/
+  }  
+</style>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <h3>Doctor Leave Setting</h3>
+      </div><!-- /.container-fluid -->
+    </section>
+  
+    <!-- Main content -->
+    <section class="content">
+     <div class="row" >
+            <div class="col-md-12">
+              <div class="card card-primary card-tabs">
+                <div class="card-header p-0 pt-1">
+                  <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" id="custom-tabs-one-add-tab" data-toggle="pill" href="#custom-tabs-one-add" role="tab" aria-controls="custom-tabs-one-add" aria-selected="true">Add</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="custom-tabs-one-view-tab" data-toggle="pill" href="#custom-tabs-one-view" role="tab" aria-controls="custom-tabs-one-view" aria-selected="true">View</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="custom-tabs-one-update-tab" data-toggle="pill" href="#custom-tabs-one-update" role="tab" aria-controls="custom-tabs-one-update" aria-selected="true">Update</a>
+                      </li>                      
+                  </ul>
+                </div>
+                <div class="card-body">
+                <div class="tab-content" id="custom-tabs-one-tabContent">
+
+                <div class="tab-pane fade show active" id="custom-tabs-one-add" role="tabpanel" aria-labelledby="custom-tabs-one-add-tab">                  
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-3">                                                                
+                            <div class="form-group">
+                            <label>Doctor Name:</label> 
+                            <input list="demo5"  class="form-control" id="drselect5" name="drselect5" >
+                            <datalist name="drtoken" id="demo5">
+                            {% for user in docname %} 
+                            <option value="{{user.drname}}">{{user.drname}}</option>
+                            {% endfor %} 
+                            </datalist>                         
+                            </div>
+                            </div>
+                            <div class="col-md-3">                                                                
+                            <div class="form-group">
+                            <label>Leave Date:</label> 
+                            <input class="form-control" type="date" name="levdtsv" id="levdtsv" ><br>                           
+                            </div>
+                          </div>
+                          <div class="col-md-4">                                                                
+                            <div class="form-group">
+                            <label>Purpose</label> 
+                            <input class="form-control" type="text" name="purposesv" id="purposesv" ><br>                      
+                            </div>
+                            </div>
+                            <div class="col-md-2">                                                                
+                              <div class="form-group">
+                              <label>&nbsp;</label><br>                            
+                              <button type="submit" id="savelev" class="btn-sml btn btn-success"><b> Save </b></button> 
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div> 
+
+                 <div class="tab-pane fade" id="custom-tabs-one-view" role="tabpanel" aria-labelledby="custom-tabs-one-view-tab">                
+                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-default">   
+                            <div class="card-body">
+                               <div class="row form-group">
+                                 <div class="col-md-5">
+                                    <label>Doctor Name</label>
+                                    <input list="demo6"  class="form-control" id="drselect6" name="drselect6"  onchange="drtokencal1()">
+                                    <datalist name="drtoken" id="demo6">
+                                {% for user in docname %} 
+                                <option value="{{user.drname}}">{{user.drname}}</option>
+                                {% endfor %} 
+                                </datalist>
+                                 </div>
+                               </div>  
+                               <hr/>                              
+                               <div class="table-responsive p-0" style="height: 270px;">
+                                 <table id="viewtbl" class="table table-dark danger">
+                                   <thead style="text-align:center;font-size:12px;">
+                                     <tr>                          
+                                       <th>Id</th>                               
+                                       <th>DoctorName</th>
+                                       <th>LeaveDate</th>
+                                       <th>Purpose</th>
+                                       </tr>
+                                   </thead>
+                                   <tbody id="viewbdy" style="font-size:12px;" >  
+                                    {% for user in pdltfetch %} 
+                                    <tr  id="user-{{user.id}}"> 
+                                      <td align="center" style="width:100px" class="userData">{{user.id}}</td>                                 
+                                      <td align="center" style="width:250px" name="doctorname" class="userData doctorname">{{user.doctorname}}</td> 
+                                      <td align="center" style="width:250px" name="leavedate" class="userData leavedate">{{user.leavedate}}</td> 
+                                      <td align="center" style="width:250px" name="purpose" class="userData userpurpose">{{user.purpose}}</td>                              
+                                    </tr>
+                                    {% endfor %} 
+                                   </tbody>
+                                 </table>
+                             </div>                             
+                             </div>
+                           </div>
+                    </div>
+                 </div>                
+                 </div>
+
+                 <div class="tab-pane fade" id="custom-tabs-one-update" role="tabpanel" aria-labelledby="custom-tabs-one-update-tab">                
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-default">   
+                                <div class="card-body">
+                                   <div class="row form-group">
+                                     <div class="col-md-5">
+                                        <label>Doctor Name</label>
+                                        <input list="demo7"  class="form-control" id="drselect7" name="drselect7" onchange="drtokencal2()" >
+                                        <datalist name="drtoken" id="demo7">
+                                    {% for user in docname %} 
+                                    <option value="{{user.drname}}">{{user.drname}}</option>
+                                    {% endfor %} 
+                                    </datalist><br>
+                                     </div>                                                                 
+                                   </div>  
+                                   <hr/>                              
+                                   <div class="table-responsive p-0" style="height: 270px;">
+                                     <table id="updatetbl" class="table table-dark danger">
+                                       <thead style="text-align:center;font-size:12px;">
+                                         <tr>                          
+                                           <th>Id</th>                               
+                                           <th>DoctorName</th>
+                                           <th>LeaveDate</th>
+                                           <th>Purpose</th>
+                                           <th>Action</th>
+                                           </tr>
+                                       </thead>
+                                       <tbody id="updatebdy" style="font-size:12px;" >  
+                                        {% for user in pdltfetch %} 
+                                        <tr  id="user-{{user.id}}"> 
+                                          <td align="center" style="width:100px" class="userData">{{user.id}}</td>                                 
+                                      <td align="center" style="width:250px" name="doctorname1" class="userData doctorname1">{{user.doctorname}}</td> 
+                                      <td align="center" style="width:250px" name="leavedate1" class="userData leavedate1">{{user.leavedate}}</td> 
+                                      <td align="center" style="width:250px" name="purpose1" class="userData purpose1">{{user.purpose}}</td>                                               
+                                      <td align="center" style="width:250px" name="purpose1" class="userData purpose1">{{user.purpose}}</td> 
+                                      <td align="center"><button type="button" onClick="editdoclev({{user.id}})" id="editdoclev"  class="btn btn-default" data-toggle="modal" data-target="#modal-default5"><i class="fas fa-edit" style="color:blue"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;                                        
+                                      <button type="button" onClick="deletecomplaint({{user.id}})"  id="deletedoclevt"  class="form-control-sm"><i class="fas fa-trash-alt" style="color:red"></i></button></td>                             
+                                        </tr>
+                                        {% endfor %} 
+                                       </tbody>
+                                     </table>
+                                 </div> 
+                                 <div class="modal fade" id="modal-default5">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h4 class="modal-title">Update Status</h4>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                      <label>ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                       <input type="text" id="form-docid" name="form-docid"><br><br>
+                                      
+                                       <label>Doctor Name&nbsp;&nbsp;</label>
+                                       <input type="text" id="form-doctorname1" name="form-doctorname1"><br><br>                                     
+                                       <label>Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                       <input type="text" id="form-leavedate1" name="form-leavedate1"><br><br>
+                                       <label>Purpose&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                       <input type="text" id="form-purpose1" name="form-purpose1"><br><br>
+                                      </div>
+                                      <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" id="editdoclev">Update</button>
+                                      </div>
+                                    </div>            
+                                  </div>          
+                                </div>                              
+                                 </div>
+                               </div>
+                        </div> 
+                    </div>
+                 </div>
+
+                 
+                </div>            
+                </div>       
+            </div>    
+    </div>
+      </div>
+   
+    </section>
+</div>
+  {% endblock %}
+  {% block javascript %}
+  <script>
+
+$("#savelev").click(function(){
+    var drselect5 = $('input[name="drselect5"]').val()// console.log(drselect5)
+    var levdtsv = $('input[name="levdtsv"]').val()//  console.log(levdtsv)
+    var purposesv = $('input[name="purposesv"]').val() //  console.log(purposesv)  
+    $.ajax({
+        url: '{% url "savelev" %}',
+        type: 'get',
+        data: {         
+            'drselect5': drselect5,
+            'levdtsv'  : levdtsv,
+            'purposesv': purposesv,
+        },
+        dataType: 'json',
+        success: function(data)  {     
+          if(data. save){ //console.log(data.aplist);
+            swal("Good job!", "Save Successfully!", "success") 
+      }
+    }
+    });   
+  });
+
+function drtokencal1() {     
+    var drselect6 = $('input[name="drselect6"]').val()  //console.log(drselect6)        
+    $.ajax({
+        url: '{% url "viewleave" %}',
+        type: 'get',
+        data: {
+            'drselect6': drselect6,
+        },
+        dataType: 'json',
+        success: function(data)  {          
+          if(data.user){ //console.log(data.doclevview); console.log(data.user)
+          }
+          appendToUserTabel(data.user);
+          
+        }
+    });   
+  }
+
+function appendToUserTabel(user) { //console.log(user)  
+    $('#viewbdy').empty();
+    for (i=0; i<user.length; i++) {
+      data2=user[i];// console.log(data2);//console.log(data2.peropno);  
+      $("#viewtbl > tbody:last-child").append(`
+      <tr id="user-${user[i].id}">   
+      <td  align="center" style="width:250px"  name="dlid" class="userData dlid">${data2.id}</td>     
+      <td  align="center" style="width:250px"  name="doctorname" class="userData userdoctorname">${data2.doctorname}</td>
+      <td  align="center" style="width:250px"  name="leavedate" class="userData userleavedate">${data2.leavedate}</td>
+      <td  align="center" style="width:100px"  name="purpose" class="userData userpurpose">${data2.purpose}</td>      
+      </tr>   
+     `);   
+    }       
+  }
+
+function drtokencal2() {     
+    var drselect7 = $('input[name="drselect7"]').val()  //console.log(drselect7)        
+    $.ajax({
+        url: '{% url "updateleave" %}',
+        type: 'get',
+        data: {
+            'drselect7': drselect7,
+        },
+        dataType: 'json',
+        success: function(data)  {          
+          if(data.user){ //console.log(data.doclevview);  console.log(data.user)
+          }
+          appendToUserTabel2(data.user);
+          
+        }
+    });   
+  }
+
+function appendToUserTabel2(user) { //  console.log(user)  
+    $('#updatebdy').empty();
+    for (i=0; i<user.length; i++) {
+      data2=user[i];// console.log(data2);//console.log(data2.peropno);  
+      $("#updatetbl > tbody:last-child").append(`
+      <tr id="user-${user[i].id}">   
+      <td  align="center" style="width:250px"  name="dlid" class="userData dlid">${data2.id}</td>     
+      <td  align="center" style="width:250px"  name="doctorname1" class="userData doctorname1">${data2.doctorname}</td>
+      <td  align="center" style="width:250px"  name="leavedate1" class="userData leavedate1">${data2.leavedate}</td>
+      <td  align="center" style="width:100px"  name="purpose1" class="userData purpose1">${data2.purpose}</td>      
+      <td align="center"><button type="button" id="comedit" name="comup"
+        class="usercomplaint userData btn btn-default" data-toggle="modal"  data-target="#modal-default5"">
+        <i class="fas fa-edit" style="color:blue" onClick="editdoclev(${user[i].id})"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;
+        <button type="button" onClick="deletedoclev(${user[i].id})" form-control-sm">
+        <i class="fas fa-trash-alt" style="color:red"></i></button></td>  
+      </tr>   
+     `);   
+    }       
+  }
+
+function editdoclev(id) {
+  if (id) {  //alert(id);
+    tr_id = "#user-" + id;
+    doctorname1 = $(tr_id).find(".doctorname1").text();// console.log(doctorname1)
+    leavedate1 = $(tr_id).find(".leavedate1").text();
+    purpose1 = $(tr_id).find(".purpose1").text();
+    $('#form-docid').val(id);    
+    $('#form-doctorname1').val(doctorname1);
+    $('#form-leavedate1').val(leavedate1);
+    $('#form-purpose1').val(purpose1);
+  }
+  }
+
+$("#editdoclev").click(function(){
+  var docid2 = $('#form-docid').val().trim();   
+  var docid3 = $('input[name="form-docid"]').val()  
+  var doctorname2 = $('input[name="form-doctorname1"]').val()  
+  var leavedate2 = $('input[name="form-leavedate1"]').val()  
+  var purpose2 = $('input[name="form-purpose1"]').val() //console.log(purpose2)
+  // Create Ajax Call
+    $.ajax({
+      url: '{% url "editdoclev" %}',
+      data: {    
+        'docid3':docid3,    
+        'doctorname2'    : doctorname2, 
+        'leavedate2'  : leavedate2,
+        'purpose2'   : purpose2,        
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.user) { //  console.log(data.user) 
+          console.log(data.user)       
+        }     
+        updateToUserTabel(data.user) 
+      }
+    });  
+  });
+
+function updateToUserTabel(user){ //console.log(user); 
+  var uid = user.id;//console.log(uid)
+$("#updatebdy #user-" + uid).children(".userData").each(function() {
+      var attr = $(this).attr("name");
+      if (attr == "doctorname1") {
+        $(this).text( user.doctorname);      
+      } 
+      if (attr == "leavedate1") {
+        $(this).text( user.leavedate);      
+      } 
+      if (attr == "purpose1") {
+        $(this).text( user.purpose);      
+      } 
+    });
+  }
+
+  function deletedoclev(id) {  //alert(id)
+    $.ajax({
+        url: 'deletedoclev',
+        data: {'id'  :id},  
+        dataType: 'json',
+        success: function (data) {
+          if (data.success) { 
+            $("#updatetbl #user-" + id).remove();
+            swal("Good job!", "Delete Successfully", "success")   
+          } 
+        }
+    });
+}
+      
+</script> 
+
+{% endblock javascript%}

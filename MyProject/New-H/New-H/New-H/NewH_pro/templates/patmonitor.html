@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+.content-wrapper{
+  background-image: url('/static/dist/img/monbackimg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin-bottom:unset !important;
+  margin-right:unset !important;
+}
+</style>
+<div class="content-wrapper">     
+    <div class="content-header">
+      <div class="container-fluid text-center">
+        <h2  style="color:white"> SM Hospital</h2>
+      </div><br>
+      <div class="row">
+        <div class="col-12">
+          <div class="row form-group">
+      <div class="col-md-6 col-sm-12">  
+        <h6 id="tdaydate"  style="font-family: monospace; font-size: 28px; color:white; padding: 10px;"></h6>                  
+            <!-- <h3 class="text-dark"  style="font-size: 28px; color: rgb(10, 10, 10);">SM Hospital</h3> -->
+      </div>
+      <div class="col-md-6 col-sm-12" style="text-align: right;">  
+        <span id="clk"  style="font-family: monospace; font-size: 28px; color: white; padding: 10px;"></span>                  
+  </div>
+  </div>
+  </div>
+  </div>
+    </div>
+    <div class="col-sm-12  text-center">
+      <h2  style="color:white" id="docname"></h2>
+    </div><br>
+    <section class="content">  
+        <div class="row">          
+<input type="hidden" value="{{docname}}" id="docname" name="docname">
+          <div class="col-12 col-sm-6 col-md-3">
+                  
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box">
+              <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-clipboard-list"></i></span>
+              <div  class="info-box-content">
+                <span class="info-box-text">Total Token</span>
+                <h6 class="info-box-number" id="tokcut"></h6>
+              </div>              
+            </div>         
+          </div>
+
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box">
+              <span class="info-box-icon bg-success elevation-1"><i class="fas fa-clock"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Waiting</span>
+                <h6 class="info-box-number" id="waitcount"></h6>
+              </div>              
+            </div>         
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+                  
+          </div>
+        </div><br><br>
+         <h3 class="text-center"  style="color:white">Next Patient</h3><br><br>
+            <div class="row">
+              <div class="col-md-12">
+                     <div class="row form-group" style="padding:2px;">                        
+                      <div class="col-md-2">
+                     </div>
+                        <div class="col-12 col-md-5">                                        
+                           <!-- <label style="text-align:center;font-size:14px;">Patient Name</label> -->
+                           <h5 id="pname" style="color:white"></h5>
+                        </div>
+                        <div class="col-12 col-md-5">                                        
+                           <!-- <label style="text-align:center;font-size:14px;">Token-No</label> -->
+                           <h5 id="tokno"  style="color:white"></h5>
+                        </div> 
+                      </div> 
+                      
+                     <!-- </div> -->
+                   </div>
+            </div>
+
+    </section>  
+  </div>
+
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'dist/js/pages/patmonitor.js' %}"></script>
+{% endblock javascript%}

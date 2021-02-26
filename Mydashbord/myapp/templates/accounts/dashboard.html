@@ -1,0 +1,58 @@
+
+{%  extends 'accounts/main.html' %}
+{% load static %}
+{% block content %}
+
+{%  include 'accounts/status.html' %}
+
+<br>
+	
+<div class="row">
+	<div class="col-md-4">		
+		<div class="card card-body" style="height:420px;width:400px;">	
+			<img src="{% static 'images/c.jpeg' %}" >			
+		<button type="button" id="pic1" style="width:80px"><i class="fa fa-heart" style="color:red"></i></button>
+		<!-- <input type="hidden" name="pic1" value="1"> -->
+		</div>
+		
+	</div>
+	<div class="col-md-4">		
+		<div class="card card-body" style="height:420px;width:400px;">			
+			<img src="{% static 'images/d.jpg' %}" style="height:360px;width:360px;">
+			<button type="button" id="pic2"  style="width:80px"><i class="fa fa-heart" style="color:red"></i></button>
+			<input type="hidden" name="pic2">
+		</div>
+	</div>
+	<div class="col-md-4">		
+		<div class="card card-body" style="height:420px;width:400px;">			
+			<img src="{% static 'images/a.jpg' %}">
+			<button type="button" id="pic3" style="width:80px"><i class="fa fa-heart" style="color:red"></i></button>
+		</div>
+	</div>
+
+</div>
+<div class="row">
+	<div class="col-md-4">		
+		<div class="card card-body" style="height:420px;width:400px;">	
+			<img src="{% static 'images/b.jpg' %}">			
+			<button type="button" id="pic4" style="width:80px"><i class="fa fa-heart" style="color:red"></i></button>
+		</div>
+		
+	</div>
+	<div class="col-md-4">		
+		<div class="card card-body" style="height:420px;width:400px;">			
+			<img src="{% static 'images/f.jpg' %}" style="height:360px;width:360px;">
+			<button type="button" id="pic5" style="width:80px"><i class="fa fa-heart" style="color:red"></i></button>
+		</div>
+	</div>
+	<div class="col-md-4">		
+		<div class="card card-body" style="height:420px;width:400px;">			
+			<img src="{% static 'images/p.jpg' %}" style="height:355px">
+			<button type="button" id="pic6" style="width:80px"><i class="fa fa-heart" style="color:red"></i></button>
+		</div>
+	</div>
+
+</div>
+{% endblock %}
+
+

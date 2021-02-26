@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        
+      </div>
+    </section>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">               
+          <div class="col-sm-6">
+            <form action="" method="POST">
+              {% csrf_token%}
+          <div class="form-group" style="padding:2px;width:220px;">
+            <label for="cars" >Choose Doctor:</label>
+            <input list="demo4"  class="form-control" id="drselect" name="drselect" onchange="drselectcal()"/>
+            <datalist name="drtoken" id="demo4">
+            {% for user in docname %} 
+            <option value="{{user.drname}}">{{user.drname}}</option>
+            {% endfor %} 
+            </datalist>
+            </div> 
+          </form>   
+        </div> 
+                  
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card card-solid ">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card-body pb-0">
+                  
+                    <div class="row">
+                      <div class="col-12 col-sm-12">
+                        <h3>IP Monitor</h3>
+                            <hr/>
+                            <br>
+                          <div class="row d-flex align-items-stretch ">                            
+                            <div class="col-md-6">                              
+                              <div class="card">
+                                <div class="card-header">
+                                  <label>Today IP</label>
+                                  </div>
+                                  <div class=" card-body table-responsive p-0" style="height: 270px;width:100%;">
+                                   
+                                    <table id="tdyiptbl" class="table table-dark">
+                                      <thead style="text-align:center;font-size:12px;">
+                                        <tr>  
+                                          <th>IPID</th>  
+                                          <th>PerId</th>
+                                          <th>Name</th>
+                                          <th>RoomType</th>
+                                          <th>RoomNo</th> 
+                                          <th style="display:none">A-Date</th>         
+                                          <th>Action</th>                                        
+                                        </tr>                                        
+                                      </thead>
+                                      <tbody id="tdyipbdy" style="font-size:12px;"> 
+                                                                               
+                                      </tbody>
+                                    </table>
+                                   
+                                </div>
+                                <div class="card-footer">
+                                
+                                </div>
+                              </div>
+                              </div> 
+
+                             
+
+                            <div class="col-md-6">
+                                <div class="card">
+                                  <div class="card-header">
+                                    <label>PrevIP</label>
+                                    </div>
+                                    <div class=" card-body table-responsive p-0" style="height: 270px;">
+                                      
+                                      <table id="preiptbl" class="table table-dark">
+                                        <thead style="text-align:center;">
+                                          <tr style="font-size:12px;">
+                                            <th align="center">IPID</th>  
+                                            <th align="center">PerId</th>
+                                            <th align="center">Name</th>
+                                            <th align="center"> RoomType</th>
+                                            <th align="center">RoomNo</th>
+                                            <th style="display: none;">A-Date</th>                                          
+                                            <th align="center">Action</th> 
+                                          </tr>
+                                        </thead>
+                                         <tbody id="preipbdy" style="font-size:12px;"> 
+                                           
+                                        </tbody>
+                                      </table>
+                                      
+                                  </div>
+                                  <div class="card-footer">                                   
+                                  </div>
+                                </div>
+                            </div>  
+                          </div>
+                          <hr/>                
+                      </div>  
+                      <hr/>
+            </div>         
+        </div>   
+        </div>
+        <!-- /.card -->  
+    </section>
+      <!-- /.content -->
+</div>
+    <!-- /.content-wrapper -->    
+    <div class="card">
+    </div>
+  {% endblock %}
+  {% block javascript %}
+  
+  <script>
+  function  drselectcal(){     
+    var drselectInput = $('input[name="drselect"]').val()   // console.log(drselectInput)       
+    $.ajax({
+        url: '{% url "ipdoclist" %}',
+        type: 'get',
+        data: {
+            'select': drselectInput,
+        },
+        dataType: 'json',
+        success: function(data)  {           
+          if (data.docipsearch) { // console.log(data.docipsearch)  // console.log("success normal table")
+            $('#tdyipbdy').empty();
+            norFun(data.docipsearch);                 
+          }
+          if (data.docipsearch1) {  //   console.log(data.docipsearch1)
+            $('#preipbdy').empty();//   console.log("success emergency table")
+            norFun1(data.docipsearch1);                 
+          }  
+        }
+    });
+} 
+
+function norFun(docipsearch){
+  var rawmetrial = JSON.parse(docipsearch); // console.log(rawmetrial);
+  appendToUsrTable(rawmetrial);   
+}
+
+function appendToUsrTable(rawmetrial) {    //console.log(rawmetrial)
+  for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields;
+    if(data2.admitdate==null){ 
+      var newdt = data2.admitdate;
+     }
+     else{
+     var getdt = data2.admitdate;
+     var newdt = getdt.split('T')[0]; 
+     } 
+   $("#tdyiptbl > tbody:last-child").append(`
+     <tr id="users-${rawmetrial[i].pk}">
+      <td style="display:none">${rawmetrial[i].pk}</td>                
+      <td align="center">${data2.ipno}</td>
+      <td align="center">${data2.perid}</td>
+      <td align="center">${data2.name}</td>
+      <td align="center">${data2.roomtype}</td>
+      <td align="center">${data2.roomno}</td>
+      <td style="display:none">${newdt}</td>      
+      <td align="center"><a href="#" onClick="patientid(str(${data2.perid}))" ><i class="far fa-eye" style="color:red"></i></a></td>    
+    </tr>   
+      `);             
+} 
+}
+
+function norFun1(docipsearch1){
+  var rawmetrial = JSON.parse(docipsearch1); // console.log(rawmetrial);
+  appendToTable(rawmetrial);   
+}
+
+function appendToTable(rawmetrial) {  // console.log(rawmetrial)
+  for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields; //  console.log(getdt)
+    if(data2.admitdate==null){ 
+     var newdt = data2.admitdate;
+    }
+    else{
+    var getdt = data2.admitdate;
+    var newdt = getdt.split('T')[0]; 
+    }
+    $("#preiptbl > tbody:last-child").append(`
+     <tr id="users-${rawmetrial[i].pk}">
+      <td style="display:none">${rawmetrial[i].pk}</td> 
+      <td>${data2.ipno}</td>
+      <td>${data2.perid}</td>
+      <td>${data2.name}</td>
+      <td>${data2.roomtype}</td>
+      <td>${data2.roomno}</td>
+      <td style="display: none;">${newdt}</td>
+      <td align="center"><a href="#" onClick="patientid(${rawmetrial[i].pk})"><i class="far fa-eye" style="color:red"></i></a></td>    
+    </tr>   
+      `);       
+   
+  // console.log(dt)     
+}
+}
+
+function patientid(pk) {  
+  console.log(pk);  //var url = "{% url 'ippatientdetails' %}";  //alert(id);  //console.log(id);
+  document.location.href = "/ippatientdetails/" + pk;
+}
+</script>
+
+{% endblock javascript%}
+ 

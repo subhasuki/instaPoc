@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+
+.login {
+  width: 400px;
+  margin: 16px auto;
+  font-size: 16px;
+}
+
+/* Reset top and bottom margins from certain elements */
+.login-header,
+.login p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* The triangle form is achieved by a CSS hack */
+.login-triangle {
+  width: 0;
+  margin-right: auto;
+  margin-left: auto;
+  border: 12px solid transparent;
+  border-bottom-color: #28d;
+}
+
+.login-header {
+  background: #28d;
+  padding: 20px;
+  font-size: 1.4em;
+  font-weight: normal;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.login-container {
+  background: #ebebeb;
+  padding: 12px;
+}
+
+/* Every row inside .login-container is defined with p tags */
+.login p {
+  padding: 12px;
+}
+
+.login input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  padding: 16px;
+  outline: 0;
+  font-family: inherit;
+  font-size: 0.95em;
+}
+
+.login input[type="email"],
+.login input[type="password"] {
+  background: #fff;
+  border-color: #bbb;
+  color: #555;
+}
+
+/* Text fields' focus effect */
+.login input[type="email"]:focus,
+.login input[type="password"]:focus {
+  border-color: #888;
+}
+
+.login input[type="submit"] {
+  background: #28d;
+  border-color: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.login input[type="submit"]:hover {
+  background: #17c;
+}
+
+/* Buttons' focus effect */
+.login input[type="submit"]:focus {
+  border-color: #05a;
+}
+
+</style>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+      
+      </div><!-- /.container-fluid -->
+    </section>
+  
+    <!-- Main content -->
+<section class="content">
+    <div class="login">
+        <div class="login-triangle"></div>
+        
+        <h2 class="login-header">Log in</h2>
+      
+        <form class="login-container">
+          <p><input type="text" placeholder="User Name" name="username"></p>
+          <p><input type="password" placeholder="Password" name="userpwd"></p>
+          <p><input type="submit" value="Log in" id="loguser"></p>
+        </form>
+      </div>
+      <!-- Default box -->
+      
+</section>
+</div>
+{% endblock %}
+{% block javascript %}
+  <script>
+
+  
+$("#loguser").click(function(){
+    var username = $('input[name="username"]').val() //console.log(Diagnosis)
+    var userpwd = $('input[name="userpwd"]').val() 
+    if(username||userpwd){
+    $.ajax({
+        url: '{% url "loguser" %}',
+        type: 'get',
+        data: {         
+            'username': username,
+            'userpwd'     : userpwd ,      
+        },
+        dataType: 'json',
+        success: function(data)  { 
+            if(data.h){
+                swal("Good job!", "success", "success")   
+            }
+    }
+    }); 
+  }    
+    else
+      swal("Oh noes!", "Enter username password", "error");      
+  });
+
+
+  //var i = $('#login').val();
+ //if (i == 'login')
+     // window.location = "Login.php";
+  //else
+     // window.location = "Logout.php";
+
+</script> 
+ {% endblock javascript%}
+

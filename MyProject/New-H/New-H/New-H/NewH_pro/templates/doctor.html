@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <h3>Search OP Number</h3>
+      </div><!-- /.container-fluid -->
+    </section>
+  
+    <!-- Main content -->
+    <section class="content">
+  
+      <!-- Default box -->
+      <div class="card" style="height:75%;">
+            <div class="row" >
+              <div class="col-md-12">
+                <div class="card card-default">   
+                    <div class="card-body">
+                       <div class="row form-group">
+                         <div class="col-md-4">
+                            <label style="text-align:center;font-size:14px;">Search Method</label>
+                            <input list="demo5" name="serchdtl" class="form-control"/>
+                            <datalist name="drtoken" id="demo5">                            
+                            <option value="Name">Name</option>
+                            <option value="Address">Address</option>
+                            <option value="Mobile">Mobile</option>                                                                                                                                 
+                            </datalist>       
+                         </div>
+                         <div class="col-md-4"> 
+                         <label  style="text-align:center;font-size:14px;">Enter value</label>
+                         <input type="text" name="enval" class="form-control" onchange="searchopno()">                      
+                         </div> 
+                         <div class="col-md-4"> 
+                          <label  style="text-align:center;font-size:14px;">Count</label>
+                          <input type="text" id="countbdy" class="form-control">                      
+                          </div>                         
+                       </div>
+                        
+                       <br>
+                       <div class="table-responsive p-0" style="height: 270px;">
+                         <table id="oplisttable" class="table table-dark danger">
+                           <thead style="text-align:center;font-size:12px;">
+                             <tr>                          
+                               <th>OPId</th>                               
+                               <th>RegDate</th>
+                               <th>Name</th>
+                               <th>Address</th>                               
+                               <th>Gender</th>
+                               <th>DOB</th>
+                               <th>Age</th>
+                               <th>Mobile</th>  
+                               </tr>
+                           </thead>
+                           <tbody id="oplistbody" style="font-size:12px;" > 
+                            {% for user in pdltfetch %} 
+                            <tr  id="user-{{user.id}}"> 
+                              <td align="center" style="width:100px" class="userData" >{{user.id}}</td>                                 
+                              <td align="center" style="width:250px" name="peropid" class="userData userperopid" >{{user.peropid}}</td> 
+                              <td align="center" style="width:250px" name="regdr" class="userData userregdr" >{{user.regdr}}</td> 
+                              <td align="center" style="width:250px" name="name" class="userData username" >{{user.name}}</td> 
+                              <td align="center" style="width:250px" name="addrs" class="userData useraddrs" >{{user.addrs}}</td> 
+                              <td align="center" style="width:250px" name="gender" class="userData gender" >{{user.gender}}</td> 
+                              <td align="center" style="width:250px" name="dob" class="userData userdob" >{{user.dob}}</td>                              
+                              <td align="center" style="width:250px" name="age" class="userData age" >{{user.age}}</td> 
+                              <td align="center" style="width:250px" name="mobileno" class="userData usermobileno" >{{user.mobileno}}</td> 
+                            </tr>
+                            {% endfor %}                 
+                           </tbody>
+                         </table>
+                     </div> 
+                     </div>
+                   </div>
+                      </div>
+            </div>
+            </div>
+</section>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+function searchopno() {
+  var serchdtl = $('input[name="serchdtl"]').val()  //console.log(serchdtl)
+  var enval = $('input[name="enval"]').val() // console.log(fromdt); 
+  $.ajax({
+      url: '{% url "searchopno" %}',
+      type: 'get',
+      data: {
+        'serchdtl'  : serchdtl,
+        'enval'     : enval, 
+    },
+      dataType: 'json',       
+      success: function(data) {
+        if(data.user){           
+          appendToUserTabel(data.user);  //console.log(data.user)
+        } 
+      CountRows1();
+    } 
+  });
+};
+
+function appendToUserTabel(user) {  //  console.log(user)  
+  $("#oplistbody").empty();
+  for (i=0; i<user.length; i++) {
+    data2=user[i]; // console.log(data2);//console.log(data2.peropno);  
+    $("#oplisttable > tbody:last-child").append(`
+    <tr id="user-${user[i].pk}">      
+    <td  align="center" style="width:250px"  name="peropid" class="userData userperopid">${data2.peropid}</td>
+    <td  align="center" style="width:100px"  name="regdr" class="userData userregdr">${data2.regdr}</td>
+    <td  align="center" style="width:250px"  name="name" class="userData username">${data2.name}</td>
+    <td  align="center" style="width:100px"  name="addrs" class="userData useraddrs">${data2.addrs}</td>      
+    <td  align="center" style="width:100px"  name="gender" class="userData usergender">${data2.gender}</td>
+    <td  align="center" style="width:250px"  name="dob" class="userData userdob">${data2.dob}</td>
+    <td  align="center" style="width:100px"  name="age" class="userData userage">${data2.age}</td>
+    <td  align="center" style="width:250px"  name="mobileno" class="userData usermobileno">${data2.mobileno}</td>
+    </tr>   
+   `);   
+  }       
+}
+
+function CountRows1() {
+  var rowCount1 = $('#oplistbody tr').length;
+  document.getElementById("countbdy").value=rowCount1;
+}
+
+</script> 
+
+{% endblock javascript%}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

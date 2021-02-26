@@ -1,0 +1,735 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  .overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;    
+    /*transition: opacity 500ms;*/
+    visibility: hidden;
+    opacity: -1;
+  }
+  .overlay:target {
+    visibility: visible;
+    opacity: 1;
+  }
+  .popup {
+    margin: 70px auto;
+    padding: 20px;
+    background: rgb(201, 198, 198);
+    border-radius: 5px;
+    width: 50%;
+    position: relative;
+    transition: all 2s ease-in-out;
+  }
+  .popup .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    transition: all 200ms;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+  }
+  .popup .content {
+    max-height: 50%;
+    /*overflow: auto;*/
+  }  
+  .taln{
+    padding-left: 13px;
+  }
+
+  /* .ul,
+.li {
+  list-style-type:disc;
+} */
+ /* .ul .li {
+  margin: 10px 30px;
+} */
+
+/* .ul .li:last-child {
+  margin: 20px 0 25px 0;
+} */
+/*==========================requirements style============================*/
+.invalid {
+  color: #848482;
+  transition: all 0.1s ease-in;
+}
+.invalid:before {
+  content: "";
+  padding-right: 15px;
+}
+.invalidPass {
+  background: rgba(192, 57, 43, 0.85);
+}
+.valid {
+  color: #3cbc3c;
+  transition: all 0.2s ease-in;
+  animation-name: grow;
+  animation-duration: 0.2s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+}
+.valid strong {
+  text-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1), 5px 10px 5px rgba(0, 0, 0, 0.05),
+    -5px 10px 5px rgba(0, 0, 0, 0.05);
+}
+
+.valid::before {
+  content: "\2713 ";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  left: -5px;
+  position: relative;
+  font-weight: 800;
+  animation-name: grow;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  -webkit-transition: -webkit-transform 1200ms cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 100ms ease-out;
+  -moz-transition: -moz-transform 1200ms cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 100ms ease-out;
+  -ms-transition: -ms-transform 1200ms cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 100ms ease-out;
+  -o-transition: -o-transform 1200ms cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 100ms ease-out;
+  transition: transform 1200ms cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 100ms ease-out;
+  -webkit-transform: scale(1.3);
+  -moz-transform: scale(1.3);
+  -ms-transform: scale(1.3);
+  -o-transform: scale(1.3);
+  transform: scale(1.3); 
+}
+
+.pswd_info .ul {
+  margin: 0 auto;
+  width: 250px;
+}
+
+.pswd_info .li {
+  padding: 5px;
+  text-align: left;
+  -webkit-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
+  -moz-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
+  -ms-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
+  -o-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 0.2s ease-in;
+}
+
+/*==========================requirements logic============================*/
+
+.pswd_info {
+  display: none;
+  padding: 10px 5px;
+  margin-top: 5px;
+  text-align: right;
+  font-family: helvetica, arial, sans-serif;
+  position: relative;
+  text-align: center;
+  margin: 1em auto;
+  width: 400px;
+  /*transition: all .2s ease-in;*/
+}
+#email {    
+    padding: 5px;
+    font-size: 1em;   
+    border: 1px solid #c0c0c0;
+}
+
+#email:focus {outline-style: none;}
+</style>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <h3>Employees</h3>
+      </div><!-- /.container-fluid -->
+    </section>
+  
+    <!-- Main content -->
+    <section class="content">
+     <div class="row" >
+    <div class="col-md-12">
+              <div class="card card-primary card-tabs">
+                <div class="card-header p-0 pt-1">
+                  <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" id="custom-tabs-one-add-tab" data-toggle="pill" href="#custom-tabs-one-add" role="tab" aria-controls="custom-tabs-one-add" aria-selected="true">Add New</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="custom-tabs-one-view-tab" data-toggle="pill" href="#custom-tabs-one-view" role="tab" aria-controls="custom-tabs-one-view" aria-selected="true">Update</a>
+                    </li>                   
+                  </ul>
+                </div>
+                <div class="card-body">
+                <div class="tab-content" id="custom-tabs-one-tabContent">
+
+                <div class="tab-pane fade show active" id="custom-tabs-one-add" role="tabpanel" aria-labelledby="custom-tabs-one-add-tab">                  
+                <form id="saveuserlogin" enctype="multipart/form-data">
+                  {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-12">
+                      <div class="row">                       
+                          <div class="col-12 col-md-3 col-sm-6 col-lg-3">  
+                            <div class="form-group">
+                              <label>Employee Code:</label> 
+                              <input type="text"  class="form-control" id="empcode" name="empcode" value="{{newempcd}}" required>
+                              </div> 
+                              <div class="row">    
+                             <div class="col-md-6 col-sm-6 col-12 col-lg-6">                                                                 
+                            <div class="form-group">
+                            <label>DOB:</label> 
+                            <input class="form-control" type="date" name="dob" id="dob" onchange="empdobcal()" required>                           
+                            </div>
+                              </div> 
+                              <div class="col-md-6 col-sm-6 col-12 col-lg-6"> 
+                              <div class="form-group">
+                              <label>Age:</label> 
+                              <input class="form-control" type="text" name="age" id="age" required> 
+                              </div>                  
+                              </div>
+                              </div>    
+                              <div class="form-group">
+                                  <label>Address:</label> 
+                                  <textarea class="form-control" type="text" name="address" id="address" required></textarea>                              
+                              </div>                      
+                          </div>                        
+                    <div class="col-12 col-md-3 col-sm-6 col-lg-3">  
+                      <div class="form-group">
+                        <label>Username:</label> 
+                        <input type="text"  class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                          <label>MobileNo:</label> 
+                          <input class="form-control" type="text" name="mblno" id="mblno" required>                      
+                          </div>    
+                          <div class="form-group">
+                            <label>Password:</label> 
+                            <input class="form-control" type="password" name="pwd" id="pwd"  title="Must contain at least one number and  lowercase letter, 
+                            and at least 8 or more characters" required>                  
+                          </div>
+                          <div class="pswd_info">    
+                            <ul>
+                              <li style="display:none;" id='letter' class='invalid'>Contains <strong>a lowercase letter</strong></li>
+                          
+                              <li id='capital' class='invalid'>Contains <strong>a capital letter</strong></li>
+                          
+                              <li id='number' class='invalid'>Contains <strong>a number</strong></li>		 
+                          
+                              <li id='length' class='invalid'>Contains <strong>8 characters</strong></li>
+                      
+                              <li id='special' class='invalid'>a special character</li>
+                            </ul>
+                        </div>  
+                    </div>
+                    <div class="col-12 col-md-3 col-sm-6 col-lg-3">
+                      <div class="row">    
+                        <div class="col-md-6 col-sm-6 col-12 col-lg-6">   
+                      <div class="form-group">
+                        <label>Gender:</label> 
+                        <select class="form-control" type="select" name="gender" id="gender" required>  
+                        <option selected>select</option>                    
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option></select>
+                        </div> 
+                      </div> 
+                      <div class="col-md-6 col-sm-6 col-12 col-lg-6"> 
+                        <div class="form-group">
+                          <label>Blood:</label>                                           
+                          <select class="form-control" type="select" name="bldgrp" id="bldgrp" required>  
+                            <option selected>select</option>                    
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option></select>
+                          </div>
+                          </div>
+                          </div>
+                        <div class="form-group">
+                          <label>Role:</label> 
+                          <input list="demo2"  class="form-control"id="role" name="role" required>
+                          <datalist id="demo2">
+                          {% for user in rolelist %} 
+                          <option value="{{user.role}}">{{user.role}}</option>
+                          {% endfor %} 
+                          </datalist>                         
+                        </div>
+                          <div class="form-group"> 
+                            <label>Profile Picture:</label> 
+                            <input type="file" id="prfpic" name="prfpic" required>                         
+                           </div>                       
+                      </div>   
+                      <div class="col-12 col-md-3 col-sm-6 col-lg-3">  
+                        <div class="form-group">
+                          <label>Email-id:</label> 
+                          <input type="text"  class="form-control" id="email" name="email" required>
+                          </div>
+                          <div class="form-group">
+                            <label>Qualification:</label> 
+                            <input class="form-control" type="text" name="qulifi" id="qulifi" required>                  
+                            </div> 
+                            <div class="form-group">
+                              <label>Date_join:</label> <br>
+                              <input  type="date" onload="getDate()"  class="form-control" id="date1" name="date1" required>                         
+                              </div> 
+                     
+                              <div class="form-group">
+                                <label>Status:</label> 
+                                     <input type="checkbox" name="active" id="active" value="True">
+                                     <label>Active</label>&nbsp;&nbsp;&nbsp;
+                              <button type="submit"  class="btn-sml btn btn-success"><b> Save </b></button> 
+                         </div>  
+                         </div>
+                        </div>                    
+                </div>
+              </div> 
+                </form>
+                </div> 
+
+                 <div class="tab-pane fade" id="custom-tabs-one-view" role="tabpanel" aria-labelledby="custom-tabs-one-view-tab">                
+                 <div class="row">
+                    <div class="col-md-12">
+                        <!-- <div class="card card-default">    -->
+                            <!-- <div class="card-body"> -->
+                               <div class="row form-group">
+                                 <div class="col-md-5">
+                                    <!-- <label>Search</label> -->
+                                    <input id="myInput" type="text" class="form-control" placeholder="Search...">
+                                 </div>
+                               </div>  
+                               <hr/>                              
+                               <div class="table-responsive p-0" style="height: 270px;">
+                                 <table id="viewtbl" class="table table-dark danger">
+                                   <thead style="text-align:center;font-size:12px;">
+                                     <tr>                          
+                                       <th>Id</th>                               
+                                       <th>Name</th>
+                                       <th>Empcode</th>
+                                       <th>Email</th>
+                                       <th>DOB</th>
+                                       <th>Age</th>
+                                       <th>Gender</th>
+                                       <th>BloodGroup</th>   
+                                       <th>MobileNo</th>                                      
+                                       <th>Address</th>
+                                       <th>Qual</th>
+                                       <th>Role</th>
+                                       <th>Date_join</th>
+                                       <th>Profile</th>
+                                       <th style="display:none">Oldpic</th>        
+                                       <th>Status</th>                                               
+                                       <th>Permission</th>
+                                       <th>Action</th>
+                                       </tr>
+                                   </thead>
+                                   <tbody id="viewbdy" style="font-size:12px;">  
+                                    {% for user in prfpic %}
+                                    <tr  id="user-{{user.id}}"> 
+                                      <td align="center"  class="userData id1"  name="id1">{{user.id}}</td>                                 
+                                      <td align="center"  name="name1" class="userData name1">{{user.username}}</td> 
+                                      <td align="center"  name="email1" class="userData email1">{{user.email}}</td> 
+                                      <td align="center"  name="empcode1" class="userData empcode1">{{user.empcode}}</td> 
+                                      <td align="center"  name="dob1" class="userData dob1">{{user.dob | date:"d-m-Y"}}</td> 
+                                      <td align="center"  name="age1" class="userData age1">{{user.age}}</td>      
+                                      <td align="center"  name="gender1" class="userData gender1">{{user.gender}}</td>  
+                                      <td align="center"  name="bloodgroup1" class="userData bloodgroup1">{{user.bloodgroup}}</td>                          
+                                      <td align="center"  name="mblno1" class="userData mblno1">{{user.mobileno}}</td>                              
+                                      <td align="center"  name="address1" class="userData address1">{{user.address}}</td>                                                
+                                      <td align="center"  name="qulifi1" class="userData qulifi1">{{user.qualification}}</td>                              
+                                      <td align="center"  name="role1" class="userData role1">{{user.role}}</td>  
+                                      <td align="center"  name="date_join" class="userData date_join">{{user.date_join | date:"d-m-Y" }}</td>                         
+                                      <td align="center"><img src="{{ user.profile.url }}" name="profile1" class="userData profile1 img-responsive" style="width:30px;height:30px; border-radius: 50%; "/></td>
+                                      <td style="display:none" name="oldprfpic1" class="userData oldprfpic1">{{ user.profile.name }}</td>                                      
+                                      <td align="center"  name="active1" class="userData active1">{{user.status}}</td>  
+                                      <td align="center"><button type="button" onClick="employeepermission({{user.id}})" id="employeepermission" class="btn btn-default" data-toggle="modal" data-target="#modal-lg"><i class="fas fa-key" style="color:rgb(8, 202, 8)"></i></button></td>   
+                                      <td align="center"><button type="button"   onClick="edituserlog({{user.id}})" id="edituserlog"  class="btn btn-default-sm" data-toggle="modal" data-target="#modal-default5"><i class="fas fa-edit" style="color:rgb(50, 141, 226)"></i></button>&nbsp;&nbsp;/&nbsp;&nbsp;                                        
+                                      <button type="button" onClick="deleteuser({{user.id}})"  id="deleteuser"  class="btn btn-default-sm"><i class="fas fa-trash-alt" style="color:red"></i></button></td>                                                                   
+                                    </tr>
+                                    {% endfor %} 
+                                   </tbody>
+                                 </table>
+                             </div>     
+                             <div class="modal fade" id="modal-default5">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <form id="updateuserlogin" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                  <div class="modal-header">
+                                    <h4 class="modal-title">Update User</h4>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">                                    
+                                    <div class="row">
+                                      <div class="col-md-12">
+                                          <div class="row">
+                                            <div class="col-md-6">                                                                
+                                              <div class="form-group-sm">
+                                              <label>Name:</label>                                              
+                                              <input type="text"  class="form-control" id="form-name1" name="name1" readonly><br>
+                                              </div>
+                                              </div>
+                                            <div class="col-md-6">                                                                
+                                              <div class="form-group-sm">
+                                              <label>Empcode:</label> 
+                                              <input type="hidden"  class="form-control" id="form-id1" name="id1">
+                                              <input type="text"  class="form-control" id="form-empcode1" name="empcode1"><br>
+                                              </div>
+                                              </div>                                          
+                                                                                                     
+                                          </div>
+                                      </div> 
+                                      <div class="col-md-12">
+                                        <div class="row">                   
+                                            <div class="col-md-3">                                                                
+                                              <div class="form-group">
+                                              <label>Gender:</label> 
+                                              <input class="form-control" type="text" name="gender1" id="form-gender1" ><br>                      
+                                              </div>
+                                              </div>  
+                                              <div class="col-md-3">       
+                                              <div class="form-group">
+                                                <label>Blood:</label>                                           
+                                                <select class="form-control" type="select" name="bloodgroup1" id="form-bloodgroup1">  
+                                                  <option selected>select</option>                    
+                                                  <option value="A+">A+</option>
+                                                  <option value="A-">A-</option>
+                                                  <option value="B+">B+</option>
+                                                  <option value="B-">B-</option>
+                                                  <option value="O+">O+</option>
+                                                  <option value="O-">O-</option>
+                                                  <option value="AB+">AB+</option>
+                                                  <option value="AB-">AB-</option></select>
+                                               </div>
+                                               </div>
+                                              <div class="col-md-6">                                                                
+                                                <div class="form-group">
+                                                <label>MobileNo:</label> 
+                                                <input class="form-control" type="text" name="mblno1" id="form-mblno1" ><br>                      
+                                                </div>
+                                                </div>                                                         
+                                        </div>
+                                    </div> 
+                                      <div class="col-md-12">
+                                          <div class="row"> 
+                                            <div class="col-md-4">                                                                
+                                              <div class="form-group-sm">
+                                              <label>DOB:</label>            
+                                              <input class="form-control" type="text" name="dob1" id="form-dob1" readonly><br>                                                                                 
+                                              </div>
+                                            </div>  
+                                            <div class="col-md-2">                                                                
+                                              <div class="form-group-sm">
+                                              <label>Age:</label> 
+                                              <input class="form-control" type="text" name="age1" id="form-age1" ><br>                      
+                                              </div>
+                                              </div> 
+                                              <div class="col-md-6">                                                                
+                                                <div class="form-group">
+                                                <label>Edit DOB:</label> 
+                                                <input class="form-control" type="date" onchange="empdobcal1()" id="date2" name="date2"><br>                           
+                                                </div>
+                                                </div> 
+                                                                     
+                                         </div>
+                                      </div>
+                                      <div class="col-md-12">
+                                        <div class="row">
+                                          <div class="col-md-6">                                                                
+                                            <div class="form-group">
+                                              <label>Email:</label> 
+                                              <input class="form-control" type="text" name="email1" id="form-email1" readonly><br>                      
+                                              </div>
+                                          </div>
+                                          <div class="col-md-6">                                                                
+                                            <div class="form-group">
+                                            <label>Qualification:</label> 
+                                            <input class="form-control" type="text" name="qulifi1" id="form-qulifi1" ><br>                           
+                                            </div>
+                                          </div>                                                                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="row"> 
+                                          <div class="col-md-6"> 
+                                            <div class="file-field big">&nbsp;&nbsp;  
+                                            <label>Role:</label> 
+                                            <input list="demo1"  class="form-control" id="form-role1" name="role1" >
+                                            <datalist id="demo1">
+                                            {% for user in rolelist %} 
+                                            <option value="{{user.role}}">{{user.role}}</option>
+                                            {% endfor %} 
+                                            </datalist>                    
+                                            </div>
+                                          </div>
+                                          <div class="col-md-6">                                                                
+                                            <div class="form-group">
+                                            <label>Address:</label> 
+                                            <input class="form-control" type="text" name="address1" id="form-address1" ><br>                                           
+                                            </div>
+                                            </div>                               
+                                         </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                      <div class="row">
+                                        <div class="col-md-6"> 
+                                          <div class="file-field big">&nbsp;&nbsp;  
+                                          <input  type="hidden" id="form-oldprfpic1" name="oldprfpic1"><br>   
+                                          <input type="file" id="form-prfpic1" name="prfpic1"><br>                           
+                                          </div>
+                                        </div><br>    
+                                          <div class="col-md-6">                                                                
+                                           <div class="form-group">
+                                           <label>Status:</label> <br>
+                                           <label>Active</label>&nbsp;&nbsp;<input type="checkbox"  name="active1" id="form-active1" value="False"> 
+                                           </div>
+                                          </div>                                                                                
+                                      </div>
+                                  </div>
+                                  </div>                                  
+                                  </div>
+                                  <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary" id="updateuserlog" required>Update</button>
+                                  </div>
+                                </form>
+                                </div>            
+                              </div>          
+                            </div> 
+
+                            <div class="modal fade" id="modal-lg">
+                              <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                  <form id="emppermission" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                  <div class="modal-header" style="background-color: rgb(224, 224, 224);">
+                                    <h4 class="modal-title" style="color:rgb(197, 10, 25);">Permission Settings</h4>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                  <div class="row">
+
+                                  <div class="col-12 col-md-4 col-sm-12">
+                                        <div class="form-group">
+                                          <label style="font-size: large;font-weight: 1000;"><ul>Admin</ul></label><br>
+                                          <input type="hidden" id="id1" name="id1"/>                                          
+                                          <input type="checkbox" id="dashbord" class="cutomck" name="dashbord" value="Can link Dashboard"/>                                         
+                                          <label class="taln">Dashbord</label>          
+                                          </div>
+                                          <div class="form-group">
+                                          <input type="checkbox" id="profile" name="profile" class="cutomck" value="Can link profile"/> 
+                                          <label label class="taln">Profile</label>
+                                          </div>
+                                          <div class="form-group">
+                                            <input type="checkbox" id="addemp" name="addemp" class="cutomck" value="Can link Addemployee"/> 
+                                            <label label class="taln">Add Employee</label>
+                                            </div>
+                                          <div class="form-group">                                       
+                                          <label style="font-size: large;font-weight: 1000;"><ul>OutPatient</ul></label><br>
+                                          <input type="checkbox" id="tokengen" name="tokengen" class="cutomck" value="Can link Checkupinfo"/>
+                                          <label label class="taln">Tokengen</label>                      
+                                          </div>
+                                          <div class="form-group">
+                                          <input type="checkbox" id="searchid" name="searchid" class="cutomck" value="Can link Searchip"/>   
+                                          <label label class="taln">Search-Id</label>
+                                          </div>
+                                          <div class="form-group">
+                                          <input type="checkbox" id="updateform" name="updateform" class="cutomck" value="Can link Updateform"/>   
+                                          <label label class="taln">UpdateForm</label>
+                                          </div>
+                                          <div class="form-group">
+                                          <input type="checkbox" id="emgchange" name="emgchange" class="cutomck" value="Can link Emergencychange"/>   
+                                          <label label class="taln">Emergency Change</label>
+                                          </div>
+                                          <div class="form-group">
+                                          <input type="checkbox" id="updatestatus" name="updatestatus"  class="cutomck" value="Can link Updatestatus"/>   
+                                          <label label class="taln">Update Status</label>
+                                          </div>
+                                          <div class="form-group">
+                                          <input type="checkbox" id="pvisitstatus" name="pvisitstatus"  class="cutomck" value="Can link Patientvisitingstatus" />   
+                                          <label label class="taln">Patient visiting Status</label>
+                                          </div> 
+                                          <div class="form-group">
+                                            <input type="checkbox" id="monitor" name="monitor" class="cutomck" value="Can link patinetdetails"/>   
+                                          <label label class="taln">Doctor Monitor</label>
+                                          </div>                                                                                    
+                                  </div>
+
+                                  <div class="col-12 col-md-4 col-sm-12">   
+                                    <div class="form-group">
+                                      <label style="font-size: large;font-weight: 1000;"><ul>Report</ul></label><br>
+                                      <input type="checkbox" id="dlyreport" name="dlyreport" class="cutomck" value="Can link Dailyreport"/>                      
+                                      <label label class="taln">Daily Report</label>
+                                      </div> 
+                                      <div class="form-group">
+                                        <input type="checkbox" id="tokreport" name="tokreport"class="cutomck" value="Can link Tokenstatusreport"/>
+                                      <label label class="taln">TokenStatus Report</label>
+                                      </div>                                                                 
+                                        <div class="form-group">                                       
+                                          <label style="font-size: large;font-weight: 1000;"><ul>InPatient</ul></label><br>
+                                          <input type="checkbox" id="newadmission" name="newadmission" class="cutomck" value="Can link Newadmission" />
+                                          <label label class="taln">New Admission</label>
+                                          </div>
+                                          
+                                          <div class="form-group"> 
+                                        <input type="checkbox" id="ipdlyreport" name="ipdlyreport" class="cutomck" value="Can link Ipdailyreport"/>
+                                      <label label class="taln">IP Daily Report</label>
+                                      </div>
+                                      <div class="form-group">
+                                        <input type="checkbox" id="patientmonitor" name="patientmonitor" class="cutomck" value="Can link Patientmonitor" />
+                                      <label label class="taln">Patient Monitor</label>
+                                      </div>
+                                      <div class="form-group">   
+                                      <label style="font-size: large;font-weight: 1000;"><ul>Appointment</ul></label><br>
+                                      <input type="checkbox" id="appoinentry" name="appoinentry" class="cutomck" value="Can link Appointmententry"/>                      
+                                      <label label class="taln">Appointment Entry</label>
+                                      </div> 
+                                      <div class="form-group">
+                                        <input type="checkbox" id="appoinreport" name="appoinreport" class="cutomck" value="Can link Appointmentreport"/>
+                                      <label label class="taln">Appointment Report</label>
+                                      </div>
+                                  </div>
+
+                                  <div class="col-12 col-md-4 col-sm-12">                                    
+                                    <div class="form-group">
+                                      <label style="font-size: large;font-weight: 1000;"><ul>Settings</ul></label><br>
+                                      <input type="checkbox" id="complaints" name="complaints" class="cutomck" value="Can link complaintform"/>                      
+                                      <label label class="taln">Complaints</label>
+                                      </div> 
+                                      <div class="form-group">
+                                        <input type="checkbox" id="tokensettings" name="tokensettings" class="cutomck" value="Can link tokenset"/>
+                                      <label label class="taln">Token Settings</label>
+                                      </div>
+                                      <div class="form-group">
+                                        <input type="checkbox" id="diagsettings" name="diagsettings"  class="cutomck" value="Can link Diagnosisform"/>
+                                      <label label class="taln">Diagnosis Settings</label>
+                                      </div>
+                                      <div class="form-group">
+                                        <input type="checkbox" id="tokendisease" name="tokendisease" class="cutomck" value="Can link tokendiagonsisform"/>
+                                      <label label class="taln">Token Disease</label>
+                                      </div>                                                        
+                                        
+                                        <div class="form-group">
+                                          <label style="font-size: large;font-weight: 1000;"><ul>Doctor</ul></label><br>
+                                          <input type="checkbox" id="searchpatient" name="searchpatient" class="cutomck" value="Can link Searchopno"/>                      
+                                          <label label class="taln">Search Patient</label>
+                                          </div> 
+                                          <div class="form-group">
+                                            <input type="checkbox" id="levset" name="levset" class="cutomck" value="Can link Doctorleavesetting"/>
+                                          <label label class="taln">Leave Settings</label>
+                                          </div>
+                                          <div class="form-group">
+                                            <input type="checkbox" id="emphelp" name="emphelp"/>
+                                          <label label class="taln">Help</label>
+                                          </div>                                         
+                                  </div>
+                                  </div>
+                                  
+                                  <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" style="background-color: gray;color:white">Close</button>
+                                    <button type="button" class="btn btn-primary" id="empsavepermission">Update</button>
+                                  </div>
+                                </div>
+                                </form>            
+                              </div>          
+                            </div>        
+                             </div>
+                           <!-- </div> -->
+                    <!-- </div> -->
+                 </div>                
+                 </div>
+            
+                </div>            
+                </div>       
+            </div>    
+    </div>
+      </div>
+   
+    </section>
+</div>
+  {% endblock %}
+  {% block javascript %}
+  <script>
+    var password = [];
+
+$(document).ready(function () {
+  password = $("#pwd");
+ 
+  var ruleValidator = function () {
+    var pswd = $(this).val();
+    //gets what is being input in the field and sets as variable
+
+    if (pswd.length < 8) {
+      $("#length").removeClass("valid").addClass("invalid");
+    } else {
+      $("#length").removeClass("invalid").addClass("valid");//   console.log("length " + pswd.length);
+    }
+
+    // letter
+    if (pswd.match(/[a-z]/)) {
+      $("#letter").removeClass("invalid").addClass("valid");
+    } else {
+      $("#letter").removeClass("valid").addClass("invalid");
+    }
+
+    // Capital
+    if (pswd.match(/[A-Z]/)) {
+      $("#capital").removeClass("invalid").addClass("valid");
+    } else {
+      $("#capital").removeClass("valid").addClass("invalid");
+    }
+
+    // number
+    if (pswd.match(/\d/)) {
+      $("#number").removeClass("invalid").addClass("valid");
+    } else {
+      $("#number").removeClass("valid").addClass("invalid");
+    }
+
+    // character
+    if (pswd.match(/[$&+,:;=?@#|'<>.^*()%!-]/)) {
+      $("#special").removeClass("invalid").addClass("valid");// console.log("log: " + pswd);
+    } else {
+      $("#special").removeClass("valid").addClass("invalid");
+    }
+  };
+
+  password.focus(function () {
+    // (triggers whenever the password field is selected by the user)
+    $(".pswd_info").fadeIn("low");
+  });
+  password.blur(function () {
+    // (triggers whenever the password field is unselected)
+    $(".pswd_info").fadeOut("low");
+  });
+
+  password.keyup(ruleValidator);
+});
+
+var validateEmail = function(elementValue) {
+    var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(elementValue);
+}
+$('#email').keyup(function() {
+    var value = $(this).val();
+    var valid = validateEmail(value);
+    if (!valid) {
+        $(this).css('color', 'red');
+    } else {
+        $(this).css('color', '#000');
+    }
+});
+  </script>
+ <script src="{% static 'dist/js/pages/userlogin.js' %}"></script>
+{% endblock javascript%}

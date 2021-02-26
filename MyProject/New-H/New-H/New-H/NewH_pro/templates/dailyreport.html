@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div id="getdocdt" style="padding: 4px;">
+          <div class="row form-group">
+        <div class="col-md-4">
+        <h3>Daily Report</h3>
+        </div>
+        <div class="col-md-4" style="text-align:right">
+          <label style="text-align:right">Date:&nbsp;<label name="cdt" id="cdtid"></label></label> 
+           </div>
+        <div class="col-md-4" style="text-align:right">
+        <label>Consult:&nbsp;<label name="doctorname" id="doctorid"></label></label>
+       </div>
+      </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    <div class="printarea" style="height: 0px;width:0px;overflow:hidden;"></div>
+    <!-- Main content -->
+<section class="content">
+      <!-- Default box -->    
+      <div class="card" style="height:75%;">
+       <div class="card-body" style="height:80%;width:100%;">
+            <div class="row" >
+              <div class="col-md-12">
+                <!-- <div class="card card-default">    -->
+                    <!-- <div class="card-body"> -->
+                       <div class="row form-group">
+                         <div class="col-md-4">
+                            <label style="text-align:center;font-size:14px;">Dr.Name</label>
+                            <input list="demo5" name="docname" id="docname" class="form-control" required/>
+                            <datalist name="drtoken" id="demo5">
+                            {% for user in docname %} 
+                            <option value="{{user.drname}}">{{user.drname}}</option>
+                            {% endfor %}                                                                                                       
+                            </datalist>
+                         </div>
+                        
+                         <div class="col-md-2">                                        
+                            <label>From</label>
+                            <input type="date" class="form-control" name="fromdt" id="fromdt" required/>                           
+                         </div>
+                         <div class="col-md-2">                                        
+                            <label>To</label>
+                            <input type="date" class="form-control" name="todt" id="todt" required/>
+                         </div>  
+                         <div class="col-3 col-md-1">
+                          <label>&nbsp;</label><br>
+                          <button type="submit" class="btn btn-success  btn-sml" id="searchop"><i class="fas fa-search"></i></button> 
+                       </div>  
+                       <div class="col-3 col-md-1">  
+                        <label>&nbsp;</label><br>                        
+                        <button type="submit" id="dailyprint" class="btn btn-primary btn-sml"><i class="fas fa-print"></i></button> 
+                     </div> 
+                     <div class="col-3 col-md-1"> 
+                      <label>&nbsp;</label><br>         
+                      <button type="button" id="prtdeatil" class="btn btn-info btn-sml"> <img src="{% static 'dist/img/pd.gif' %}" alter=" Logo" style="width:20px;"></button> 
+                   </div>
+                     <div class="col-3 col-md-1">   
+                      <label>&nbsp;</label><br>                       
+                      <button type="button" id="reset"  class="btn btn-secondary btn-sml"><i class="fas fa-registered"></i></button>
+                     </div>                
+                       </div>
+                       <hr/>
+                      <!-- </div> -->
+
+                       <div class="table-responsive p-0" style="height:270px;">
+                         <table id="oplisttable" class="table table-dark danger">
+                           <thead style="text-align:center;font-size:12px;">
+                             <tr>                          
+                               <th style="display:none">id</th>  
+                               <th>S.NO</th>                             
+                               <th>OPId</th>
+                               <th>Tokenno</th>
+                               <th>Date</th>                               
+                               <th>Consult</th>
+                               <th>Name</th>
+                               <th>Amount</th>                               
+                               <th>Status</th>
+                               <th>Type</th>
+                               <th>CStatus</th>
+                               <th>Mobileno</th>                              
+                               <th>Disease</th>
+                               </tr>
+                           </thead>
+                           <tbody id="oplistbody" style="font-size:12px;" >
+                            {% for user in pdltfetch %} 
+                            <tr  id="user-{{user.id}}"> 
+                              <td align="center" style="width:100px;display:none;" class="userData" >{{user.id}}</td>                                 
+                              <td align="center" style="width:250px" name="peropno" class="userData userperopno" >{{user.peropno}}</td> 
+                              <td align="center" style="width:250px" name="tokenno" class="userData usertokenno" >{{user.tokenno}}</td> 
+                              <td align="center" style="width:250px" name="date" class="userData userdate" >{{user.date}}</td> 
+                              <td align="center" style="width:250px" name="consult" class="userData userconsult" >{{user.consult}}</td> 
+                              <td align="center" style="width:250px" name="opname" class="userData username" >{{user.name}}</td> 
+                              <td align="center" style="width:250px" name="amount" class="userData useramount" >{{user.amount}}</td> 
+                              <td align="center" style="width:250px" name="status" class="userData userstatus" >{{user.status}}</td> 
+                              <td align="center" style="width:250px" name="ctype" class="userData userctype" >{{user.ctype}}</td> 
+                              <td align="center" style="width:250px" name="cstatus" class="userData usercstatus" >{{user.cstatus}}</td> 
+                              <td align="center" style="width:250px" name="cstatus" class="userData usercstatus" >{{user.cstatus}}</td> 
+                              <td align="center" style="width:250px" name="mobileno" class="userData usermobileno" >{{user.mobileno}}</td> 
+                              <td align="center" style="width:250px" name="diagnosis" class="userData userdiagnosis" >{{user.diagnosis}}</td> 
+                            </tr>
+                            {% endfor %}                                                                           
+                           </tbody>
+                         </table>
+                     </div><br>
+                     <div class="row form-group" style="padding:2px;">
+                        <div class="col-md-3">
+                           <label style="text-align:center;font-size:14px;">Total Amount</label>
+                           <input type="text" id="totamt"  class="form-control" value="0" readonly> 
+                        </div>
+                        <div class="col-md-3">                                        
+                           <label style="text-align:center;font-size:14px;">Total OP</label>
+                           <input type="text" id="oplist" name="oplist" class="form-control" value="0" readonly>
+                        </div>
+                        <div class="col-md-3">                                        
+                           <label style="text-align:center;font-size:14px;">Cancelled OP</label>
+                           <input type="text"  id="cancelop"  name="cancelop" class="form-control" value="0" readonly>
+                        </div>
+                        <div class="col-md-3">                                        
+                            <label style="text-align:center;font-size:14px;">Cancelled OP Amt</label>
+                            <input type="text"  id="cancelamt" name="cancelamt" class="form-control" value="0" readonly>
+                         </div>
+                      </div> 
+                      
+                     <!-- </div> -->
+                   </div>
+                  </div>
+                  </div>
+      </div>
+</section>
+</div>
+
+{% endblock %}
+{% block javascript %}
+<script>
+  myDate = new Date().toLocaleDateString();//console.log(myDate)
+  $('#cdtid').text(myDate);
+  //document.getElementById("cdtid").value=myDate;
+  
+$("#searchop").click(function(){
+  var docname = $('input[name="docname"]').val()  //console.log(docname)
+  var fromdt = $('input[name="fromdt"]').val() //console.log(fromdt);
+  var todt = $('input[name="todt"]').val() //  console.log(todt);
+  if(docname!='' && fromdt!='' && todt!=''){
+      $.ajax({
+        url: '{% url "searchop" %}',
+        data: {
+          'docname'   : docname,
+          'fromdt'    : fromdt, 
+          'todt'      : todt,
+        },
+        dataType: 'json',
+        success: function (data) {         
+          if (data.user) { 
+            appendToUserTabel(data.user);      
+          }
+          if (data.docname) {  
+            var getdoname=data.docname;
+            $('#doctorid').text(getdoname);
+          }
+          if (data.drshrtlist2) {  
+            var countamt=data.drshrtlist2; 
+            document.getElementById("cancelamt").value=countamt;
+          }
+          if (data.drshrtlist1) {  
+            var countcanop=data.drshrtlist1;
+            document.getElementById("cancelop").value=countcanop;            
+          }          
+          if (data.drshrtlist4) {  
+            var countopamt=data.drshrtlist4;
+            document.getElementById("totamt").value=countopamt;
+          }
+        }       
+      });  
+    } else{ swal("Oh noes!", "Please enter all fields !", "error");  } 
+    
+    });
+
+function CountRows1() {    
+var rowCount1 = $('table#oplisttable tbody#oplistbody tr:last').index() + 1; //console.log(rowCount1)
+document.getElementById("oplist").value=rowCount1;  
+}  
+
+function appendToUserTabel(user) {  //console.log(user) 
+  var user=user; //user =JSON.parse(user);// console.log(user.length)
+    if(!this.snNo) this.snNo = 1;  
+    for (i=0; i<user.length; i++) {
+      data2=user[i];// console.log(data2);//console.log(data2.peropno);  
+      $("#oplisttable > tbody:last-child").append(`
+      <tr id="user-${user[i].pk}">  
+        <td  style="height:5px;" >${this.snNo}</td>
+      <td  align="center" style="width:100px;display:none;" class="userData" >${user[i].pk}</td>
+      <td  align="center" style="width:250px" class="userData userperopno"  name="peropno">${data2.peropno}</td>
+      <td  align="center" style="width:100px" class="userData usertokenno"  name="tokenno">${data2.tokenno}</td>
+      <td  align="center" style="width:250px" class="userData userdate"  name="date">${data2.date}</td>
+      <td  align="center" style="width:100px" class="userData userconsult"  name="consult">${data2.consult}</td>
+      <td  align="center" style="width:250px" class="userData useropname"  name="opname">${data2.name}</td>
+      <td  align="center" style="width:100px" class="userData useramount"  name="amount">${data2.amount}</td>
+      <td  align="center" style="width:250px" class="userData userstatus"  name="status">${data2.status}</td>
+      <td  align="center" style="width:100px" class="userData userctype"  name="ctype">${data2.ctype}</td>
+      <td  align="center" style="width:250px" class="userData usercstatus"  name="cstatus">${data2.cstatus}</td>
+      <td  align="center" style="width:100px" class="userData usermobileno"  name="mobileno">${data2.mobileno}</td>
+      <td  align="center" style="width:100px" class="userData userdiagnosis"  name="diagnosis">${data2.diagnosis}</td>
+      </tr>   
+     `)
+     this.snNo += 1;   
+    }   
+    CountRows1();    
+  }
+
+function printData() { 
+   newWin= window.open("");
+   newWin.document.write('<style>body {border-style: double;}</style>');    
+   var ToPrint=document.getElementById("getdocdt");//console.log(docPrint)      
+   newWin.document.write(ToPrint.outerHTML); 
+   var divToPrint=document.getElementById("oplisttable");
+   newWin.document.write('<style>table, td, th {border: 1px solid black;text-align: left;}table {border-collapse: collapse;width: 100%;}th, td {padding: 15px;}</style>');   
+   newWin.document.write(divToPrint.outerHTML);
+   newWin.print();
+   newWin.close();
+}
+
+$('#prtdeatil').on('click',function(){
+//if($.trim($("#oplistbody").val()) != "" ){
+printData();
+//}
+//else{ swal("Oh noes!", "Please enter all fields !", "error"); }
+})
+
+$(document).ready(function() { 
+  $("#reset").click(function() { 
+    document.getElementById("docname").value="";
+    document.getElementById("fromdt").value="";
+    document.getElementById("todt").value="";
+      $("#myForm").trigger("reset"); 
+      $("#oplistbody").empty();
+      //$("#d").get(0).reset(); 
+      //$("#myForm")[0].reset() 
+  }); 
+}); 
+
+$("#dailyprint").click(function(){
+  var docname = $('input[name="docname"]').val()  //console.log(docname)
+  var fromdt = $('input[name="fromdt"]').val() //console.log(fromdt);
+  var todt = $('input[name="todt"]').val() // console.log(todt);
+  if(docname!='' && fromdt!='' && todt!=''){
+  var sample= '/dailyreportprint/'+docname+'/'+fromdt+'/'+todt+'/' //console.log(sample)
+  $('<iframe>', {src: sample,id:'myFrame',frameborder:0,scrolling:'yes'}).appendTo('.printarea');                     
+  }
+  else{ swal("Oh noes!", "Please enter all fields !", "error");  }    
+ });
+
+ $("#reset").click(function(){
+  document.getElementById("docname").value = "";  
+  document.getElementById("fromdt").value = "";   
+  document.getElementById("todt").value = ""; 
+  document.getElementById("cancelop").value = ""; 
+  document.getElementById("cancelamt").value = "";  
+  document.getElementById("totamt").value = "";
+  document.getElementById("oplist").value = "";  
+  $("#oplistbody").empty();
+ });
+
+</script>
+{% endblock javascript%}

@@ -1,0 +1,277 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <h3>Patient Visiting Status</h3>
+    </div><!-- /.container-fluid -->
+  </section>
+ 
+  <div class="col-md-12">
+  <div class="row form-group">
+    <div class="col-md-4">
+        <label>Name:</label>
+        <input type="text" id="pname"   class="form-control" readonly>
+        </div> 
+        <div class="col-md-4">
+           <label for="cars">Age:</label>
+           <input type="text"  id="page" name="page"  class="form-control"  readonly>
+      </div>           
+      <div class="col-md-4">
+       <label for="cars">Gender:</label>
+       <input type="text"  id="pgender"  name="pgender" class="form-control"  readonly>
+  </div>   
+</div>
+</div>
+  <!-- Main content -->
+  <section class="content">
+        <div class="row" >
+          <div class="col-md-12">
+            <div class="card card-primary card-tabs">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="custom-tabs-one-add-tab" data-toggle="pill" href="#custom-tabs-one-add" role="tab" aria-controls="custom-tabs-one-add" aria-selected="true">Patient details</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-view-tab" data-toggle="pill" href="#custom-tabs-one-view" role="tab" aria-controls="custom-tabs-one-view" aria-selected="true">prescription</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+              <div class="tab-content" id="custom-tabs-one-tabContent">
+              <div class="tab-pane fade show active" id="custom-tabs-one-add" role="tabpanel" aria-labelledby="custom-tabs-one-add-tab">                  
+                <div class="row" >
+                  <div class="col-md-12">
+                            <div class="row form-group">
+                                <div class="col-9 col-md-4">
+                                     <label for="cars">PerOpId</label>
+                                     <input type="text"   class="form-control" id="peropid" name="peropid" >
+                                </div>  
+                                     <div class="col-2 col-md-1">
+                                         <label>&nbsp;</label><br>
+                                         <button type="submit" id="visitsearch"   class="btn-sml btn btn-info"><i class="fas fa-search"></i></button>
+                                         </div> 
+                                         <div class="col-md-4">
+                                            <label for="cars">Count</label>
+                                            <input type="text"  id="procount"  class="form-control" >
+                                       </div>              
+                             </div> <br>                     
+                            <div class="table-responsive p-0" style="height: 270px;">
+                                <table id="userTable" class="table table-dark">
+                                  <thead style="text-align:center;font-size:14px;">
+                                    <tr>                          
+                                      <th>Id</th>
+                                      <th>Perop</th>
+                                      <th>Tokno</th>
+                                      <th>Date</th>
+                                      <th>Consult</th>
+                                      <th>Name</th>                                     
+                                      <th>Amount</th>
+                                      <th>Status</th>
+                                      <th>Type</th>
+                                      <th>CStatus</th>                                                                       
+                                    </tr>
+                                  </thead>
+                                  <tbody id="userbody" style="font-size:12px;">                                                                 
+                                  
+                                  </tbody>
+                                </table>
+                            </div>    
+                         
+                      
+                          </div>
+               </div>
+              </div> 
+
+               <div class="tab-pane fade" id="custom-tabs-one-view" role="tabpanel" aria-labelledby="custom-tabs-one-view-tab">                
+                <div class="row">
+                       <div class="col-md-12">
+                         <div class="row form-group">
+                           <div class="col-md-4">
+                           <label>PerOpId</label>
+                           <input type="text" name="pperopid" id="pperopid"  class="form-control">
+                           </div>
+                           <div class="col-9 col-md-4">
+                           <label>Date</label>
+                           <input type="date" name="pdate" id="pdate" class="form-control">
+                           </div>
+                           <div class="col-2 col-md-4">
+                            <label>&nbsp;</label><br>
+                            <button type="submit" id="prescriptionsearch" class="btn-sml btn btn-info"><i class="fas fa-search"></i></button>
+                            </div>
+                         </div>            
+                       </div>                       
+                     </div>                              
+                     <hr/>
+         
+                     <div class="table-responsive p-0" style="height: 270px;">
+                       <table id="productusertable" class="table table-dark danger">
+                         <thead style="text-align:center;font-size:12px;">
+                           <tr>                          
+                             <th style="display:none">Id</th>
+                             <th align="Center">S.No</th>
+                             <th align="Center">Pro-Name</th>
+                             <th align="Center">Qty</th>
+                             <th align="Center">Morn</th>
+                             <th align="Center">A-Noon</th>
+                             <th align="Center">Night</th>
+                             <th align="Center">B-Food</th>
+                             <th align="Center">A-Food</th>                            
+                             </tr>
+                         </thead>
+                         <tbody id="prouserbody" style="font-size:12px;">  
+                         </tbody>
+                       </table>
+                   </div> 
+                  
+               
+                           
+               </div>
+              </div>            
+              </div>       
+          </div>    
+  </div>
+    </div>
+
+<!-- </div> -->
+  </section>
+</div>
+
+
+
+  {% endblock %}
+  {% block javascript %}
+  <script>
+
+$("#visitsearch").click(function(){
+  var peropid = $('input[name="peropid"]').val() //console.log(peropid)
+  if(peropid){
+  $.ajax({
+      url: '{% url "visitsearch" %}',
+      type: 'get',
+      data: {         
+          'peropid': peropid,
+      },
+      dataType: 'json',
+      success: function(data)  { 
+        if (data.user) { 
+          appendToUserTabel(data.user);  
+        }          
+        if (data.pdltsave) { 
+         var listdata=data.pdltsave;
+         for (var i=0; i<listdata.length; i++) {           
+            var name =listdata[i].name;//     console.log(pid)            
+            var age =listdata[i].age;
+            var peropid =listdata[i].peropid;
+            var gender =listdata[i].gender;
+            } 
+            document.getElementById("pname").value=name; 
+            document.getElementById("page").value=age; 
+            //document.getElementById("pperopid").value=peropid; 
+            document.getElementById("pgender").value=gender; 
+        }   
+    }
+    }); 
+  }    
+    else
+      swal("Oh noes!", "Enter the value", "error");  
+  });
+
+function CountRows1() {    
+var rowCount1 = $('table#userTable tbody#userbody tr:last').index() + 1; //console.log(rowCount1)
+document.getElementById("procount").value=rowCount1;  
+}
+
+function appendToUserTabel(user) { // console.log(user)
+  user =JSON.parse(user);// console.log(user.length)
+  if(!this.snNo) this.snNo = 1;  
+  for (i=0; i<user.length; i++) {
+    data2=user[i].fields;//  console.log(data2);console.log(data2.peropno);  
+    $("#userTable > tbody:last-child").append(`
+    <tr id="user-${user[i].pk}">  
+    <td align="Center">${this.snNo}</td>
+    <td  align="center" style="display:none;" class="userData" >${user[i].pk}</td>
+    <td  align="center"  class="userData userperopno"  name="peropno">${data2.peropno}</td>
+    <td  align="center"  class="userData usertokenno"  name="tokenno">${data2.tokenno}</td>
+    <td  align="center"  class="userData userdate"  name="date">${data2.date}</td>
+    <td  align="center"  class="userData userconsult"  name="consult">${data2.consult}</td>
+    <td  align="center"  class="userData useropname"  name="opname">${data2.name}</td>
+    <td  align="center"  class="userData useramount"  name="amount">${data2.amount}</td>
+    <td  align="center"  class="userData userstatus"  name="status">${data2.status}</td>
+    <td  align="center"  class="userData userctype"  name="ctype">${data2.ctype}</td>
+    <td  align="center"  class="userData usercstatus"  name="cstatus">${data2.cstatus}</td>    
+    </tr>  
+   `);   
+   this.snNo += 1;   
+  }  
+  CountRows1();       
+}
+
+
+$("#prescriptionsearch").click(function(){
+  var pperopid = $('input[name="pperopid"]').val() //console.log(peropid)
+  var pdate = $('input[name="pdate"]').val()
+  console.log(pdate)
+  if(peropid&&pdate){
+  $.ajax({
+      url: '{% url "prescriptionsearch" %}',
+      type: 'get',
+      data: {         
+          'pperopid': pperopid,
+          'pdate'  : pdate,
+      },
+      dataType: 'json',
+      success: function(data)  { 
+        if (data.pdltsave) { 
+          var listdata=data.pdltsave;
+          for (var i=0; i<listdata.length; i++) {           
+             var name =listdata[i].name;//     console.log(pid)            
+             var age =listdata[i].age;
+             var peropid =listdata[i].peropid;
+             var gender =listdata[i].gender;
+             } 
+             document.getElementById("pname").value=name; 
+             document.getElementById("page").value=age; 
+             //document.getElementById("pperopid").value=peropid; 
+             document.getElementById("pgender").value=gender; 
+         } 
+        if (data.perscrlist) { 
+          var rawmetrial = JSON.parse(data.perscrlist);// var dict = {rawmetrial};//  console.log(dict)
+          appendToUsrpushtbl(rawmetrial);                
+        }          
+    
+    }
+    }); 
+  }    
+    else
+      swal("Oh noes!", "Enter the value", "error");  
+  });
+
+  function appendToUsrpushtbl(rawmetrial) { // console.log(rawmetrial) 
+    var rawmetrial=rawmetrial; 
+    if(!this.snNo) this.snNo = 1;  
+    for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields;//data2=user; console.log(data2)    
+    $("#productusertable > tbody:last-child").append(`
+        <tr id="user-${data2.pk}">
+          <td align="Center">${this.snNo}</td>
+          <td align="Center">${data2.product}</td>     
+          <td align="Center">${data2.qty}</td>
+          <td align="Center">${data2.morn}</td>
+          <td align="Center">${data2.after}</td>      
+          <td align="Center">${data2.night}</td>
+          <td align="Center">${data2.beforefood}</td>      
+          <td align="Center">${data2.afterfood}</td>          
+        </tr>`)
+        this.snNo += 1;     
+    }
+    CountRows1();   
+  }
+  
+</script> 
+
+{% endblock javascript%}

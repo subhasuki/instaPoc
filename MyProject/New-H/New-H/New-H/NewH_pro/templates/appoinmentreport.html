@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .checkmark {
+        position: absolute;
+        top: 30px;
+        left: 15px;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+      }
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+      .checkmark:after {
+        display: block;
+      }
+      .checkmark:after {
+        left: 49px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+</style>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <h3>AppoinmentReport</h3>
+      </div><!-- /.container-fluid -->
+    </section>
+  
+    <!-- Main content -->
+    <section class="content">
+   
+            <div class="row" >
+              <div class="col-md-12">
+                <div class="card card-default">   
+                    <div class="card-body">
+                       <div class="row form-group">
+                         <div class="col-md-5">
+                            <label style="text-align:center;font-size:14px;">Doctor Name</label>
+                            <input list="demo5" name="docname" class="form-control"/>
+                            <datalist name="drtoken" id="demo5">
+                            {% for user in docname %} 
+                            <option value="{{user.drname}}">{{user.drname}}</option>
+                            {% endfor %}                                                                                                       
+                            </datalist> 
+                         </div>
+                         <div class="col-md-1"> 
+                         <label  style="text-align:center;font-size:14px;">&nbsp;</label>
+                         <input type="checkbox" class="checkmark" id="waivercheck">                       
+                         </div>
+                         <div class="col-md-6"> 
+                         <label style="text-align:center;font-size:14px;">Date</label>
+                         <input class="submit join-button form-control" type="date" name="dateapp" id="joinevent" disabled>
+                         </div>
+                       </div>
+                         <div class="row form-group">
+                          <div class="col-md-5">                                        
+                            <label style="text-align:center;font-size:14px;">Count</label>
+                            <input type="text" id="totaltest" class="form-control" >
+                         </div>
+                         <div class="col-md-1">                                        
+                            <label style="text-align:center;font-size:14px;">&nbsp;</label>
+                            <input type="checkbox" class="checkmark" id="waivercheck1">
+                         </div>
+                         <div class="col-md-5"> 
+                          <label style="text-align:center;font-size:14px;">Session</label>
+                            <input list="demo6" name="session" class="form-control"   id="joinevent1"  disabled/>
+                            <datalist name="drtoken" id="demo6">
+                            <option value="Morning">Morning</option>        
+                            <option value="Evening">Evening</option>                                
+                            </datalist>
+                         </div>
+                         <div class="col-md-1"> 
+                          <label>&nbsp;</label><br>
+                         <button type="submit" class="searchop btn btn-success form-control" id="searchapponiment"><i class='fa fa-search'></i></button> 
+                         </div>
+                       </div> 
+                       <br>
+                       <div class="table-responsive p-0" style="height: 270px;">
+                         <table id="oplisttable" class="table table-dark danger">
+                           <thead style="text-align:center;font-size:12px;">
+                             <tr>                          
+                               <th>id</th>                               
+                               <th>PatientName</th>
+                               <th>Date</th>
+                               <th>ContactNo</th>                               
+                               <th>Purpose</th>
+                               <th>Session</th>
+                               <th>Status</th>  
+                               </tr>
+                           </thead>
+                           <tbody id="oplistbody" style="font-size:12px;" > 
+                            {% for user in pdltfetch %} 
+                            <tr  id="user-{{user.id}}"> 
+                              <td align="center" style="width:100px" class="userData" >{{user.id}}</td>                                 
+                              <td align="center" style="width:250px" name="patientname" class="userData userpatientname" >{{user.patientname}}</td> 
+                              <td align="center" style="width:250px" name="dt" class="userData userdt" >{{user.dt}}</td> 
+                              <td align="center" style="width:250px" name="conduct" class="userData userconduct" >{{user.conduct}}</td> 
+                              <td align="center" style="width:250px" name="purpose" class="userData userpurpose" >{{user.purpose}}</td> 
+                              <td align="center" style="width:250px" name="session" class="userData session" >{{user.session}}</td> 
+                              <td align="center" style="width:250px" name="status" class="userData userstatus" >{{user.status}}</td> 
+                              
+                            </tr>
+                            {% endfor %}                        
+                           </tbody>
+                         </table>
+                     </div> 
+                     <div class="row form-group">
+                      <div class="col-md-5">
+                        <label style="text-align:center;font-size:14px;">&nbsp;</label>
+                        
+                      </div>                      
+                      </div>
+                     </div>
+                   </div>
+                      </div>
+            </div>
+</section>
+</div>
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    
+
+    $(document).ready(function() {
+        $('#waivercheck').change(function(){    
+            if(this.checked){
+                $('#joinevent').prop("disabled",false);   
+            } else {
+                $('#joinevent').prop("disabled",true);
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        $('#waivercheck1').change(function(){    
+            if(this.checked){
+                $('#joinevent1').prop("disabled",false);   
+            } else {
+                $('#joinevent1').prop("disabled",true);
+            }
+        });
+    });
+
+
+    $("#searchapponiment").click(function(){
+      var docname = $('input[name="docname"]').val()  //console.log(docname)
+      var dateapp = $('input[name="dateapp"]').val() // console.log(fromdt);
+      var session = $('input[name="session"]').val() //  console.log(todt);
+        // Create Ajax Call
+          $.ajax({
+            url: '{% url "searchapponiment" %}',
+            data: {
+              'docname'    : docname,
+              'dateapp'    : dateapp, 
+              'session'    : session,
+            },
+            dataType: 'json',
+            success: function (data) {
+              if (data.user) {  //    console.log(data.user)
+                appendToUserTabel(data.user);           
+                //swal("Good job!", "Update Successfully", "success")   
+              }
+            }
+          });  
+      
+        });
+
+ 
+function CountRows1() {    
+  var rowCount1 = $('table#oplisttable tbody#oplistbody tr:last').index() + 1; //console.log(rowCount1)
+  document.getElementById("totaltest").value=rowCount1;  
+  }
+
+function appendToUserTabel(user) {  //console.log(user)
+    user =JSON.parse(user);// console.log(user.length)
+    for (i=0; i<user.length; i++) {
+      data2=user[i].fields;//  console.log(data2);console.log(data2.peropno);  
+      $("#oplisttable > tbody:last-child").append(`
+      <tr id="user-${user[i].pk}">  
+      <td  align="center" style="width:100px" class="userData" >${user[i].pk}</td>
+      <td  align="center" style="width:250px" class="userData userpatientname"  name="patientname">${data2.patientname}</td>
+      <td  align="center" style="width:100px" class="userData userdt"  name="dt">${data2.dt}</td>
+      <td  align="center" style="width:250px" class="userData userconduct"  name="conduct">${data2.conduct}</td>
+      <td  align="center" style="width:100px" class="userData userpurpose"  name="purpose">${data2.purpose}</td>      
+      <td  align="center" style="width:100px" class="userData usersession"  name="session">${data2.session}</td>
+      <td  align="center" style="width:250px" class="userData userstatus"  name="status">${data2.status}</td>
+      </tr>   
+     `);   
+    } 
+    CountRows1();      
+  }
+
+
+</script> 
+
+{% endblock javascript%}

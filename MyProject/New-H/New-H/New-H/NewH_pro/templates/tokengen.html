@@ -1,0 +1,719 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  .overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;    
+    /*transition: opacity 500ms;*/
+    visibility: hidden;
+    opacity: -1;
+  }
+  .overlay:target {
+    visibility: visible;
+    opacity: 1;
+  }
+  .popup {
+    margin: 70px auto;
+    padding: 20px;
+    background: rgb(201, 198, 198);
+    border-radius: 5px;
+    width: 50%;
+    position: relative;
+    transition: all 2s ease-in-out;
+  }
+  .popup .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    transition: all 200ms;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+  }
+  .popup .content {
+    max-height: 50%;
+    /*overflow: auto;*/
+  }  
+</style>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+     <h3>Token</h3>
+      </div><!-- /.container-fluid -->
+    </section>
+  
+    <!-- Main content -->
+    <section class="content">      
+          <div class="row" >
+            <div class="col-md-12">
+              <div class="card card-primary card-tabs">
+                <div class="card-header p-0 pt-1">
+                  <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">New Patient</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Old Patient</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="card-body">
+                  <div class="tab-content" id="custom-tabs-one-tabContent">
+                    
+                    <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">                  
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-6">  
+                                        <div class="form-group col-xs-2">                                      
+                                          <!-- <form role="form" action="tokengen" id="target"> -->
+                                            <label>Per.OP.ID</label>
+                                            <input type="text" class="form-control col-xs-2 " name="tnid" id="tnid" value="{{tokno}}">                                          
+                                        </div>
+                                        <div class="form-group">
+                                        <label>consultant:</label>                                        
+                                        <input list="demo4"  class="form-control" id="drtokenid" name="drtoken" onchange="drtokencal()"/>
+                                        <datalist name="drtoken" id="demo4"> 
+                                        <option value="">Select</option>                                       
+                                        {% for user in docname %}                                        
+                                        <option value="{{user.drname}}">{{user.drname}}</option>
+                                        {% endfor %}                                                                                                       
+                                        </datalist> 
+                                        </div>
+                                        <div class="form-group">
+                                        <label>Token No</label>
+                                        <input type="text" class="form-control" id="tokenid" name="tokenid">
+                                        </div>
+                                        <div class="form-group">
+                                        <label>Name</label>
+                                        <input type="text" class="form-control" name="tnname" id="tnname">
+                                        </div>
+                                        <div class="form-group">
+                                        <label>Gender</label>
+                                        <select class="form-control" name="tgenter" id="tgenter">                                       
+                                        <option value="">Select</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Trans-Genter">Trans-Genter</option>
+                                        </select>
+                                        </div>
+                                        <div class="form-group">
+                                        <label>Age</label>
+                                        <input type="text" class="form-control" name="tnage" id="age">
+                                        </div>                                     
+                                    </div>
+                                    <div class="col-6">  
+                                        <div class="form-group">
+                                        <label>Status</label>
+                                        <select class="form-control" name="feestatus" id="feestatusid" onchange="tnstatuscal()"> 
+                                        <option value="">Select</option>
+                                        <option value="Normal">Normal</option>
+                                        <option value="Emergency">Emergency</option>
+                                        <option value="Free">Free</option>   
+                                        </select>
+                                        </div>
+                                        <div class="form-group">
+                                        <label>Amount</label>                                       
+                                        <input type="text" class="form-control" id="Amount" name="amount">                                       
+                                        </div>
+                                        <div class="form-group">
+                                        <label>Place</label>
+                                        <input type="textarea" class="form-control" name="tnplace" id="tnplace">
+                                        </div>
+                                        <div class="form-group">
+                                        <label>DOB</label>
+                                        <input type="date" class="form-control" id="tndob" name="tndob" onchange="tndobcal()">
+                                        </div>
+                                        <div class="form-group">
+                                        <label>Mobile</label>
+                                        <input type="text" class="form-control" name="tnmobile" id="tnmobile">
+                                        </div>
+                                        <div class="form-group">
+                                          <label>Disease</label>                                          
+                                          <input list="demo6"  class="form-control" id="pdisease"  name="pdisease"/>
+                                          <datalist name="drtoken" id="demo6"> 
+                                          <option value="">Select</option>                                       
+                                          {% for user in dialist %}                                        
+                                          <option value="{{user.diagnosis}}">{{user.diagnosis}}</option>
+                                          {% endfor %}                                                                                                       
+                                          </datalist> 
+                                          </div>
+                                          
+                                                                                          
+                                    </div> 
+                                    <div class="row">
+                                      <div class="col-4 col-md-4">
+                                        <div class="form-group">
+                                          <button type="submit" id="pdetailssave"  class="btn btn-success btn-sml"><b> Save </b></button> 
+                                          </div>
+                                      </div>  
+                                      <div class="col-4 col-md-8">
+                                        <div class="form-group">
+                                          <button type="submit" class="btn btn-info btn-sml"  data-toggle="modal" data-target="#modal-default"><b> Appoinment </b></button> 
+                                          </div>
+                                      </div> 
+                                    
+                                    <div class="modal fade" id="modal-default">
+                                      <div class="modal-dialog">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h4 class="modal-title">Appoinment</h4>
+                                            </button>
+                                          </div>
+                                          <div class="modal-body">
+                                            <div class="col-md-12">
+                                              <div class="row">                                          
+                                              <div class="col-6">
+                                                <div class="form-group">
+                                                <label>Appoinment-Id</label>
+                                                <input type="text" class="form-control" name="aptid">
+                                                </div>
+                                              </div>
+                                              <div class="col-6">
+                                                <div class="form-group">
+                                                <label>&nbsp;</label>
+                                                <button type="submit" class="btn btn-success form-control" id="appoinmentcal"><b>Search</b></button> 
+                                              </div>
+                                              </div>
+                                              </div>
+                                              </div>
+                                              <div class="row">                                          
+                                                <div class="col-6">
+                                                  <div class="form-group">
+                                                    <label>Name:</label>
+                                                    <input type="text" class="form-control" id="apname">
+                                                  </div>
+                                                </div>
+                                                <div class="col-6">
+                                                  <div class="form-group">
+                                                    <label>Session:</label>
+                                                    <input type="text" class="form-control" id="apsession">
+                                                </div>
+                                                </div>
+                                                </div>
+                                          </div>
+                                          <div class="modal-footer justify-content-between">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                          
+                                          </div>
+                                        </div>            
+                                      </div>          
+                                    </div>
+                                    
+                                  </div> 
+                                 </div>                          
+                        </div>                   
+                </div>
+                    </div>
+
+                 <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">                
+                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-5  col-md-6">                                                                
+                            <div class="form-group">
+                            <label>Per.OP.ID:</label> 
+                            <input class="form-control" type="text" name="oldidsearchnm" id="oldidsearchnmid" aria-label="Search" required> <br>                           
+                            </div>
+                            </div>
+                            <div class="col-3 col-md-2">                                                                
+                            <div class="form-group">
+                            <label>&nbsp;</label><br>
+                            <button type="submit" id="oldidsearch" class="btn btn-success btn-sml"><i class="fas fa-search"></i></button>
+                            </div>
+                            </div>
+                            <div class="col-3  col-md-2">                                                                
+                              <div class="form-group">
+                              <label>&nbsp;</label><br>
+                              <button type="submit"  class="btn btn-dark" data-toggle="modal" data-target="#modal-default5"> <img src="{% static 'dist/img/ap.png' %}" alter=" Logo" style="width:30px;"></button> 
+                              </div>
+                              </div>
+                            </div>
+                            </div>
+                            <div class="col-md-12">
+                            <div class="row">                                          
+                            <div class="col-6">                                                                
+                              <div class="form-group">
+                                <label>consultant:</label>                                        
+                                <input list="demo4"  class="form-control" id="drtokenid1" name="drtoken1" onchange="drtokencal1()" required/>
+                                <datalist name="drtoken" id="demo4">
+                                {% for user in docname %} 
+                                <option value="{{user.drname}}">{{user.drname}}</option>
+                                {% endfor %}                                                                                                       
+                                </datalist> 
+                                </div>
+                                <div class="form-group">
+                                <label>Token No</label>
+                                <input type="text" class="form-control"  id="tokenid1" name="tokenid1" required>
+                                </div>
+                                <div class="form-group">
+                                  <label>Name</label>
+                                  <input type="text" class="form-control" name="tnname1" id="tnname1" required>
+                                  </div>
+                                  <div class="form-group">
+                                  <label>Gender</label>
+                                  <input type="text" class="form-control" name="tgenter1" id="tgenter1" required>    
+                                  </div>
+                                  <div class="form-group">
+                                  <label>Age</label>
+                                  <input type="text" class="form-control" name="tnage1" id="tnage1" required>
+                                  </div> 
+                                  <div class="form-group">
+                                    <label>Status</label>
+                                    <select class="form-control" name="feestatus1" id="feestatusid1" onchange="tnstatuscal1()" required>
+                                      <option value="">Select</option>
+                                      <option value="Normal">Normal</option>
+                                      <option value="Emergency">Emergency</option>
+                                      <option value="Free">Free</option> 
+                                    </select>
+                                    </div>                                    
+                              </div>
+                              <div class="col-6">                                  
+                                  <div class="form-group">
+                                  <label>Amount</label>                                       
+                                  <input type="text" class="form-control" id="Amount1" name="amount1" required>                                       
+                                  </div>
+                                  <div class="form-group">
+                                  <label>Place</label>
+                                  <input type="textarea" class="form-control" name="tnplace1" id="tnplace1" required>
+                                  </div>
+                                  <div class="form-group">
+                                  <label>DOB</label>
+                                  <input type="date" class="form-control" id="tndob1" name="tndob1" onchange="tndobcal1()" required>
+                                  </div>
+                                  <div class="form-group">
+                                  <label>Mobile</label>
+                                  <input type="text" class="form-control" name="tnmobile1" id="tnmobile1">
+                                  </div>
+                                  <div class="form-group">
+                                    <label>Disease</label>                                   
+                                    <input list="demo7"  class="form-control" id="pdisease1"  name="pdisease1"/>
+                                          <datalist name="drtoken" id="demo7"> 
+                                          <option value="">Select</option>                                       
+                                          {% for user in dialist %}                                        
+                                          <option value="{{user.diagnosis}}">{{user.diagnosis}}</option>
+                                          {% endfor %} 
+                                    </div>   
+                                  </form>    
+                                  <div class="form-group">
+                                    <label>&nbsp;</label><br>       
+                                    <button type="submit" id="pdetailssave1" class="btn btn-success btn-sml">Save</button> 
+                                </div>                               
+                                
+                    </div> 
+
+                    <div class="modal fade" id="modal-default5">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title">Appoinment</h4>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="col-md-12">
+                              <div class="row">                                          
+                              <div class="col-6">
+                                <div class="form-group">
+                                <label>Appoinment-Id</label>
+                                <input type="text" class="form-control" name="aptid1">
+                                </div>
+                              </div>
+                              <div class="col-6">
+                                <div class="form-group">
+                                <label>&nbsp;</label>
+                                <button type="submit" class="btn btn-success form-control" id="appoinmentcal1"><b>Search</b></button> 
+                              </div>
+                              </div>
+                              </div>
+                              </div>
+                              <div class="row">                                          
+                                <div class="col-6">
+                                  <div class="form-group">
+                                    <label>Name:</label>
+                                    <input type="text" class="form-control" id="apname1">
+                                  </div>
+                                </div>
+                                <div class="col-6">
+                                  <div class="form-group">
+                                    <label>Session:</label>
+                                    <input type="text" class="form-control" id="apsession1">
+                                </div>
+                                </div>
+                                </div>
+                          </div>
+                          <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          
+                          </div>
+                        </div>            
+                      </div>          
+                    </div>
+
+                                                
+                  </div>                         
+                </div>                   
+            </div>
+           </div>
+                  </div>
+          </div>            
+        </div>       
+      </div>
+      </div> 
+    </section>
+</div>
+
+
+  {% endblock %}
+  {% block javascript %}
+<script>
+
+function  tndobcal(){     
+      var tndobInput = $('input[name="tndob"]').val()        
+      $.ajax({
+          url: '{% url "calculateAge" %}',
+          type: 'get',
+          data: {
+              'tndob': tndobInput,
+          },
+          dataType: 'json',
+          success: function (data) {
+              if (data.user) {                
+                document.getElementById("age").value=data.user;                
+              }
+          }
+      });
+  }  
+
+function  tndobcal1(){     
+    var tndobInput1 = $('input[name="tndob1"]').val()        
+    $.ajax({
+        url: '{% url "calculateAge1" %}',
+        type: 'get',
+        data: {
+            'tndob1': tndobInput1,
+        },
+        dataType: 'json',
+        success: function (data) {
+            if (data.user) {                
+              document.getElementById("age1").value=data.user;                
+            }
+        }
+    });
+}  
+  
+$(function () {
+    $("#chkPassport").click(function () {
+        if ($(this).is(":checked")) {
+            $("#txtPassportNumber").removeAttr("disabled");
+            $("#txtPassportNumber").focus();
+        } else {
+            $("#txtPassportNumber").attr("disabled", "disabled");
+        }
+    });
+});
+ 
+function  tnstatuscal(){     
+  var feestatus = $('select[name="feestatus"]').val()   //console.log(feestatus) 
+  if (feestatus == "Free")
+  {
+    document.getElementById("Amount").value=0;
+  }
+  else{
+  $.ajax({
+      url: '{% url "feesave" %}',
+      type: 'get',
+      data: {
+          'feestatus': feestatus,
+      },
+      dataType: 'json',
+      success: function(data)  {          
+        if(data.fest1){  //   console.log(data.fest1);
+          var token =  data.fest1; // console.log(token);
+          document.getElementById("Amount").value=token;
+                 
+        }
+      }
+  });
+}
+} 
+
+function  tnstatuscal1(){     
+  var feestatus1 = $('select[name="feestatus1"]').val()   //console.log(feestatus)       
+  if (feestatus1 == "Free")
+  {
+    document.getElementById("Amount1").value=0;
+  }
+  else{
+  $.ajax({
+      url: '{% url "feesave1" %}',
+      type: 'get',
+      data: {
+          'feestatus1': feestatus1,
+      },
+      dataType: 'json',
+      success: function(data)  {          
+        if(data.fest1){   //  console.log(data.fest1);
+          var token =  data.fest1; //console.log(token);
+          document.getElementById("Amount1").value=token;
+                 
+        }
+      }
+  });
+}
+} 
+
+$("#pdetailssave").click(function() {    
+  var tnid = $('input[name="tnid"]').val()// console.log(tnid)
+  var drtoken = $('input[name="drtoken"]').val() //console.log(drtoken)
+  var tokenid = $('input[name="tokenid"]').val()  //console.log(tokenid)
+  var tnname = $('input[name="tnname"]').val() // console.log(tnname)
+  var tgenter = $('select[name="tgenter"]').val() //console.log(tgenter) 
+  var tnage = $('input[name="tnage"]').val() // console.log(tnage)
+  var amount = $('input[name="amount"]').val()
+  var feestatus = $('select[name="feestatus"]').val() // console.log(feestatus)
+  var tnplace = $('input[name="tnplace"]').val() // console.log(tnplace)
+  var tndob = $('input[name="tndob"]').val() // console.log(tndob)
+  var tnmobile = $('input[name="tnmobile"]').val()  //console.log(tnmobile)
+  var pdisease = $('input[name="pdisease"]').val()  //console.log(pdisease)|| $.trim($("#tgenter").val()) != ""
+  if(tnid!='' && drtoken!='' && tokenid!='' && tnname!='' && tgenter!=''
+  && tnage!='' && amount!='' && feestatus!='' && tnplace!=''
+  && tndob!='' && pdisease!=''){
+        $.ajax({
+            url: '{% url "pdetailssave" %}',              
+            type: 'get',
+            data: {
+                'tnid'      :  tnid,
+                'drtoken'   :  drtoken,                
+                'tokenid'   :  tokenid,
+                'tnname'    :  tnname,  
+                'tgenter'   :  tgenter,  
+                'tnage'     :  tnage, 
+                'amount'    :  amount, 
+                'feestatus' :  feestatus,  
+                'tnplace'   :  tnplace,  
+                'tndob'     :  tndob,    
+                'tnmobile'  :  tnmobile, 
+                'pdisease'  :  pdisease,                            
+            },
+            dataType: 'json',       
+            success: function(data) {   
+              if(data.user){  // console.log(data.user);
+               swal("Good job!", "Save Successfully!", "success");
+               var newtokid1 =  data.user1;//   console.log(newtokid1)
+               var passtok =  data.tokno; //   console.log(passtok)
+               var newtokid =  data.user; //  console.log(newtokid); 
+               var tokid= newtokid.id; //  console.log(tokid)
+               var peropid = newtokid.peropid; //console.log(peropid)
+               var tokid1= newtokid1.id; //   console.log(tokid1)               
+               $('<iframe>', {src: '/newtherprt/'+tokid ,id:'myFrame',frameborder:0,scrolling:'yes'}).appendTo('.printarea');                
+              document.getElementById("drtokenid").value = "";  
+              document.getElementById("tokenid").value = "";   
+              document.getElementById("tnname").value = "";   
+              document.getElementById("tgenter").value = "";
+              document.getElementById("age").value = "";  
+              document.getElementById("feestatusid").value = "";   
+              document.getElementById("Amount").value = ""; 
+              document.getElementById("tnplace").value = "";  
+              document.getElementById("tndob").value = "";   
+              document.getElementById("tnmobile").value = "";   
+              document.getElementById("pdisease").value = "";  
+              document.getElementById("tnid").value = passtok;  
+             }
+            }            
+        });   
+      }else{ l("Oh noes!", "Please enter all fielswads !", "error");  }
+}); 
+
+$("#pdetailssave1").click(function() {    
+  var oldidsearchnm = $('input[name="oldidsearchnm"]').val()// console.log(tnid)
+  var drtoken1 = $('input[name="drtoken1"]').val() //console.log(drtoken)
+  var tokenid1 = $('input[name="tokenid1"]').val()  //console.log(tokenid)
+  var tnname1 = $('input[name="tnname1"]').val() // console.log(tnname)
+  var tgenter1 = $('select[name="tgenter1"]').val() //console.log(tgenter) 
+  var tnage1 = $('input[name="tnage1"]').val() // console.log(tnage)
+  var amount1 = $('input[name="amount1"]').val()
+  var feestatus1 = $('select[name="feestatus1"]').val() // console.log(feestatus)
+  var tnplace1 = $('input[name="tnplace1"]').val() // console.log(tnplace)
+  var tndob1 = $('input[name="tndob1"]').val() // console.log(tndob)
+  var tnmobile1 = $('input[name="tnmobile1"]').val()  //console.log(tnmobile)
+  var pdisease1 = $('input[name="pdisease1"]').val()  //console.log(pdisease)
+  if(oldidsearchnm!='' && drtoken1!='' && tokenid1!='' && tnname1!='' 
+  && tgenter1!='' && tnage1!='' && amount1!='' && feestatus1!=''
+  && tnplace1!='' && tndob1!='' && pdisease1!=''){
+        $.ajax({
+            url: '{% url "pdetailssave1" %}',              
+            type: 'get',
+            data: {
+                'oldidsearchnm'      :  oldidsearchnm,
+                'drtoken1'   :  drtoken1,                
+                'tokenid1'   :  tokenid1,
+                'tnname1'    :  tnname1,  
+                'tgenter1'   :  tgenter1,  
+                'tnage1'     :  tnage1, 
+                'amount1'    :  amount1, 
+                'feestatus1' :  feestatus1,  
+                'tnplace1'   :  tnplace1,  
+                'tndob1'     :  tndob1,    
+                'tnmobile1'  :  tnmobile1, 
+                'pdisease1'  :  pdisease1,                            
+            },
+            dataType: 'json',       
+                success: function(data) {
+                if(data.user){  // console.log(data.user);
+                  swal("Good job!", "Save Successfully!", "success");  
+                  var newtokid1 =  data.user1;//   console.log(newtokid1)
+                  var newtokid =  data.user; //     console.log(newtokid); 
+                  var tokid= newtokid.id; //     console.log(tokid)
+                  var tokid1= newtokid1.id; //       console.log(tokid1)
+                  $('<iframe>', {src: '/oldtherprt/'+tokid ,id:'myFrame',frameborder:0,scrolling:'yes'}).appendTo('.printarea');
+                   document.getElementById("drtokenid1").value = "";  
+                   document.getElementById("tokenid1").value = "";   
+                   document.getElementById("tnname1").value = "";   
+                   document.getElementById("tgenter1").value = "";
+                   document.getElementById("tnage1").value = "";  
+                   document.getElementById("feestatusid1").value = "";   
+                   document.getElementById("Amount1").value = ""; 
+                   document.getElementById("tnplace1").value = "";  
+                   document.getElementById("tndob1").value = "";   
+                   document.getElementById("tnmobile1").value = "";   
+                   document.getElementById("pdisease1").value = "";  
+                   document.getElementById("oldidsearchnmid").value = "";        
+                  }                                     
+            }            
+        });  
+  }    
+  else{
+    swal("Oh noes!", "Please enter all fields !", "error");   
+  }
+});
+
+$("#appoinmentcal").click(function(){
+  var aptid = $('input[name="aptid"]').val() //console.log(aptid)  
+  $.ajax({
+      url: '{% url "appoinmentcal" %}',
+      type: 'get',
+      data: {         
+          'aptid': aptid,
+      },
+      dataType: 'json',
+      success: function(data)  {     
+        if(data. aplist){ //console.log(data.aplist);
+          var aplistsd =  data.aplist; //   alert(aplistsd); //  console.log(aplistsd.length);                    
+          for (var i=0; i<aplistsd.length; i++) { 
+            var pname= aplistsd[i].patientname; //  console.log(pname)
+            var psession= aplistsd[i].session;  //  console.log(psession)
+      }
+      document.getElementById("apname").value=pname;  
+      document.getElementById("apsession").value=psession;  
+    }
+  }
+  });   
+});
+
+$("#appoinmentcal1").click(function(){
+  var aptid1 = $('input[name="aptid1"]').val() //  console.log(aptid1)  
+  $.ajax({
+      url: '{% url "appoinmentcal1" %}',
+      type: 'get',
+      data: {         
+          'aptid1': aptid1,
+      },
+      dataType: 'json',
+      success: function(data)  {     
+        if(data. aplist1){ //console.log(data.aplist);
+          var aplistsd =  data.aplist1; // alert(aplistsd); //  console.log(aplistsd.length);                    
+          for (var i=0; i<aplistsd.length; i++) { 
+            var pname= aplistsd[i].patientname; //   console.log(pname)
+            var psession= aplistsd[i].session; //   console.log(psession)
+      }
+      document.getElementById("apname1").value=pname;  
+      document.getElementById("apsession1").value=psession;  
+    }
+  }
+  });   
+});
+
+$("#oldidsearch").click(function(){     
+  var oldidsearchnm = $('input[name="oldidsearchnm"]').val()  //console.log(oldidsearchnm)         
+  if(oldidsearchnm){
+  $.ajax({
+      url: '{% url "oldidsearch" %}',
+      type: 'get',
+      data: {
+          'oldidsearchnm': oldidsearchnm,         
+      },
+      dataType: 'json',
+      success: function(data)  { 
+        if(data.oldlist){ //console.log(data.oldlist);
+          var oldlistgt =  data.oldlist;//console.log(labtbl);console.log(labtbl.length);                    
+          for (var i=0; i<oldlistgt.length; i++) { 
+            var name= oldlistgt[i].name;//  console.log(name)
+            var age = oldlistgt[i].age;// console.log(age)
+            var address = oldlistgt[i].addrs;//   console.log(address)
+            var gender = oldlistgt[i].gender;//    console.log(gender)
+            var dob = oldlistgt[i].dob;//        console.log(dob)
+            var mobileno = oldlistgt[i].mobileno;//  console.log(mobileno)
+          }   
+          document.getElementById("tnname1").value=name;  
+          document.getElementById("tnage1").value=age;  
+          document.getElementById("tgenter1").value=gender;  
+          document.getElementById("tndob1").value=dob;  
+          document.getElementById("tnmobile1").value=mobileno;  
+          document.getElementById("tnplace1").value=address;  
+        }
+      }
+  }); 
+}
+else
+{
+  swal("Oh noes!", "Enter Per.op.id ", "error");   
+}  
+});
+
+function drtokencal() {     
+  var drtoken = $('input[name="drtoken"]').val()  //console.log(drtoken)        
+  $.ajax({
+      url: '{% url "tokengenshot" %}',
+      type: 'get',
+      data: {
+          'drtoken': drtoken,
+      },
+      dataType: 'json',
+      success: function(data)  {          
+        if(data.h){   //console.log(data.feestatus);
+          var shttoken =  data.h; //console.log(token);
+          document.getElementById("tokenid").value=shttoken;        
+        }
+      }
+  });   
+}
+
+function drtokencal1() {     
+  var drtoken1 = $('input[name="drtoken1"]').val()  //console.log(drtoken1)        
+  $.ajax({
+      url: '{% url "tokengenshot1" %}',
+      type: 'get',
+      data: {
+          'drtoken1': drtoken1,
+      },
+      dataType: 'json',
+      success: function(data)  {          
+        if(data.h){   //console.log(data.feestatus);
+          var shttoken =  data.h; //console.log(token);
+          document.getElementById("tokenid1").value=shttoken;        
+        }
+      }
+  });   
+}
+
+</script> 
+{% endblock javascript%}
+
+ 

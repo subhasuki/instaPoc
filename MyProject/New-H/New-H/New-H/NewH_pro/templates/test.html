@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
+    <style>
+        textarea {
+            width: 600px;
+            height: 120px;
+        }
+    </style>
+</head>
+<body>
+    <table border="1" id="example-table">
+        <thead>
+            <tr>
+                <th>line</th>
+                <th>value1</th>
+                <th>value2</th>
+                <th>value3</th>
+                <th>value4</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="2">1</td>
+                <td>1.1</td>
+                <td>1.2</td>
+                <td>1.3</td>
+                <td rowspan="2">1.4</td>
+            </tr>
+            <tr>
+                <td>1.5</td>
+                <td>1.6</td>
+                <td>1.7</td>
+            </tr>
+            <tr>
+                <td rowspan="2">2</td>
+                <td>2.1</td>
+                <td>2.2</td>
+                <td>2.3</td>
+                <td>2.4</td>
+            </tr>
+            <tr>
+                <td colspan="2">2.5</td>
+                <td>2.6</td>
+                <td>2.7</td>
+            </tr>
+            <tr>
+                <td rowspan="2">3</td>
+                <td rowspan="2" colspan="2">3.1</td>
+                <td colspan="2">3.2</td>
+            </tr>
+            <tr>
+                <td>3.4</td>
+                <td>3.5</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <button id="convert-table">Convert</button>
+    <br>
+    <textarea id="res"></textarea>
+    <script>
+        (function ($) {
+            'use strict';
+        
+            $.fn.tableToJSON = function (opts) {
+        
+                // Set options
+                var defaults = {
+                    ignoreColumns: [],
+                    onlyColumns: null,
+                    ignoreHiddenRows: true,
+                    headings: null,
+                    allowHTML: false
+                };
+                opts = $.extend(defaults, opts);
+        
+                var notNull = function (value) {
+                    return value !== undefined && value !== null;
+                };
+        
+                var ignoredColumn = function (index) {
+                    if (notNull(opts.onlyColumns)) {
+                        return $.inArray(index, opts.onlyColumns) === -1;
+                    }
+                    return $.inArray(index, opts.ignoreColumns) !== -1;
+                };
+        
+                var arraysToHash = function (keys, values) {
+                    var result = {}, index = 0;
+                    $.each(values, function (i, value) {
+                        // when ignoring columns, the header option still starts
+                        // with the first defined column
+                        if (index < keys.length && notNull(value)) {
+                            result[keys[index]] = value;
+                            index++;
+                        }
+                    });
+                    return result;
+                };
+        
+                var cellValues = function (cellIndex, cell) {
+                    var value, result;
+                    if (!ignoredColumn(cellIndex)) {
+                        var override = $(cell).data('override');
+                        if (opts.allowHTML) {
+                            value = $.trim($(cell).html());
+                        } else {
+                            value = $.trim($(cell).text());
+                        }
+                        result = notNull(override) ? override : value;
+                    }
+                    return result;
+                };
+        
+                var rowValues = function (row) {
+                    var result = [];
+                    $(row).children('td,th').each(function (cellIndex, cell) {
+                        if (!ignoredColumn(cellIndex)) {
+                            result.push(cellValues(cellIndex, cell));
+                        }
+                    });
+                    return result;
+                };
+        
+                var getHeadings = function (table) {
+                    var firstRow = table.find('tr:first').first();
+                    return notNull(opts.headings) ? opts.headings : rowValues(firstRow);
+                };
+        
+                var construct = function (table, headings) {
+                    var i, j, len, len2, txt, $row, $cell,
+                    tmpArray = [],
+                        cellIndex = 0,
+                        result = [];
+                    table.children('tbody,*').children('tr').each(function (rowIndex, row) {
+                        if (rowIndex > 0 || notNull(opts.headings)) {
+                            $row = $(row);
+                            if ($row.is(':visible') || !opts.ignoreHiddenRows) {
+                                if (!tmpArray[rowIndex]) {
+                                    tmpArray[rowIndex] = [];
+                                }
+                                cellIndex = 0;
+                                $row.children().each(function () {
+                                    if (!ignoredColumn(cellIndex)) {
+                                        $cell = $(this);
+        
+                                        // process rowspans
+                                        if ($cell.filter('[rowspan]').length) {
+                                            len = parseInt($cell.attr('rowspan'), 10) - 1;
+                                            txt = cellValues(cellIndex, $cell, []);
+                                            for (i = 1; i <= len; i++) {
+                                                if (!tmpArray[rowIndex + i]) {
+                                                    tmpArray[rowIndex + i] = [];
+                                                }
+                                                tmpArray[rowIndex + i][cellIndex] = txt;
+                                            }
+                                        }
+                                        // process colspans
+                                        if ($cell.filter('[colspan]').length) {
+                                            len = parseInt($cell.attr('colspan'), 10) - 1;
+                                            txt = cellValues(cellIndex, $cell, []);
+                                            for (i = 1; i <= len; i++) {
+                                                // cell has both col and row spans
+                                                if ($cell.filter('[rowspan]').length) {
+                                                    len2 = parseInt($cell.attr('rowspan'), 10);
+                                                    for (j = 0; j < len2; j++) {
+                                                        tmpArray[rowIndex + j][cellIndex + i] = txt;
+                                                    }
+                                                } else {
+                                                    tmpArray[rowIndex][cellIndex + i] = txt;
+                                                }
+                                            }
+                                        }
+                                        // skip column if already defined
+                                        while (tmpArray[rowIndex][cellIndex]) {
+                                            cellIndex++;
+                                        }
+                                        if (!ignoredColumn(cellIndex)) {
+                                            txt = tmpArray[rowIndex][cellIndex] || cellValues(cellIndex, $cell, []);
+                                            if (notNull(txt)) {
+                                                tmpArray[rowIndex][cellIndex] = txt;
+                                            }
+                                        }
+                                    }
+                                    cellIndex++;
+                                });
+                            }
+                        }
+                    });
+                    $.each(tmpArray, function (i, row) {
+                        if (notNull(row)) {
+                            txt = arraysToHash(headings, row);
+                            result[result.length] = txt;
+                        }
+                    });
+                    return result;
+                };
+        
+                // Run
+                var headings = getHeadings(this);
+                return construct(this, headings);
+            };
+        })(jQuery);
+        
+        $('#convert-table').click(function () {
+            var table = $('#example-table').tableToJSON(); // Convert the table into a javascript object
+            console.log(table);
+            var json = JSON.stringify(table);
+            var res = document.getElementById("res");
+            res.value = json;
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+$( document ).ready(function() {
+    setInterval(function(){
+      var supselectInput = $('select[name="usertable3"]').val() 
+        $.ajax({
+            url:'{% url "labdatafetch1" %}' ,
+            type: "get",
+            cache: true,
+            timeout: 30000,
+            data: {
+              'select': supselectInput,
+            },
+            dataType: 'json',
+            success: function(data) {              //console.log("success");
+                if (data.chfil) {  
+                  $('#emergency').empty();
+                  checkfetched(data.chfil);                 
+                }
+                //$('#normalTable').html(data);
+            },
+            error: function(data) {
+                alert("Got an error dude "+data);
+            }
+        });
+    },5000);
+  });
+  var index = $('#usertable3 th:contains(Amount)').index(),
+      sum = 0;
+      $('#usertable3 tbody tr').each(function() {
+        var value1 = $(".value1").text();
+      sum += parseFloat( $.trim( $('td:eq('+ index +')', this).text() ), 10);//   console.log(sum);
+      });      
+      document.getElementById("totamt").value=sum;
+      $("#totamt").empty(); 
+
+      var index = $('#usertable4 th:contains(Amount)').index(),
+      sum1 = 0;
+      $('#usertable4 tbody tr').each(function() {
+      sum1 += parseFloat( $.trim( $('td:eq('+ index +')', this).text() ), 10);
+      //console.log(sum1);
+      });
+      document.getElementById("totsum").value=sum1;
+      $("#totsum").empty(); 
+
+      var total=sum+sum1;
+      document.getElementById("totsum").value=total;
+
+
+
+
+      <!DOCTYPE html>
+<html>
+<head>
+  {% load static %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Ink-A4</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap 4 -->
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <style>
+    body{
+      counter-reset: Serial;  
+    }
+    tbody tr td:first-child:before{
+      counter-increment: Serial;     
+      content: counter(Serial);
+      font-size: .7em;
+    }
+    table{
+      border-collapse: collapse;
+    }
+    .logo{
+      float: center;
+      height: 80px;
+      width: 80px;
+      background-size: 80px 80px;
+    }
+    .tabletitle{
+      /*padding: 5px;*/
+      /*font-size: .5em;*/
+      background: #EEE;
+      border-bottom: 1px solid #EEE;
+    }
+    .service{ border-bottom: 1px solid #EEE;}
+    .wrapper{
+      border: black;
+    }
+    
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <!-- Main content -->
+  <section class="invoice">
+    <div class="row invoice-info">
+      <div class="col-sm-12 invoice-col">
+        <div class="row">
+          <div class="col-3">
+            <h2 class="page-header" style="float:left">
+              <img src="{% static 'dist/img/smlogo.jpg' %}" class="logo" alt="logo">
+            </h2>
+          </div>          
+          <div class="col-9">
+            <div>
+              <h4 style="float:left">SM Hospital</h4>              
+            </div>
+          </div> 
+        </div>  
+        <div class="row">     
+          <div class="col-3" style="margin:auto;width: 50%;border: 2px;padding: 5px;">                      
+              <p>Anaikarai Street,</p>           
+          </div>
+          <div class="col-9">           
+              <p>Tenkasi,Ph-222560&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date..............</p>            
+          </div>   
+        </div> 
+        <hr/>
+        <div class="row">
+          <div class="col-12">
+        <p style="margin: auto;width: 50%;border: 3px;padding: 10px;">Dr.S.M.A.Kuthoos M.D Reg.No 23352</p>    
+        </div>
+        </div>  
+        <hr/>
+        <div class="row">
+          <div class="col-12">
+        <p style="float:left"> DR.S.A.NIHMATHALLAM M.D(G.M) Reg.No 86924</p>    
+        </div>
+        </div>  
+      </div>    
+      <hr/><br><br>
+
+      <div class="col-sm-3 invoice-col">
+      
+      </div> 
+      
+      <div class="col-sm-3 invoice-col">
+       
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+
+    <!-- Table row -->
+    <div class="row">
+      <div class="col-12">
+        <div id="table">
+        <table class="table">
+          <thead>
+          <tr class="tabletitle">
+            <th>Morning</th>
+            <th>Afternoon</th>
+            <th>Night</th>            
+          </tr>
+          </thead>
+          <tbody class="service">           
+          <tr>
+            <td style=" border-style: none;"></td>
+            <td style=" border-style: none;"></td>
+            <td style=" border-style: none;"></td>            
+          </tr>        
+          </tbody>
+        </table>
+      </div>
+      </div>     
+    </div>   
+
+    <div class="row">
+      
+      <div class="col-6">
+        <p class="lead">Payment Methods:</p>        
+      </div>    
+    </div> 
+  </section>  
+</div>
+<script type="text/javascript"> 
+  window.addEventListener("load", window.print());
+</script>
+</body>
+</html>
+var name = $('input[name="namelist"]').val();//console.log(name)
+    var br = $('input[name="br"]').val();
+    console.log(br) 
+    var bp = $('input[name="bp"]').val();
+    console.log(bp) 
+    var spo2 = $('input[name="spo2"]').val();
+    console.log(spo2) 
+    var temp = $('input[name="temp"]').val();
+    console.log(temp) 
+    var wt = $('input[name="wt"]').val();
+    console.log(wt) 
+    var type1 = $('input[name="ttype4"]').val();
+    
+    var type2 = $('input[name="ttype2"]').val();  
+    //console.log(type2) 
+    var type3 = $('input[name="ttype3"]').val();   
+    //console.log(type3)
+    //var remark = $('#form-remark').val().trim();//console.log(remark) 
+    //var diagnosis = $('#form-diagnosis').val().trim();  //console.log(diagnosis) 
+    //var complaint = $('#form-complaint').val().trim(); //console.log(complaint) 
+    var genter = $('input[name="genterlist"]').val();//console.log(genter) 
+    var age = $('input[name="agelist"]').val();//console.log(age)
+    'namelist'    :   name, 
+        'br'          :   br,
+        'bp'          :   br,
+        'spo2'        :   spo2,
+        'temp'        :   temp,
+        'wt'          :   wt,
+        'ttype3'      :   type3,
+        'ttype4'      :   type1,   
+        'ttype2'      :   type2,
+        'genterlist'  :   genter,
+        'age'         :   age,
+        namelist = request.GET.get('namelist') 
+       print(namelist)  
+       genterlist = request.GET.get('genterlist')# print(genterlist)  
+       age = request.GET.get('age')# print(age)  
+       br = request.GET.get('br')# print(br) 
+       bp = request.GET.get('bp')#  print(bp) 
+       spo2 = request.GET.get('spo2')# print(spo2) 
+       temp = request.GET.get('temp')#print(temp) 
+       wt = request.GET.get('wt')#print(wt) 
+       prohidname = request.GET.get('prohidname')# print(prohidname) 
+       #return render(request,'inkA4.html')'namelist':namelist,'genterlist':genterlist,
+       #    'age':age,'br':br,'bp':bp,'spo2':spo2,
+       #    'temp':request.GET.get('temp'),'wt':wt,
+        #    oldcomplaint = request.GET.get('complaint') 
+       #    olddiagnosis = request.GET.get('diagnosis')     
+       #    oldremark = request.GET.get('remark')
+
+
+       $("#BUTTON1").click(function(){      
+        var pid = $('input[name="galist"]').val();
+        console.log(pid)    
+        alert(pid);
+        $.ajax({
+          url: '{% url "inkA4" %}',
+          data: {       
+            'galist' :   pid, 
+            
+          },        
+        });
+        });
+
+
+        # def designid(request):
+    # if request.method == 'POST':
+    #     id1 = request.POST['printbillid']
+    #     print(id1)
+    #     billdetails=Salesbillentry.objects.filter(id=id1)
+    #     print(billdetails)
+    #     context = {'billdetails':billdetails}
+    #     return render(request, 'oldbillprint.html',context)
+    # else:
+    #     return render(request, 'index2.html')  

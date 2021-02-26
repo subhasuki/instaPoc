@@ -1,0 +1,1210 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+      
+      </div>
+    </section>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">               
+          <div class="col-sm-6">
+            <form action="" method="POST">
+              {% csrf_token%}
+          <div class="form-group" style="padding:2px;width:220px;">
+            <label for="cars" >Choose Doctor:</label>
+            <input list="demo4"  class="form-control" id="drselect" name="drselect" onchange="drselectcal()" />
+            <datalist name="drtoken" id="demo4">
+            {% for user in docname %} 
+            <option value="{{user.drname}}">{{user.drname}}</option>
+            {% endfor %} 
+            </datalist>
+            </div> 
+          </form>   
+        </div> 
+                  
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card card-solid ">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card-body pb-0">
+                  
+                    <div class="row">
+                      <div class="col-12 col-sm-12">
+                        <h4>Update Status</h4>
+                            <hr/>
+                            <br>
+                          <div class="row d-flex align-items-stretch ">                            
+                            <div class="col-md-4">                              
+                              <div class="card">
+                                <div class="card-header">
+                                  <label>Normal</label>
+                                  </div>
+                                  <div class=" card-body table-responsive p-0" style="height: 270px;width:100%;">
+                                   
+                                    <table id="waitnormaltbl" class="table table-dark">
+                                      <thead style="text-align:center;font-size:12px;">
+                                        <tr style="font-size:12px;">  
+                                          <th style="display: none;">ID</th>  
+                                          <th align="center">TokenNo</th>
+                                          <th align="center">Name</th>
+                                          <th align="center">Action</th>                                          
+                                        </tr>                                        
+                                      </thead>
+                                      <tbody id="waitnormal" style="font-size:12px;"> 
+                                                                               
+                                      </tbody>
+                                    </table>
+                                   
+                                </div>
+                                <div class="card-footer">
+                                  <div class="text-right">
+                                    <div class="input-group mb-2 mr-sm-2">
+                                        <div class="input-group-prepend">
+                                          <div class="input-group-text form-control-sm">NO.OF</div>
+                                        </div>
+                                        <input type="text" class="form-control form-control-sm"  id="totalnormal1" name="" >
+                                      </div>  
+                                  </div>
+                                </div>
+                              </div>
+                              </div> 
+
+                              <div class="modal fade" id="modal-default">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h4 class="modal-title">Update Status</h4>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <label>ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                     <input type="text" id="form-id" name="form-id">
+                                     <input type="text" id="form-token" name="form-token"><br><br>
+                                     <label>Name:&nbsp;&nbsp;&nbsp;</label>
+                                     <input type="text" id="form-name" name="form-name"><br><br>
+                                     <label>Status:&nbsp;&nbsp;&nbsp;</label>
+                                     <input list="demo5" id="form-status" name="form-status"/>
+                                      <datalist  id="demo5">
+                                      <option value="Waiting">Waiting</option> 
+                                      <option value="Finish">Finish</option>                                      
+                                      </datalist>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                      <button type="button" class="btn btn-primary" id="editnrml">Update</button>
+                                    </div>
+                                  </div>            
+                                </div>          
+                              </div> 
+
+                            <div class="col-md-4">
+                                <div class="card">
+                                  <div class="card-header">
+                                    <label>Emergency</label>
+                                    </div>
+                                    <div class=" card-body table-responsive p-0" style="height: 270px;">
+                                      
+                                      <table id="waitemgtbl" class="table table-dark">
+                                        <thead style="text-align:center;">
+                                          <tr style="font-size:12px;">
+                                          <th  style="display: none;">ID</th>  
+                                          <th align="center">TokenNo</th>
+                                          <th align="center">Name</th>
+                                          <th align="center">Action</th>                                         
+                                          </tr>
+                                        </thead>
+                                         <tbody id="waitemg" style="font-size:12px;"> 
+                                           
+                                        </tbody>
+                                      </table>
+                                      
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="text-right">
+                                      <div class="input-group mb-2 mr-sm-2">
+                                          <div class="input-group-prepend">
+                                            <div class="input-group-text form-control-sm">NO.OF</div>
+                                          </div>
+                                          <input type="text" class="form-control form-control-sm" id="totalemergency1" name="" >
+                                        </div>  
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>  
+
+                            <div class="modal fade" id="modal-default2">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title">Update Status</h4>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                  <label>ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                   <input type="text" id="form-weid" name="form-weid">
+                                   <input type="text" id="form-wetoken" name="form-wetoken"><br><br>
+                                   <label>Name:&nbsp;&nbsp;&nbsp;</label>
+                                   <input type="text" id="form-wename" name="form-wename"><br><br>
+                                   <label>Status:&nbsp;&nbsp;&nbsp;</label>
+                                   <input list="demo6" id="form-westatus" name="form-westatus"/>
+                                    <datalist  id="demo6">
+                                    <option value="Waiting">Waiting</option> 
+                                    <option value="Finish">Finish</option>                                      
+                                    </datalist>
+                                  </div>
+                                  <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" id="editwaitemg">Update</button>
+                                  </div>
+                                </div>            
+                              </div>          
+                            </div>   
+
+                            <div class="col-md-4">
+                                <div class="card">
+                                  <div class="card-header">
+                                    <label>Free</label>
+                                    </div>
+                                    <div class=" card-body table-responsive p-0" style="height: 270px;">
+                                      
+                                      <table id="waitfreetbl" class="table table-dark">
+                                        <thead style="text-align:center;">
+                                          <tr style="font-size:12px;">
+                                          <th  style="display: none;">ID</th>  
+                                          <th align="center">TokenNo</th>
+                                          <th align="center">Name</th>
+                                          <th align="center">Action</th>                                         
+                                          </tr>
+                                        </thead>
+                                         <tbody id="waitfrebdy" style="font-size:12px;"> 
+                                           
+                                        </tbody>
+                                      </table>
+                                      
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="text-right">
+                                      <div class="input-group mb-2 mr-sm-2">
+                                          <div class="input-group-prepend">
+                                            <div class="input-group-text form-control-sm">NO.OF</div>
+                                          </div>
+                                          <input type="text" class="form-control form-control-sm" id="totalemergency2" name="" >
+                                        </div>  
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="modal-default3">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title">Update Status</h4>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                  <label>ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                   <input type="text" id="form-frid" name="form-frid">
+                                   <input type="text" id="form-frtoken" name="form-frtoken"><br><br>
+                                   <label>Name:&nbsp;&nbsp;&nbsp;</label>
+                                   <input type="text" id="form-frname" name="form-frname"><br><br>
+                                   <label>Status:&nbsp;&nbsp;&nbsp;</label>
+                                   <input list="demo7" id="form-frstatus" name="form-frstatus"/>
+                                    <datalist  id="demo7">
+                                    <option value="Waiting">Waiting</option> 
+                                    <option value="Finish">Finish</option>                                      
+                                    </datalist>
+                                  </div>
+                                  <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" id="editwfree">Update</button>
+                                  </div>
+                                </div>            
+                              </div>          
+                            </div> 
+
+                          </div>
+                          <hr/>
+                          <h4>Finished Status</h4>
+                         <hr/>
+                          <div class="row d-flex align-items-stretch ">
+                            <div class="col-md-4">                              
+                                <div class="card">
+                                  <div class="card-header">
+                                    <label>Normal</label>
+                                    </div>
+                                    <div class=" card-body table-responsive p-0" style="height: 270px;width:100%;">
+                                      <table id="finnrmltbl" class="table table-dark">
+                                        <thead style="text-align:center;font-size:12px;">
+                                          <tr  style="font-size:12px;">  
+                                            <th  style="display: none;">ID</th>  
+                                            <th align="center">TokenNo</th>
+                                            <th align="center">Name</th>
+                                            <th align="center">Action</th>                                          
+                                          </tr>                                        
+                                        </thead>
+                                        <tbody id="finnrmlbdy" style="font-size:12px;"> 
+                                                                                 
+                                        </tbody>
+                                      </table>
+                                     
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="text-right">
+                                      <div class="input-group mb-2 mr-sm-2">
+                                          <div class="input-group-prepend">
+                                            <div class="input-group-text form-control-sm">NO.OF</div>
+                                          </div>
+                                          <input type="text" class="form-control form-control-sm"  id="fininput" name="" >
+                                        </div>  
+                                    </div>
+                                  </div>
+                                </div>
+                                </div> 
+
+                                <div class="modal fade" id="modal-default1">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h4 class="modal-title">Update Status</h4>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                      <label>ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                       <input type="text" id="form-idfin1" name="form-idfin1">
+                                       <input type="text" id="form-tokenfin1" name="form-tokenfin1"><br><br>
+                                       <label>Name:&nbsp;&nbsp;&nbsp;</label>
+                                       <input type="text" id="form-namefin1" name="form-namefin1"><br><br>
+                                       <label>Status:&nbsp;&nbsp;&nbsp;</label>
+                                       <input list="demo8" id="form-finstatus" name="form-finstatus"/>
+                                        <datalist  id="demo8">
+                                        <option value="Waiting">Waiting</option> 
+                                        <option value="Finish">Finish</option>                                      
+                                        </datalist>
+                                      </div>
+                                      <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" id="editfinnrml">Update</button>
+                                      </div>
+                                    </div>            
+                                  </div>          
+                                </div>
+
+                              <div class="col-md-4">
+                                  <div class="card">
+                                    <div class="card-header">
+                                      <label>Emergency</label>
+                                      </div>
+                                      <div class=" card-body table-responsive p-0" style="height: 270px;">
+                                        
+                                        <table id="finemgtbl" class="table table-dark">
+                                          <thead style="text-align:center;">
+                                            <tr style="font-size:12px;">
+                                            <th  style="display: none;">ID</th>  
+                                            <th align="center">TokenNo</th>
+                                            <th align="center">Name</th>
+                                            <th align="center">Action</th>                                         
+                                            </tr>
+                                          </thead>
+                                           <tbody id="finemgbdy" style="font-size:12px;"> 
+                                             
+                                          </tbody>
+                                        </table>
+                                        
+                                    </div>
+                                    <div class="card-footer">
+                                      <div class="text-right">
+                                        <div class="input-group mb-2 mr-sm-2">
+                                            <div class="input-group-prepend">
+                                              <div class="input-group-text form-control-sm">NO.OF</div>
+                                            </div>
+                                            <input type="text" class="form-control form-control-sm" id="finemginid" name="" >
+                                          </div>  
+                                      </div>
+                                    </div>
+                                  </div>
+                              </div>
+
+                              <div class="modal fade" id="modal-default4">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h4 class="modal-title">Update Status</h4>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <label>ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                     <input type="text" id="form-feid" name="form-feid">
+                                     <input type="text" id="form-fetoken" name="form-fetoken"><br><br>
+                                     <label>Name:&nbsp;&nbsp;&nbsp;</label>
+                                     <input type="text" id="form-fename" name="form-fename"><br><br>
+                                     <label>Status:&nbsp;&nbsp;&nbsp;</label>
+                                     <input list="demo9" id="form-festatus" name="form-festatus"/>
+                                      <datalist  id="demo9">
+                                      <option value="Waiting">Waiting</option> 
+                                      <option value="Finish">Finish</option>                                      
+                                      </datalist>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                      <button type="button" class="btn btn-primary" id="editfinemg">Update</button>
+                                    </div>
+                                  </div>            
+                                </div>          
+                              </div> 
+
+                              <div class="col-md-4">
+                                  <div class="card">
+                                    <div class="card-header">
+                                      <label>Free</label>
+                                      </div>
+                                      <div class=" card-body table-responsive p-0" style="height: 270px;">
+                                        
+                                        <table id="finfretbl" class="table table-dark">
+                                          <thead style="text-align:center;">
+                                            <tr style="font-size:12px;">
+                                            <th  style="display: none;">ID</th>  
+                                            <th align="center">TokenNo</th>
+                                            <th align="center">Name</th>
+                                            <th align="center">Action</th>                                         
+                                            </tr>
+                                          </thead>
+                                           <tbody id="finfrebdy" style="font-size:12px;"> 
+                                             
+                                          </tbody>
+                                        </table>
+                                        
+                                    </div>
+                                    <div class="card-footer">
+                                      <div class="text-right">
+                                        <div class="input-group mb-2 mr-sm-2">
+                                            <div class="input-group-prepend">
+                                              <div class="input-group-text form-control-sm">NO.OF</div>
+                                            </div>
+                                            <input type="text" class="form-control form-control-sm" id="finfreinid" name="" >
+                                          </div>  
+                                      </div>
+                                    </div>
+                                  </div>
+                              </div>
+
+                              <div class="modal fade" id="modal-default5">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h4 class="modal-title">Update Status</h4>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <label>ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                     <input type="text" id="form-ffeid" name="form-ffeid">
+                                     <input type="text" id="form-ffetoken" name="form-ffetoken"><br><br>
+                                     <label>Name:&nbsp;&nbsp;&nbsp;</label>
+                                     <input type="text" id="form-ffename" name="form-ffename"><br><br>
+                                     <label>Status:&nbsp;&nbsp;&nbsp;</label>
+                                     <input list="demo2" id="form-ffestatus" name="form-ffestatus"/>
+                                      <datalist  id="demo2">
+                                      <option value="Waiting">Waiting</option> 
+                                      <option value="Finish">Finish</option>                                      
+                                      </datalist>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                      <button type="button" class="btn btn-primary" id="editfinfre">Update</button>
+                                    </div>
+                                  </div>            
+                                </div>          
+                              </div>
+
+                          </div>                        
+                      </div>  
+                      <hr/>
+            </div>         
+        </div>   
+        </div>
+        <!-- /.card -->  
+    </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->    
+    <div class="card">
+    </div>
+  {% endblock %}
+  {% block javascript %}
+  
+  <script>
+function  drselectcal(){     
+    var drselectInput = $('input[name="drselect"]').val()    //console.log(drselectInput)       
+    $.ajax({
+        url: '{% url "updatedoclist" %}',
+        type: 'get',
+        data: {
+            'select': drselectInput,
+        },
+        dataType: 'json',
+        success: function(data)  {           
+          if (data.docsearch) { //console.log(data.docsearch)   console.log("success normal table")
+            $('#waitnormal').empty();
+            norFun(data.docsearch);                 
+          }
+          if (data.docsearch1) {  
+            $('#waitemg').empty();//   console.log("success emergency table")
+            norFun1(data.docsearch1);                 
+          }    
+          if (data.docsearch2) { //console.log(data.docsearch)   console.log("success normal table")
+          $('#waitfrebdy').empty();
+          norFun2(data.docsearch2);                 
+          } 
+          if (data.Finishnoprmal) {  //  console.log("success finishnormal table")
+            $('#finnrmlbdy').empty();
+            norFunfinish(data.Finishnoprmal);                 
+          }         
+          if (data.Finishemergency) {  
+            $('#finemgbdy').empty();// console.log("success  finishemergency table")
+            norFunfinishem(data.Finishemergency);                 
+          } 
+          if (data.Finishemergency2) { //  console.log(data.Finishemergency2) 
+            $('#finfrebdy').empty();// console.log("success  finishemergency table")
+            norFunfinishem2(data.Finishemergency2);                 
+          } 
+        }
+    });
+} 
+
+
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "updatedoclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) { //console.log("success");
+              if (data.docsearch) {                
+                $('#waitnormal').empty();
+                norFun(data.docsearch);  
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "updatedoclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) {           
+              if (data.docsearch1) { //console.log("success"); 
+              $('#waitemg').empty();//   console.log("success emergency table")
+              norFun1(data.docsearch1);
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "updatedoclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) {           
+              if (data.docsearch2) { // console.log("success"); 
+              $('#waitfrebdy').empty();
+              norFun2(data.docsearch2);    
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "updatedoclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) {              //console.log("success");
+              if (data.Finishnoprmal) {  // console.log(data.Finishnoprmal) 
+                $('#finnrmlbdy').empty();
+                norFunfinish(data.Finishnoprmal);                 
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "updatedoclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) {           
+              if (data.Finishemergency) { //console.log("success"); 
+              $('#finemgbdy').empty();// console.log("success  finishemergency table")
+              norFunfinishem(data.Finishemergency);
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "updatedoclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) {           
+              if (data.Finishemergency2) { // console.log("success"); 
+              $('#finfrebdy').empty();// console.log("success  finishemergency table")
+              norFunfinishem2(data.Finishemergency2);   
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+
+function norFun(docsearch){
+    var rawmetrial = JSON.parse(docsearch); // console.log(rawmetrial);
+    appendToUsrTable(rawmetrial);   
+}
+
+function appendToUsrTable(rawmetrial) {    //console.log(rawmetrial)
+    for(var i=0; i<rawmetrial.length; i++){
+      data2=rawmetrial[i].fields; 
+     $("#waitnormaltbl > tbody:last-child").append(`
+       <tr id="users-${rawmetrial[i].pk}">
+        <td style="display: none;">${rawmetrial[i].pk}</td> 
+        <td align="center" class="usertoken userData">${data2.tokenno}</td>
+        <td align="center" class="username userData">${data2.name}</td>
+        <td align="center"><a href="#"  onClick="editnrml(${rawmetrial[i].pk})" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
+        Edit </button></td>    
+      </tr>   
+        `);             
+  } 
+  CountRows(); 
+}
+
+function CountRows() {
+    var rowCount = $('#waitnormal tr').length;
+    document.getElementById("totalnormal1").value=rowCount;
+}
+
+function editnrml(id) {
+  if (id) {  //alert(id);
+    tr_id = "#users-" + id;
+    token = $(tr_id).find(".usertoken").text();  
+    console.log(token)
+    pname = $(tr_id).find(".username").text();
+    $('#form-id').val(id);    
+    $('#form-token').val(token);
+    $('#form-name').val(pname);
+  }
+  }
+
+$("#editnrml").click(function(){
+  var idInput = $('#form-id').val().trim(); //  console.log(idInput);console.log(token);
+  var pid = $('input[name="form-id"]').val()  
+  var token = $('input[name="form-token"]').val()  
+  var name = $('input[name="form-name"]').val()
+  var Status = $('input[name="form-status"]').val()
+  // Create Ajax Call
+    $.ajax({
+      url: '{% url "editwaitnrml" %}',
+      data: {    
+        'idInput':idInput,    
+        'pid'    : pid, 
+        'token'  : token,
+        'name'   : name,
+        'Status' : Status,
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.save) { 
+          var user = data.save;                
+          swal("Good job!", "Update Successfully", "success")  
+          $('#waitnormal').empty();  
+        
+        }
+      }
+    });    
+    $('#modal-default').modal('hide');
+    return false;
+  });
+
+function norFun1(docsearch1){
+  var rawmetrial = JSON.parse(docsearch1);   //console.log(rawmetrial);
+  appendToTable(rawmetrial);   
+}
+
+function appendToTable(rawmetrial) {  //console.log(rawmetrial)
+  for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields; 
+   $("#waitemgtbl > tbody:last-child").append(`
+   <tr id="users-${rawmetrial[i].pk}"> 
+      <td style="display: none;">${rawmetrial[i].pk}</td> 
+      <td align="center" class="usertoken1 userData">${data2.tokenno}</td>
+      <td align="center" class="username1 userData">${data2.name}</td>
+      <td align="center" onClick="editwaitemg(${rawmetrial[i].pk})" class="btn btn-default" data-toggle="modal" data-target="#modal-default2">
+      Edit </button></td>       
+  </tr>   
+    `);             
+} 
+CountRows1();
+}
+
+function CountRows1() {
+  var rowCount1 = $('#emergency tr').length;
+  document.getElementById("totalemergency1").value=rowCount1;  
+}
+
+function editwaitemg(id) {
+  if (id) {  //alert(id);
+    tr_id = "#users-" + id;// console.log(tr_id)
+    token = $(tr_id).find(".usertoken1").text(); // console.log(token)
+    pname = $(tr_id).find(".username1").text();
+    $('#form-weid').val(id);    
+    $('#form-wetoken').val(token);
+    $('#form-wename').val(pname);
+  }
+  }
+
+$("#editwaitemg").click(function(){
+  var idInput = $('#form-id').val().trim(); //  console.log(idInput);console.log(token);
+  var pid = $('input[name="form-weid"]').val()  
+  var token = $('input[name="form-wetoken"]').val()  
+  var name = $('input[name="form-wename"]').val()
+  var status = $('input[name="form-westatus"]').val() //console.log(status)
+  // Create Ajax Call
+    $.ajax({
+      url: '{% url "editwaitemg" %}',
+      data: {    
+        'idInput':idInput,    
+        'pid'    : pid, 
+        'token'  : token,
+        'name'   : name,
+        'status' : status,
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.save) { 
+          var user = data.save;                
+          swal("Good job!", "Update Successfully", "success")
+          $('#emergency').empty(); 
+        }
+      }
+    });    
+    $('#modal-default1').modal('hide');
+    return false;
+  });
+
+function norFun2(docsearch2){
+  var rawmetrial = JSON.parse(docsearch2); // console.log(rawmetrial);
+  appendToUsrTable2(rawmetrial);   
+}
+
+function appendToUsrTable2(rawmetrial) {    //console.log(rawmetrial)
+  for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields; 
+   $("#waitfreetbl > tbody:last-child").append(`
+     <tr id="users-${rawmetrial[i].pk}">
+      <td style="display: none;">${rawmetrial[i].pk}</td> 
+      <td align="center" class="usertoken2 userData">${data2.tokenno}</td>
+      <td align="center" class="username2 userData">${data2.name}</td>
+      <td align="center" onClick="editwfree(${rawmetrial[i].pk})" class="btn btn-default" data-toggle="modal" data-target="#modal-default3">
+        Edit </button></td>       
+    </tr>   
+      `);             
+} 
+CountRows2(); 
+}
+
+function CountRows2() {
+  var rowCount = $('#waitfrebdy tr').length;
+  document.getElementById("totalemergency2").value=rowCount;
+}
+
+function editwfree(id) {
+  if (id) {  //alert(id);
+    tr_id = "#users-" + id;
+    token = $(tr_id).find(".usertoken2").text();//console.log(token)
+    pname = $(tr_id).find(".username2").text();
+    $('#form-frid').val(id);    
+    $('#form-frtoken').val(token);
+    $('#form-frname').val(pname);
+  }
+  }
+
+$("#editwfree").click(function(){
+  var idInput = $('#form-id').val().trim(); //  console.log(idInput);console.log(token);
+  var pid = $('input[name="form-frid"]').val()  
+  var token = $('input[name="form-frtoken"]').val()  
+  var name = $('input[name="form-frname"]').val()
+  var status = $('input[name="form-frstatus"]').val()//console.log(status)
+  // Create Ajax Call
+    $.ajax({
+      url: '{% url "editwfree" %}',
+      data: {    
+        'idInput':idInput,    
+        'pid'    : pid, 
+        'token'  : token,
+        'name'   : name,
+        'status' : status,
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.save) { 
+          var user = data.save;                
+          swal("Good job!", "Update Successfully", "success")
+          $('#waitfrebdy').empty(); 
+        }
+      }
+    });    
+    $('#modal-default1').modal('hide');
+    return false;
+  });
+
+function norFunfinish(Finishnoprmal){
+  var rawmetrial = JSON.parse(Finishnoprmal);   // console.log(rawmetrial);
+  appendToTablefinish(rawmetrial);   
+}
+
+function appendToTablefinish(rawmetrial) {  //console.log(rawmetrial)
+  for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields; 
+   $("#finnrmltbl > tbody:last-child").append(`
+   <tr id="users-${rawmetrial[i].pk}">
+    <td style="display: none;">${rawmetrial[i].pk}</td> 
+      <td align="center" class="usertokenfin userData">${data2.tokenno}</td>
+      <td align="center" class="usernamefin userData">${data2.name}</td>
+      <td align="center" onClick="editfinnrml(${rawmetrial[i].pk})" class="btn btn-default" data-toggle="modal" data-target="#modal-default1">
+        Edit </button></td>    
+   </tr>    
+    `);             
+} 
+CountRows3();
+}
+
+function CountRows3() {
+  var rowCount2 = $('#finnrmlbdy tr').length;
+  document.getElementById("fininput").value=rowCount2;  
+}
+
+function editfinnrml(id) {
+  if (id) {  //alert(id);
+    tr_id = "#users-" + id;
+    token = $(tr_id).find(".usertokenfin").text();//console.log(token)
+    pname = $(tr_id).find(".usernamefin").text();
+    $('#form-idfin1').val(id);    
+    $('#form-tokenfin1').val(token);
+    $('#form-namefin1').val(pname);
+  }
+  }
+
+$("#editfinnrml").click(function(){
+  var idInput = $('#form-id').val().trim(); //  console.log(idInput);console.log(token);
+  var pid = $('input[name="form-idfin1"]').val()  
+  var token = $('input[name="form-tokenfin1"]').val()  
+  var name = $('input[name="form-namefin1"]').val()
+  var status = $('input[name="form-finstatus"]').val()// console.log(status)
+  // Create Ajax Call
+    $.ajax({
+      url: '{% url "editfinnrml" %}',
+      data: {    
+        'idInput':idInput,    
+        'pid'    : pid, 
+        'token'  : token,
+        'name'   : name,
+        'status' : status,
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.save) { 
+          var user = data.save;                
+          swal("Good job!", "Update Successfully", "success")
+          $('#finnrmlbdy').empty();  
+        }
+      }
+    });    
+    $('#modal-default1').modal('hide');
+    return false;
+  });
+
+function norFunfinishem(Finishemergency){
+  var rawmetrial = JSON.parse(Finishemergency); // console.log(rawmetrial);
+  appendToUsrTable3(rawmetrial);   
+}
+
+function appendToUsrTable3(rawmetrial) {    //console.log(rawmetrial)
+  for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields; 
+   $("#finemgtbl > tbody:last-child").append(`
+     <tr id="users-${rawmetrial[i].pk}">
+      <td style="display: none;">${rawmetrial[i].pk}</td> 
+      <td align="center" class="usertoken3 userData">${data2.tokenno}</td>
+      <td align="center" class="username3 userData">${data2.name}</td>
+      <td align="center" onClick="editfinemg(${rawmetrial[i].pk})" class="btn btn-default" data-toggle="modal" data-target="#modal-default4">
+      Edit</button></td>    
+    </tr>   
+      `);             
+} 
+CountRows4(); 
+}
+
+function CountRows4() {
+  var rowCount = $('#finemgbdy tr').length;
+  document.getElementById("finemginid").value=rowCount;
+}
+
+function editfinemg(id) {
+  if (id) {  //alert(id);
+    tr_id = "#users-" + id;//  console.log(tr_id)
+    token = $(tr_id).find(".usertoken3").text();//  console.log(token)
+    pname = $(tr_id).find(".username3").text();
+    $('#form-feid').val(id);    
+    $('#form-fetoken').val(token);
+    $('#form-fename').val(pname);
+  }
+  }
+
+$("#editfinemg").click(function(){
+  var idInput = $('#form-id').val().trim(); //  console.log(idInput);console.log(token);
+  var pid = $('input[name="form-feid"]').val()  
+  var token = $('input[name="form-fetoken"]').val()  
+  var name = $('input[name="form-fename"]').val()
+  var status = $('input[name="form-festatus"]').val()//console.log(status)
+  // Create Ajax Call
+    $.ajax({
+      url: '{% url "editfinemg" %}',
+      data: {    
+        'idInput':idInput,    
+        'pid'    : pid, 
+        'token'  : token,
+        'name'   : name,
+        'status' : status,
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.save) { 
+          var user = data.save;                
+          swal("Good job!", "Update Successfully", "success")
+          $('#finemgbdy').empty();   
+          
+        }
+      }
+    });    
+    $('#modal-default1').modal('hide');
+    return false;
+  });
+
+function norFunfinishem2(Finishemergency2){//console.log(Finishemergency2)
+  var rawmetrial = JSON.parse(Finishemergency2); // console.log(rawmetrial);
+  appendToUsrTable4(rawmetrial);   
+}
+
+function appendToUsrTable4(rawmetrial) {    //console.log(rawmetrial)
+  for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields; 
+   $("#finfretbl > tbody:last-child").append(`
+     <tr id="users-${rawmetrial[i].pk}">
+      <td style="display: none;">${rawmetrial[i].pk}</td> 
+      <td align="center" class="usertoken4 userData">${data2.tokenno}</td>
+      <td align="center" class="username4 userData">${data2.name}</td>
+      <td align="center" onClick="editfinfre(${rawmetrial[i].pk})" class="btn btn-default" data-toggle="modal" data-target="#modal-default5">
+        Edit </button></td>   
+    </tr>   
+      `);             
+} 
+CountRows5(); 
+}
+
+function CountRows5() {
+  var rowCount = $('#finfrebdy tr').length;
+  document.getElementById("finfreinid").value=rowCount;
+}
+
+function editfinfre(id) {
+  if (id) {  //alert(id);
+    tr_id = "#users-" + id;
+    token = $(tr_id).find(".usertoken4").text();//console.log(token)
+    pname = $(tr_id).find(".username4").text();
+    $('#form-ffeid').val(id);    
+    $('#form-ffetoken').val(token);
+    $('#form-ffename').val(pname);
+  }
+  }
+
+$("#editfinfre").click(function(){
+  var idInput = $('#form-id').val().trim(); //  console.log(idInput);console.log(token);
+  var pid = $('input[name="form-ffeid"]').val()  
+  var token = $('input[name="form-ffetoken"]').val()  
+  var name = $('input[name="form-ffename"]').val()
+  var status = $('input[name="form-ffestatus"]').val()// console.log(status)
+  // Create Ajax Call
+    $.ajax({
+      url: '{% url "editfinfre" %}',
+      data: {    
+        'idInput':idInput,    
+        'pid'    : pid, 
+        'token'  : token,
+        'name'   : name,
+        'status' : status,
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.save) { 
+          var user = data.save;                
+          swal("Good job!", "Update Successfully", "success")
+          $('#finfrebdy').empty();
+        }
+      }
+    });    
+    $('#modal-default1').modal('hide');
+    return false;
+  });
+
+
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "updatedoclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) { //console.log("success");
+              if (data.docsearch) {                
+                //$('#waitnormal').empty();
+                norFun(data.docsearch);  
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "updatedoclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) {              //console.log("success");
+              if (data.Finishnoprmal) {  
+                console.log(data.Finishnoprmal) 
+                //$('#finnrmlbdy').empty();
+                norFunfinish(data.Finishnoprmal);                 
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "updatedoclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) {           
+              if (data.docsearch1) { //console.log("success"); 
+              //$('#waitemg').empty();//   console.log("success emergency table")
+              norFun1(data.docsearch1);
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "updatedoclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) {           
+              if (data.docsearch2) { // console.log("success"); 
+              //$('#waitfrebdy').empty();
+              norFun2(data.docsearch2);    
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "updatedoclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) {           
+              if (data.Finishemergency) { //console.log("success"); 
+              //$('#finemgbdy').empty();// console.log("success  finishemergency table")
+              norFunfinishem(data.Finishemergency);
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "updatedoclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) {           
+              if (data.Finishemergency2) { // console.log("success"); 
+              //$('#finfrebdy').empty();// console.log("success  finishemergency table")
+              norFunfinishem2(data.Finishemergency2);   
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+
+
+</script>
+
+{% endblock javascript%}
+ 

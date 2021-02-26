@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load static %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Ink-A4</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap 4 -->
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+<style>
+  body{
+    width:288px;
+    height: auto;
+} 
+</style>
+</head>
+<body>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Pace</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Pace</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+  
+    <!-- Main content -->
+    <section class="content">
+  
+      <!-- Default box -->
+      <div class="card" style="height:75%;">
+        <div class="card-header">
+          <h3 class="card-title">Print</h3>
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool"  data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+              <i class="fas fa-minus"></i></button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+              <i class="fas fa-times"></i></button>              
+          </div>          
+        </div>
+        <div class="card-body" style="height:80%;width:100%;">
+            <div class="row" >
+              <div class="col-12 col-sm-6 col-lg-12">
+                <div class="card card-default">   
+                    <div class="card-body">
+                        <div id="invoice-POS">         
+                              <div class="info"> 
+                                <h2>S.M HOSPITAL</h2>
+                                <p>Anaikarai Street,Tenkasi-627811</p>                               
+                              </div><!--End Info-->
+                            <div id="bot">   
+                               <h2>Token</h2>
+                                            <div id="legalcopy">
+                                              <small>Token No:&nbsp;{{user.tokenno}}</small><br>
+                                              <small>Type:&nbsp;{{user.status}}</small><br>
+                                              <small>Name:&nbsp;{{user.name}}</small><br>
+                                              <small>Age:&nbsp;{{user.age}}</small><br>
+                                              <small>Gender:&nbsp;{{user.gender}}</small><br>
+                                              <small>Place:&nbsp;{{user.addrs}}</small><br>
+                                              <small>Diagnosis:&nbsp;{{user.diagnosis}}</small><br>
+                                              <small>Date:&nbsp;{{d1}}</small><hr>
+                                              <div id="generator">
+                                                <input type="hidden" id="barcodeValue" value={{user.peropid}}>
+                                                 <div id="config">    
+                                                     <div class="title"></div>
+                                                     <input type="radio" name="btype" id="code39" value="code39" checked="checked" style="display:none;">
+                                                     <input type="radio" id="css" name="renderer" value="css" checked="checked"  style="display:none;">                                                                                                       
+                                               </div>
+                                               <div id="barcodeTarget"  style="size:1.5;display:inline-block"></div>
+                                                <canvas id="canvasTarget"></canvas> <hr/>
+                                                <label>*****--Care For You--*****</label>
+                                              <p><strong style="text-align:right;"><small>Developed By SR SoftTech</small></strong></p>                                               
+                                            </div>                        
+                                        </div><!--End InvoiceBot-->
+                          </div><!--End Invoice-->
+                     </div>
+                   </div>
+                      </div>
+                      </div>
+                      </div>
+                      </div>
+</section>
+</div>
+</body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type="text/javascript"  src="{% static 'dist/js/jquery-barcode.js' %}"></script>
+<script>
+    window.addEventListener("load", window.print()); 
+    window.console = window.console || function(t) {};
+    if (document.location.search.match(/type=embed/gi)) {
+        window.parent.postMessage("resize", "*");
+        window.location.href='/tokengen/'
+      }
+
+    function generateBarcode(){
+      console.log("ahhhhhhhhhhhhh")
+      var value = $("#barcodeValue").val();
+      console.log(value)
+      var btype = $("input[name=btype]:checked").val();
+      var renderer = $("input[name=renderer]:checked").val();
+      var settings = {
+        output:renderer,
+        bgColor: $("#bgColor").val(),
+        color: $("#color").val(),
+        barWidth: $("#barWidth").val(),
+        barHeight: $("#barHeight").val(),
+        moduleSize: $("#moduleSize").val(),
+        posX: $("#posX").val(),
+        posY: $("#posY").val(),
+        addQuietZone: $("#quietZoneSize").val()
+      };
+      if ($("#rectangular").is(':checked') || $("#rectangular").attr('checked')){
+        value = {code:value, rect: true};
+      }
+      if (renderer == 'canvas'){
+        clearCanvas();
+        $("#barcodeTarget").hide();
+        $("#canvasTarget").show().barcode(value, btype, settings);
+      } else {
+        $("#canvasTarget").hide();
+        $("#barcodeTarget").html("").show().barcode(value, btype, settings);
+      }
+    }
+        
+    function showConfig1D(){
+      $('.config .barcode1D').show();
+      $('.config .barcode2D').hide();
+    }
+    
+    function showConfig2D(){
+      $('.config .barcode1D').hide();
+      $('.config .barcode2D').show();
+    }
+    
+    function clearCanvas(){
+      var canvas = $('#canvasTarget').get(0);
+      var ctx = canvas.getContext('2d');
+      ctx.lineWidth = 1;
+      ctx.lineCap = 'butt';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.strokeStyle  = '#000000';
+      ctx.clearRect (0, 0, canvas.width, canvas.height);
+      ctx.strokeRect (0, 0, canvas.width, canvas.height);
+    }
+    
+    $(function(){
+      $('input[name=btype]').click(function(){
+        if ($(this).attr('id') == 'datamatrix') showConfig2D(); else showConfig1D();
+      });
+      $('input[name=renderer]').click(function(){
+        if ($(this).attr('id') == 'canvas') $('#miscCanvas').show(); else $('#miscCanvas').hide();
+      });
+      generateBarcode();
+    });
+  </script>
+
+  </html>

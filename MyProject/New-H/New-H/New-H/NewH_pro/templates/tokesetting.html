@@ -1,0 +1,486 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  #bxcs{
+    background-color: rgb(218, 216, 211);
+    width: 1000px;
+    border: 1px solid rgb(4, 105, 26);
+    padding: 50px;
+    margin: 20px;
+    left: 0;
+  }
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 190px;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+  }
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  .checkmark:after {
+    display: block;
+  }
+  .checkmark:after {
+    left: 49px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  .checkmark1 {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+  }
+  .checkmark1:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  .checkmark1:after {
+    display: block;
+  }
+  .checkmark1:after {
+    left: 49px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+</style>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">   
+    <section class="content-header">          
+            <div class="col-sm-6">
+              <h4>PATIENT DETAILS</h4>
+            </div>          
+          <hr/>               
+    </section>
+
+   
+
+    <!-- Main content -->
+    <section class="content">           
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                  <li class="nav-item"><a class="nav-link active" href="#ResetToken" data-toggle="tab">Reset Token</a>
+                  <li class="nav-item"><a class="nav-link" href="#DoctorInfo" data-toggle="tab">DoctorInfo</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#DoctorFee" id="labdata" data-toggle="tab">DoctorFee</a></li>
+                  
+              </ul>
+              </div>
+
+<div class="card-body">
+<div class="tab-content">
+
+<div class="active tab-pane" id="ResetToken"> 
+      
+    
+             <div class="row">
+              <div class="col-md-12">
+                <div class="row form-group">   
+                <div class="col-md-8"> 
+              <label>Reset Selected Doctor:</label>
+              <input type="checkbox" class="checkmark form-control"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <input list="demo5"  disabled="disabled" id="drtoken" name="drtoken"/>
+                <datalist  id="demo5">
+                {% for user in docname %} 
+                <option value="{{user.drname}}">{{user.drname}}</option>
+                {% endfor %}                                                                                                       
+                </datalist> 
+              </div><br>
+              <div class="col-md-4"> 
+                <label>&nbsp;</label>
+                <button type="submit" id="tokdlt" class="btn-sml btn btn-success">ResetToken</button>                     
+                </div>
+              </div><br>
+            </div>
+            </div>
+                            
+    
+</div>
+               
+<div class="tab-pane" id="DoctorInfo">       
+             <div class="row">
+              <div class="col-md-12">
+                <div class="row form-group">   
+              <div class="col-md-3"> 
+              <label>Dr.Name</label>
+              <input type="text" name="docname" id="docname" class="form-control"/>
+              </div>
+              <div class="col-md-2"> 
+              <label>VisitTime</label>
+              <input type="text" name="visittime" id="visittime" class="form-control"/>
+              </div>
+              <div class="col-md-2"> 
+                <label>ShortName</label>
+                <input type="text" name="shrtname" id="shrtname" class="form-control"/>
+                </div>
+                <div class="col-8 col-md-3"> 
+                  <label>&nbsp;</label><br>
+                  <button type="submit" id="checkavail" class="btn btn-warning btn-sml">Check Availablity</button>                     
+                  </div>
+                  <div class="col-3 col-md-2"> 
+                    <label>&nbsp;</label><br>
+                    <button type="submit" id="savedrname" class="btn btn-success btn-sml">Save</button>                     
+                    </div>
+              </div>
+            </div>           
+            <hr/>
+           
+              <div class="table-responsive p-0" style="height: 270px;">
+                <table id="docinfotbl" class="table table-dark danger">
+                  <thead style="text-align:center;font-size:12px;">
+                    <tr>                          
+                      <th>id</th>                               
+                      <th>DoctorName</th>
+                      <th>ShortName</th>
+                      <th>VisitingTime</th>
+                      <th>Action</th>
+                      </tr>
+                  </thead>
+                  <tbody id="drdtlbody" style="font-size:12px;" >  
+                    {% for user in docname %} 
+                    <tr  id="user-{{user.id}}"> 
+                      <td align="center" class="userid userData" name="did">{{user.id}}</td>                                 
+                      <td align="center" class="userdrname userData"  name="drname">{{user.drname}}</td> 
+                      <td align="center"  class="usershortname userData"  name="shortname" >{{user.shortname}}</td> 
+                      <td align="center"  class="uservisitingtime userData"  name="visitingtime">{{user.visitingtime}}</td> 
+                      <td align="center"><button type="button"  onClick="editdrdtl({{user.id}})" id="editdrdtl"   class="btn-sml btn btn-default" data-toggle="modal" data-target="#modal-default"><i class="fas fa-edit" style="color:blue"></i></button>&nbsp;&nbsp;/&nbsp;&nbsp;
+                      <button type="button" onClick="deletedrdtl({{user.id}},'{{user.shortname}}')" id="deletedrdtl"   class="btn-sml btn btn-default"><i class="fas fa-trash-alt" style="color:red"></i></button></td>  
+                    </tr>
+                    {% endfor %} 
+                   </tbody>
+                </table>
+            </div>
+            <div class="modal fade" id="modal-default">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Edit DoctorInfo</h4>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                  <label>ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                   <input type="text" id="form-id" name="snoupt"><br><br>
+                   <label>DoctorName&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                   <input type="text" id="form-drname" name="drname"><br><br>
+                   <label>ShortName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                   <input type="text" id="form-shortname" name="shortname" disabled><br><br>
+                   <label>VisitingTime&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                   <input type="text" id="form-visitingtime" name="visitingtime">
+                  </div>
+                  <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="updatedrdetails" class="btn btn-primary">Update</button>
+                  </div>
+                </div>            
+              </div>          
+            </div>
+            </div>                  
+</div>
+                  
+<div class="tab-pane" id="DoctorFee">  
+       <div class="row">
+        <div class="col-md-12">
+        <div class="row form-group"> 
+        {% for user in feedlt %}   
+        <div class="col-10 col-md-10"> 
+        <input type="hidden" class="form-sm-control" name="feeid" value="{{user.id}}" ><br><br>
+        <label>Last Update&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+        <input type="text" class="form-sm-control" id="theDate" name="lastupdate"><br><br>
+        <label>New Update&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+        <input type="text" class="form-sm-control" value="{{user.newnormal}}" name="newnormal"><br><br>
+        <label>New Emergency&nbsp;&nbsp;&nbsp;</label>
+        <input type="text" class="form-sm-control" value="{{user.newemer}}" name="newemer"><br><br>
+        <label>Old Normal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+        <input type="text" class="form-sm-control" value="{{user.oldnormal}}" name="oldnormal"><br><br>
+        <label>Old Emergency&nbsp;&nbsp;&nbsp;&nbsp;</label>
+        <input type="text" class="form-sm-control" value="{{user.oldemer}}" name="oldemer"><br><br>
+        </div>
+        {% endfor %} 
+        </div><br>
+         <div class="col-md-12">
+          <div class="row form-group">  
+          <label></label>
+          <div class="col-4"> 
+          <button type="submit" id="updatefee" class="btn btn-success btn-sml">Update</button>                     
+          </div>     
+         </div>            
+      </div> 
+      </div>
+      </div>               
+</div>
+
+      
+      </div>               
+      </div>
+      </div>
+      </section>
+      </div>  
+      </div>
+
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    var d = new Date();
+    var o = {year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit'};
+    d.toLocaleDateString('en-US', o);
+    document.getElementById('theDate').value = d;
+
+    var myVar = setInterval(myTimer, 1000);
+
+function myTimer() {
+      var date = new Date();
+      var day = date.getDate();
+      var month = date.getMonth() + 1;
+      var year = date.getFullYear();
+      var t = d.toLocaleTimeString() ;
+
+      if (month < 10) month = "0" + month;
+      if (day < 10) day = "0" + day;
+      var today = year + "-" + month + "-" + day + "-" + t;
+      document.getElementById('theDate').value = today;
+    }
+
+$(':checkbox').click(function() {
+  $('input:text').attr('disabled',! this.checked)
+});
+
+function drtokencal() {     
+  var drtoken = $('input[name="drtoken"]').val()  
+  console.log(drtoken)        
+  $.ajax({
+      url: '{% url "doctokengenshot" %}',
+      type: 'get',
+      data: {
+          'drtoken': drtoken,
+      },
+      dataType: 'json',
+      success: function(data)  {  
+        if(data.success){
+          alert("hlo")
+        }
+      }
+  });   
+}
+   
+$("#tokdlt").click(function(){     
+    var drtoken = $('input[name="drtoken"]').val()  // console.log(drtoken)                
+    if(drtoken){
+    $.ajax({
+        url: '{% url "tokdlt" %}',
+        type: 'get',
+        data: {
+            'drtoken': drtoken,         
+        },
+        dataType: 'json',
+        success: function(data)  { 
+          if(data.success) {
+            swal("Good job!", "Reset SuceessFully!", "success");  }         
+        }
+    }); 
+  }
+  else
+  {
+    swal("Oh noes!", "Enter Per.op.id ", "error");   
+  } 
+  document.getElementById("drtoken").value = "";   
+  });
+  
+$("#checkavail").click(function(){     
+    var docname = $('input[name="docname"]').val()  // console.log(docname)   
+    var visittime = $('input[name="visittime"]').val()  //  console.log(visittime)  
+    var shrtname  = $('input[name="shrtname"]').val()  //  console.log(shrtname)
+    if(docname || visittime || shrtname){
+    $.ajax({
+        url: '{% url "checkavail" %}',
+        type: 'get',
+        data: {
+            'docname'   : docname,
+            'visittime' : visittime,
+            'shrtname'  : shrtname,     
+        },
+        dataType: 'json',
+        success: function(data)  { 
+          if (data.exist)  { // console.log(data.exist)
+            swal("Oh noes!", "Name already exists ", "error")}          
+          else{
+            swal("Oh noes!", "Enter values", "error"); 
+          }
+  }
+});
+ }
+  else
+      swal("Oh noes!", "Enter values", "error"); 
+  });
+
+$("#savedrname").click(function(){     
+    var docname = $('input[name="docname"]').val()  // console.log(docname)   
+    var visittime = $('input[name="visittime"]').val()  //  console.log(visittime)  
+    var shrtname  = $('input[name="shrtname"]').val()  //  console.log(shrtname)
+    if(docname || visittime || shrtname){
+    $.ajax({
+        url: '{% url "savedrname" %}',
+        type: 'get',
+        data: {
+            'docname'   : docname,
+            'visittime' : visittime,
+            'shrtname'  : shrtname,     
+        },
+        dataType: 'json',
+        success: function(data)  {
+          if(data.newsrtnm){
+            var ddtt= data.newsrtnm;
+            console.log(ddtt)
+            //document.getElementById("shrtdrdtl").value=ddtt; 
+          } 
+          if (data.user) {
+          appendToUserTabel(data.user); // console.log(data.user)        
+          swal("Good job!", "Save Successfully", "success") }
+          else{ swal("Oh noes!", "Name already exists ", "error"); }
+        }
+    });     
+  }
+  else
+      swal("Oh noes!", "Enter values", "error"); 
+      document.getElementById("docname").value = ""; 
+      document.getElementById("visittime").value = "";  
+      document.getElementById("shrtname").value = ""; 
+  });  
+
+function appendToUserTabel(user) {  
+    console.log(user)
+    data2=user; // console.log(data2)
+    $("#docinfotbl > tbody:last-child").append(`
+    <tr id="user-${data2.id}">  
+    <td align="center"  class="userid userData" name="did">${data2.id}</td>
+    <td align="center"  class="userdrname userData"  name="drname">${data2.drname}</td>
+    <td align="center"  class="usershortname userData"  name="shortname">${data2.shortname}</td>
+    <td align="center"  class="uservisitingtime userData"  name="visitingtime">${data2.visitingtime}</td>
+    <td align="center"><button align="center" type="button" id="comedit" name="comup"
+    class="userdrname userData btn btn-default  btn-sml" data-toggle="modal" data-target="#modal-default">
+    <i class="fas fa-edit" style="color:blue" onClick="editdrdtl(${data2.id})"></i></button>&nbsp;&nbsp;/&nbsp;&nbsp;
+    <button type="button" class="btn btn-default btn-sml" onClick="deletedrdtl(${user.id},'${data2.shortname}')">
+    <i class="fas fa-trash-alt" style="color:red"></i></button></td>                          
+    </tr>   
+   `);          
+    }  
+
+function editdrdtl(id,newsrtnm) {
+  if (id) {  
+  tr_id = "#user-" + id; //console.log(tr_id);
+  drdetails = $(tr_id).find(".userdrname").text(); 
+  shortname = $(tr_id).find(".usershortname").text();  
+  visitingtime = $(tr_id).find(".uservisitingtime").text();  //console.log(drdetails)
+  $('#form-id').val(id);
+  $('#form-drname').val(drdetails);
+  $('#form-shortname').val(shortname);
+  $('#form-visitingtime').val(visitingtime);
+  }
+}
+
+$("#updatedrdetails").click(function(){
+  var snoupt = $('input[name="snoupt"]').val()// console.log(complaintupdate)  
+  var drname = $('input[name="drname"]').val() // console.log(snoupt) 
+  var visitingtime = $('input[name="visitingtime"]').val()
+  $.ajax({
+      url: '{% url "updatedrdetails" %}',
+      type: 'get',
+      data: {                 
+        'snoupt'         : snoupt,
+        'drname'         : drname,   
+        'visitingtime'   : visitingtime,   
+      },
+      dataType: 'json',
+      success: function(data)  {             
+      if (data.to_updatenewdrdtl) { 
+        var user = data.to_updatenewdrdtl;        //console.log(user)
+        updateToUserTabel(user);     
+        swal("Good job!", "Update Successfully", "success")   
+        } 
+      }
+      }); 
+    });
+
+function updateToUserTabel(user){  // console.log(user);  
+  $("#drdtlbody #user-" + user.id).children(".userData").each(function() {
+  var attr = $(this).attr("name");
+  if (attr == "drname") {
+    $(this).text(user.drname);    
+  } 
+  if (attr == "visitingtime") {
+    $(this).text(user.visitingtime);    
+  } 
+  });
+  }
+  
+function deletedrdtl(id, shrtnam){  //alert(shrtnam)
+  $.ajax({
+    url: 'deletedrdtl',
+    data: {'id'  :id,
+    'shortname':shrtnam},  
+    dataType: 'json',
+    success: function (data) {
+    if (data.success) { 
+      $("#docinfotbl #user-" + id).remove();
+      swal("Good job!", "Delete Successfully", "success")   
+    } 
+    }
+    });
+}  
+
+$("#updatefee").click(function(){
+  var feeid = $('input[name="feeid"]').val()
+  var newnormal = $('input[name="newnormal"]').val() // console.log(snoupt) 
+  var newemer = $('input[name="newemer"]').val()
+  var oldnormal = $('input[name="oldnormal"]').val() // console.log(snoupt) 
+  var oldemer = $('input[name="oldemer"]').val()
+  var lastupdate = $('input[name="lastupdate"]').val()// console.log(complaintupdate)  
+  $.ajax({
+      url: '{% url "updatefee" %}',
+      type: 'get',
+      data: {     
+        'feeid'       : feeid,
+        'newnormal'   : newnormal,   
+        'newemer'     : newemer,   
+        'oldnormal'   : oldnormal,   
+        'oldemer'     : oldemer,  
+        'lastupdate'  : lastupdate, 
+      },
+      dataType: 'json',
+      success: function(data)  {             
+      if (data.to_updatefee) { 
+        //var user = data.to_updatefee;        //console.log(user)
+        //updateToUserTabel(user);     
+        swal("Good job!", "Update Successfully", "success")   
+        } 
+      }
+      }); 
+    });
+
+
+</script> 
+
+{% endblock javascript%}

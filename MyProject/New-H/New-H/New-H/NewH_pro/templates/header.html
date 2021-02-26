@@ -1,0 +1,415 @@
+{% load static%}
+<!------------------------- content wrapper ----------------------------->
+
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+      <!-- Left navbar links -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="{% url 'index' %}" class="nav-link">Home</a>
+        </li>
+        
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="#" class="nav-link">Contact</a>
+        </li>
+
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+        </li>
+      </ul>
+  
+      <!-- SEARCH FORM -->
+      <form class="form-inline ml-3">
+        <div class="input-group input-group-sm">
+          <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-navbar" type="submit">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </form>  
+      
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <!-- Brand Logo -->
+      <a href="#" class="brand-link">
+        {% for user in hosdel %}
+        <img src="{{ user.profile.url }}" alter=" Logo" class="brand-image img-circle elevation-3" style="opacity:.8">
+        {% endfor %}
+        <span class="brand-text font-weight-light">{{user.hosname}}</span>
+      </a>
+  
+      <!-- Sidebar -->
+      <div class="sidebar">
+       
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            {% if perms.NewH_app.can_Dashboard %}
+            <li class="nav-item has-treeview">
+              <a href="{% url 'dashboard' %}" class="nav-link">
+                &nbsp;<i class="fas fa-tachometer-alt"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p style="color:white;">Dashboard                 
+                  <span class="badge badge-info right"></span>
+                  </p>               
+              </a>              
+            </li> 
+            {% endif %}   
+            {% if perms.NewH_app.can_Addemployee %}
+            <li class="nav-item has-treeview">
+              <a href="{% url 'newemp' %}" class="nav-link">
+                <i class="fas fa-user-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p style="color:white;">Add Employee</p>
+              </a>
+            </li>
+            {% endif %} 
+            {% if perms.NewH_app.can_profile %}
+            <li class="nav-item has-treeview">
+              <a href="{% url 'Profile' %}" class="nav-link">               
+                <i class="fas fa-user-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p style="color:white;">Edit Profile                 
+                  <span class="badge badge-info right"></span>
+                  </p>               
+              </a>              
+            </li>
+            {% endif %} 
+            
+            {% if perms.NewH_app.can_Checkupinfo or perms.NewH_app.can_Searchip or perms.NewH_app.can_Updateform or perms.NewH_app.can_Emergencychange or perms.NewH_app.can_Updatestatus or perms.NewH_app.can_Patientvisitingstatus or perms.NewH_app.can_patinetdetails or perms.NewH_app.can_Newadmission or  perms.NewH_app.can_Ipdailyreport or  perms.NewH_app.can_Ipmonitor %}
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="fas fa-user-injured"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p style="color:white;">Patient Mgmt                 
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>  
+              {% if perms.NewH_app.can_Checkupinfo or perms.NewH_app.can_Searchip or perms.NewH_app.can_Updateform or perms.NewH_app.can_Emergencychange or perms.NewH_app.can_Updatestatus or perms.NewH_app.can_Patientvisitingstatus or perms.NewH_app.can_patinetdetails %}            
+              <ul class="nav nav-treeview">                
+                <li class="nav-item has-treeview">                
+                <a href="#" class="nav-link">               
+                  <i class="nav-icon fab fa-accessible-icon"></i>&nbsp;&nbsp;&nbsp;
+                  <p style="color:white;">Out-Patient
+                    <i class="fas fa-angle-left right"></i>
+                    <span class="badge badge-info right"></span>
+                    </p>               
+                </a>              
+                <ul class="nav nav-treeview">
+                {% if perms.NewH_app.can_Checkupinfo %}
+                <li class="nav-item">
+                  <a href="{% url 'tokengen' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Tokengen</p>
+                  </a>
+                </li>
+                {% endif %} 
+                {% if perms.NewH_app.can_Searchip %}
+                <li class="nav-item">
+                  <a href="{% url 'searchid' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Search ID</p>
+                  </a>
+                </li> 
+                {% endif %} 
+                {% if perms.NewH_app.can_Updateform %}
+                <li class="nav-item">
+                  <a href="{% url 'updateform' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Update Form</p>
+                  </a>
+                </li>
+                {% endif %} 
+                {% if perms.NewH_app.can_Emergencychange %}        
+                <li class="nav-item">
+                  <a href="{% url 'emerchange' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Emergency Change</p>
+                  </a>
+                </li>   
+                {% endif %} 
+                {% if perms.NewH_app.can_Updatestatus %}                  
+                <li class="nav-item">
+                  <a href="{% url 'updatestatus' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Update Status</p>
+                  </a>
+                </li>   
+                {% endif %} 
+                {% if perms.NewH_app.can_Patientvisitingstatus %}         
+                <li class="nav-item">
+                  <a href="{% url 'pvisitingstatus' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Patient Visiting Status</p>
+                  </a>
+                </li>  
+                {% endif %} 
+                {% if perms.NewH_app.can_patinetdetails %}    
+                <li class="nav-item">
+                  <a href="{% url 'monitor' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Doctor Monitor</p>
+                  </a>
+                </li>   
+                {% endif %}          
+              </ul>
+            </li>                         
+            </ul>
+              {% endif %}  
+
+              {% if perms.NewH_app.can_Newadmission or perms.NewH_app.can_Ipdailyreport or  perms.NewH_app.can_Ipmonitor %} 
+              <ul class="nav nav-treeview">
+                <li class="nav-item has-treeview">
+                  <a href="{% url 'ip' %}" class="nav-link">               
+                    <i class="fas fa-share-alt" style="width:12px;"></i></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <p style="color:white;">In-Patient
+                      <i class="fas fa-angle-left right"></i>
+                      <span class="badge badge-info right"></span>
+                      </p>               
+                  </a>    
+                  {% if perms.NewH_app.can_Newadmission %}   
+                  <!-- <ul class="nav nav-treeview"> -->
+                    <li class="nav-item">
+                      <a href="{% url 'ipenterform' %}" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>New Admission</p>
+                      </a>
+                    </li>                 
+                  <!-- </ul>   -->
+                  {% endif %}     
+                  {% if perms.NewH_app.can_Ipdailyreport %}     
+                  <!-- <ul class="nav nav-treeview"> -->
+                    <li class="nav-item">
+                      <a href="{% url 'ipdailyreport' %}" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>IP Daily Report</p>
+                      </a>
+                    </li> 
+                  {% endif %}     
+                  {% if perms.NewH_app.can_Ipmonitor %}  
+                    <li class="nav-item">
+                      <a href="{% url 'ip' %}" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>IP Monitor</p>
+                      </a>
+                    </li>
+                    {% endif %}     
+                  <!-- </ul>    -->
+                </li>
+              </ul>
+              {% endif %} 
+            </li> 
+            {% endif %} 
+            
+            {% if perms.NewH_app.can_Patientmonitor %}  
+            <li class="nav-item has-treeview">
+              <a href="{% url 'patmonitor' %}" class="nav-link">
+                <i class="fas fa-heartbeat" style="width:12px;"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p style="color:white;">
+                Patient Monitor
+                  <!-- <i class="fas fa-angle-left right"></i> -->
+                  <span class="badge badge-info right"></span>
+                  </p>               
+              </a>              
+            </li>
+            {% endif %}     
+
+          
+            {% if perms.NewH_app.can_Appointmententry or  perms.NewH_app.can_Appointmentreport%}  
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="fas fa-calendar-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p style="color:white;">                  
+                  Appointment
+                  <i class="fas fa-angle-left right"></i>
+                  <span class="badge badge-info right"></span>
+                  </p>               
+              </a>
+              <ul class="nav nav-treeview">
+                {% if perms.NewH_app.can_Appointmententry %}  
+                <li class="nav-item">
+                  <a href="{% url 'appoinmententry' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Appointment Entry</p>
+                  </a>
+                </li>
+                {% endif %}  
+                {% if perms.NewH_app.can_Appointmentreport %}   
+                <li class="nav-item">
+                  <a href="{% url 'appoinmentreport' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Appointment Report </p>
+                  </a>
+                </li> 
+                {% endif %}  
+                </ul>
+            </li>
+            {% endif %}  
+
+            {% if perms.NewH_app.can_complaintform or perms.NewH_app.can_tokenset or  perms.NewH_app.can_Diagnosisform or  perms.NewH_app.can_tokendiagonsisform %} 
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="fas fa-cogs"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p style="color:white;">
+                 Settings
+                  <i class="fas fa-angle-left right"></i>
+                  <span class="badge badge-info right"></span>
+                  </p>               
+              </a>
+              <ul class="nav nav-treeview">
+                {% if perms.NewH_app.can_complaintform %}   
+                <li class="nav-item">
+                  <a href="{% url 'complaints' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Complaints</p>
+                  </a>
+                </li>  
+                {% endif %}  
+                {% if perms.NewH_app.can_tokenset %}   
+                <li class="nav-item">
+                  <a href="{% url 'tokesetting' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Token Settings</p>
+                  </a>
+                </li> 
+                {% endif %}  
+                <!-- <li class="nav-item">
+                  <a href="{% url 'loginset' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Loginset</p>
+                  </a>
+                </li>  -->
+                {% if perms.NewH_app.can_Diagnosisform %}   
+                <li class="nav-item">
+                  <a href="{% url 'diagnosisset' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Diagnosis Settings</p>
+                  </a>
+                </li>  
+                {% endif %}  
+                {% if perms.NewH_app.can_tokendiagonsisform %}   
+                <li class="nav-item">
+                  <a href="{% url 'tokendisease' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Token Disease</p>
+                  </a>
+                </li>  
+                {% endif %}  
+                </ul>
+            </li>
+            {% endif %}  
+
+
+            {% if perms.NewH_app.can_Dailyreport or  perms.NewH_app.can_Tokenstatusreport %}   
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p style="color:white;">
+                  Report
+                  <i class="fas fa-angle-left right"></i>
+                  <span class="badge badge-info right"></span>
+                  </p>               
+              </a>
+              <ul class="nav nav-treeview">
+                {% if perms.NewH_app.can_Dailyreport %}   
+                <li class="nav-item">
+                  <a href="{% url 'dailyreport' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Daily Report</p>
+                  </a>
+                </li> 
+                {% endif %}  
+                {% if perms.NewH_app.can_Tokenstatusreport %}  
+                <li class="nav-item">
+                  <a href="{% url 'tokstatusreport' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>TokenStatus Report </p>
+                  </a>
+                </li> 
+                {% endif %}                      
+                </ul>
+            </li>
+            {% endif %}  
+
+            {% if perms.NewH_app.can_Searchopno or perms.NewH_app.can_Doctorleavesetting %}  
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="fas fa-user-md"></i>&nbsp;&nbsp;&nbsp;&nbsp;
+                <p style="color:white;">                  
+                  Doctor
+                  <i class="fas fa-angle-left right"></i>
+                  <span class="badge badge-info right"></span>
+                  </p>               
+              </a>
+              <ul class="nav nav-treeview">
+                {% if perms.NewH_app.can_Searchopno %}  
+                <li class="nav-item">
+                  <a href="{% url 'doctor' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>SearchPatient</p>
+                  </a>
+                </li> 
+                {% endif %}  
+                {% if perms.NewH_app.can_Doctorleavesetting %}  
+                <li class="nav-item">
+                  <a href="{% url 'levset' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>LeaveSetting</p>
+                  </a>
+                </li> 
+                {% endif %}  
+                </ul>
+            </li>
+            {% endif %}  
+
+            <li class="nav-item has-treeview">
+              <a href="" class="nav-link"  data-toggle="modal" data-target="#modal-default1">
+               
+                <i class="fas fa-people-carry" style="width:12px;"></i></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p style="color:white;">
+                 Help
+                  <!-- <i class="fas fa-angle-left right"></i> -->
+                  <span class="badge badge-info right"></span>
+                  </p>               
+              </a>              
+            </li>
+            </ul>
+
+        </nav>
+        <!-- /.sidebar-menu -->
+      </div>
+      <!-- /.sidebar -->
+    </aside>
+
+  </nav>
+
+  <div class="modal fade" id="modal-default1">
+    <div class="modal-dialog" style="width:auto;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">For Help</h4>
+          </button>
+        </div>
+        <div class="modal-body">
+          <label>Company Name</label>
+          <input type="text" value="SR SOFTTECH" readonly><br><br>
+          <label>Address</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <p style="border: 1px solid rgb(92, 92, 92);
+          height:120px;overflow:hidden;padding: 10px;
+          margin: 10px;margin-left:120px;margin-top:-35px; width:190px" readonly>
+            158 SM Complex,<br>RailWay Road,<br>Tenkasi.627811.</p><br>
+            <label>Phone</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" value="04633-281212,9047281212" style="width:200px;" readonly><br><br>
+            <label>Mail Id</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" value="contact@srsofttech.in" readonly><br><br>
+            <label>WebSite</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" value="www.srsofttech.in" readonly><br><br>
+        </div>
+        <!-- <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="editdiagnosis" >Update</button>               
+        </div> -->
+      </div>           
+    </div> 
+  </div>

@@ -1,0 +1,1972 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+    <section class="content-header">  
+      <h6>PATIENT DETAILS</h6>
+      <hr/>
+          <div class="row">  
+            <div class="col-sm-2">
+              <h6>NAME:</h6>
+            </div>
+            <div class="col-sm-10">
+              {% for user in tokenlist %} 
+              <input style="width: 225px;" type="text" name="namelist" class="form-control form-control-sm"  style="width:325px;" value="{{user.name}}"disabled/>
+              {% endfor %}              
+            </div>
+          </div>
+          <hr/>
+        <div class="row">            
+              <div class="col-md-3">
+                    <label>Per.Id:</label><input type="text" class="form-control form-control-sm" name="galist"  value="{{galist}}"disabled/></li>&nbsp;&nbsp;&nbsp;
+                    {% for user in tokenlist %} 
+              </div>
+              <div class="col-md-5">
+                    <div class="form-group row">
+                    <div class="col-6">
+                    <label>Token No:</label>&nbsp;<input type="text"  class="form-control form-control-sm" name="tokennolist"  value="{{user.tokenno}}"disabled/>&nbsp;&nbsp;&nbsp;                                 
+                    {% endfor %}
+                    </div>
+                    <div class="col-6">
+                    {% for user in detail %} 
+                    <label>Gender:</label>&nbsp;<input type="text"  class="form-control form-control-sm" name="genterlist"  value="{{user.gender}}" readonly/>&nbsp;&nbsp;&nbsp;
+                    <input type="hidden" name="mobileno" class="form-control form-control-sm"   value="{{user.mobileno}}"disabled/>
+                    {% endfor %}
+                    </div>
+                    </div>
+              </div>
+              <div class="col-md-4">
+                    <div class="form-group row">
+                    <div class="col-6">
+                    {% for user in detail %}
+                    <label>Age:</label>&nbsp;<input type="text"  class="form-control form-control-sm" name="agelist"  value="{{user.age}}"disabled/>&nbsp;&nbsp;&nbsp;
+                    </div>
+                    {% endfor %}
+                    <div class="col-6">
+                    <label>Total Visit:</label>&nbsp;<input type="text" id="totalnormal" class="form-control form-control-sm" disabled/>&nbsp;&nbsp;&nbsp;
+                    {% for user in users %} 
+                    <input type="hidden" name="consult"  value="{{user.consult}}">
+                    <input type="hidden" name="peropno"  value="{{user.peropno}}">
+                    {% endfor %}
+                   </div>
+                  </div>
+              </div>            
+        </div>       
+    </section>
+
+    <!-- Main content -->
+    <section class="content">           
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                  <li class="nav-item"><a class="nav-link active" href="#firstinfo" data-toggle="tab">First Info</a>
+                  <li class="nav-item"><a class="nav-link" href="#complaint" data-toggle="tab">Complaint</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#labrequest" id="labdata" data-toggle="tab">Lab Request</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#prescription" id="prescriptiontab" data-toggle="tab">Perscription</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#others" data-toggle="tab">Others</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#todaylab" id="todaylabid" data-toggle="tab">Today Lab</a></li>
+              </ul>
+              </div>
+
+<div class="card-body">
+<div class="tab-content">
+
+      <div class="active tab-pane" id="firstinfo">              
+                    <label>Visiting Info:</label>                        
+                    <div class="table-responsive p-0" style="height: 270px;">
+                        <table id="userTable" class="table table-dark">
+                          <thead style="text-align:center;font-size:14px;">
+                            <tr>                          
+                              <th>Id</th>
+                              <th>Perop</th>
+                              <th>Tokno</th>
+                              <th>Date</th>
+                              <th>Consult</th>
+                              <th>Name</th>
+                              <th>Amount</th>
+                              <th>Status</th>
+                              <th>Type</th>
+                              <th>CStatus</th>
+                              <th>Disease</th>                                                                                              
+                            </tr>
+                          </thead>
+                          <tbody id="pcount" style="font-size:12px;">                                                                 
+                          {% for user in users %} 
+                          <tr>
+                          <td align="center">{{user.pk}}</td>
+                          <td align="center">{{user.peropno}}</td>
+                          <td align="center">{{user.tokenno}}</td>
+                          <td align="center">{{user.date}}</td>
+                          <td align="center">{{user.consult}}</td>                         
+                          <td align="center">{{user.name}}</td>
+                          <td align="center">{{user.amount}}</td>
+                          <td align="center">{{user.status}}</td>
+                          <td align="center">{{user.ctype}}</td>
+                          <td align="center">{{user.cstatus}}</td>
+                          <td align="center">{{user.diagnosis}}</td>
+                          </tr>
+                          {% endfor %} 
+                          </tbody>
+                        </table>
+                    </div>                    
+      </div>
+                 
+      <div class="tab-pane" id="complaint">
+                    <div class="row ">                            
+                        <div class="col-md-6">
+                          <div class="card">
+                           <div class=" card-body" style="height: 1000px;">
+                                <div class="row form-group">
+                                   <div class="col-md-4">
+                                        <label for="cars">Complaint:</label>
+                                        <input list="ttype5" id="ttype" class="form-control form-control-sm" >
+                                        <datalist style="display:none;" id="ttype5" name="complaint1" class="form-control form-control-sm">
+                                       {% for user in com %} 
+                                        <option value="{{user.complaints}}">{{user.complaints}}</option>
+                                       {% endfor %} 
+                                       </datalist>
+                                   </div>
+                                   <div class="col-md-5">
+                                       <div class="form-group row">
+                                        <div class="col-5">
+                                            <label>Value</label>
+                                            <input type="text" id="first_name" name="task" class="form-control form-control-sm" >
+                                            </div>
+                                           <div class="col-7">
+                                               <label>Day</label>
+                                               <input list="demo5"   id='ttype4' name ="ttype4" class="form-control form-control-sm">
+                                                <datalist style="display:none;" id="demo5" name="complaint2" class="form-control form-control-sm">
+                                                <option value="Day">Day
+                                                <option value="Days">Days
+                                                <option value="Month">Month
+                                                <option value="Months">Months
+                                                <option value="Year">Year
+                                                <option value="Years">Years
+                                              </datalist>
+                                            </div>
+                                       </div>
+                                   </div>
+                                   <div class="col-md-3"> 
+                                        <label>&nbsp;</label><br>
+                                       <button type="submit"  id="addUser2"  class="form-control form-control-sm" style="text-align:center;"><i class="fas fa-plus" style="color:blue;"></i></button>
+                                   </div>
+                                </div>
+                                  <div class="row">
+                                  <div class="col-md-12">                                  
+                                 <div class="table-responsive p-0" style="height: 150px;">
+                                 <table  id='usertable' class="table table-dark" >
+                                  <thead style="text-align:center;font-size:14px;">
+                                    <tr>                          
+                                      <th style="width:14px;">NO</th>
+                                      <th>Complaints</th>
+                                      <th>Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody id="complaintbody" class="Info" style="font-size:12px;">
+                                  </tbody>
+                                </table>
+                              </div>
+                               </div>
+                              </div><br>                               
+                              <div class="row">
+                                <div class="col-md-9">
+                                <div class="form-group">        
+                                    <label>Diagnosis</label>
+                                    <input list="demo3" id="ttype2" name="ttype2" class="form-control form-control-sm">
+                                    <datalist style="display:none;" id="demo3" name="complaint" class="form-control form-control-sm">
+                                     {% for user in des %} 
+                                      <option  value="{{user.diagnosis}}">{{user.diagnosis}}</option>
+                                        {% endfor %}                                   
+                                    </datalist> 
+                                  </div>
+                                  </div>
+                                  <div class="col-md-3">
+                                     <div class="form-group">
+                                        <label>&nbsp;</label><br>
+                                       <button type="submit" id="addUser3" class="form-control form-control-sm" style="text-align:center"><i class="fas fa-plus" style="color:blue;"></i></button>
+                                        </div>                                           
+                                    </div>
+                                  </div>
+
+                             <div class="row">
+                              <div class="col-md-12">
+                              <div class="form-group">
+                              <div class="card-body table-responsive p-0" style="height: 100px;">
+                              <table id="usertable1" class="table table-dark">
+                              <thead style="text-align:center;font-size:14px;">
+                                <tr>                          
+                                  <th style="width:14px;"> NO</th>
+                                  <th>Diagnosis</th>
+                                  <th>Action</th>
+                                </tr>
+                              </thead>
+                              <tbody id="diagnosisbody" style="font-size:12px;">                                                                 
+                                
+                              </tbody>
+                            </table>
+                          </div>
+                            </div>
+                            </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-9">
+                              <div class="form-group">        
+                                  <label>Remark</label>
+                                  <input type="text" id="ttype3" name="ttype3" class="form-control form-control-sm">
+
+                                </div>
+                                </div>
+                                <div class="col-md-3">
+                                   <div class="form-group"> 
+                                    <label>&nbsp;</label><br>                                   
+                                     <button type="submit" id="addUser4" class="form-control form-control-sm" style="text-align:center"><i class="fas fa-plus" style="color:blue;"></i></button>
+                                      </div>                                           
+                                  </div>
+                                </div>
+                           <div class="row">
+                           <div class="col-md-12">
+                            <div class="form-group">
+                              <div class="card-body table-responsive p-0" style="height: 100px;">
+                                <table id="usertablere" class="table table-dark">
+                                <thead style="text-align:center;font-size:14px;">
+                                  <tr>                          
+                                    <th style="width:14px;"> NO</th>
+                                    <th>Remark</th>
+                                    <th>Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody id="remarkbody" style="font-size:12px;">                                                                 
+                                  
+                                </tbody>
+                              </table>
+                            </div>                              
+                            </div>
+                            </div>
+                            </div><br>
+
+                            <div class="row">
+                            <div class="col-4 col-md-12">
+                              <div class="form-group">
+                              <input type="hidden" class="form-control form-control-sm" id="output" name="jcdata"  required>                                      
+                              <input type="hidden" class="form-control form-control-sm" id="diatbl" name="jddata"  required>                         
+                              <input type="hidden" class="form-control form-control-sm" id="remarkid1" name="jremark"  required>                         
+                              <button type="submit" id="subtbl" class="btn-sml btn btn-success">Save</button>
+                              </div>
+                              </div>
+                              </div>
+                      
+                      </div> 
+                      </div>  
+                        </div>  
+
+                        <div class="col-md-6">
+                            <div class="card">                              
+                               <div class=" card-body " style="height:1000px;">
+                                <div class="col-md-12">
+                                  <div class="form-group row">
+                                    <label>Old Complaint</label>
+                                  <div class="col-12 table-responsive p-0" style="height: 250px;">                                  
+                                    <table id="userTable" class="table table-dark" >
+                                      <thead style="text-align:center;font-size:14px;">
+                                        <tr>                        
+                                          <th style="width:14px;">ID</th>
+                                          <th>Complaints</th>                                      
+                                        </tr>
+                                      </thead>
+                                    <tbody id="tbodyid" style="font-size:12px;">                                                               
+                                  </tbody>
+                                </table>
+                              </div>
+                             </div>
+                            </div>
+                              <div class="col-md-12">
+                                <div class="form-group row">
+                                <label>Old Diagnosis</label>
+                                <div class="col-12 table-responsive p-0" style="height: 250px;">
+                               <table id="userTable1" class="table table-dark">
+                               <thead style="text-align:center;font-size:14px;">
+                                  <tr>                          
+                                    <th style="width:14px;"> ID</th>
+                                    <th>Diagnosis</th>
+                                  </tr>
+                                </thead>
+                                <tbody id="tbodyid1" style="font-size:12px;">                                                               
+                                </tbody>
+                                </table>
+                              </div>
+                              </div>
+                            </div>
+                            <div class="col-md-12">
+                              <div class="form-group row">
+                              <label>Old Remarks</label>
+                              <div class="col-12 table-responsive p-0" style="height: 250px;">                              
+                              <table id="userTable2" class="table table-dark">
+                              <thead style="text-align:center;font-size:14px;">
+                                <tr>                          
+                                  <th style="width:14px;"> ID</th>
+                                  <th>Remarks</th>
+                                </tr>
+                              </thead>
+                              <tbody id="tbodyid2" style="font-size:12px;"> 
+                              </tbody>
+                              </table>
+                         
+                            </div>
+                            </div>
+                          </div>
+                              </div>
+                            </div>
+                        </div>    
+                   </div>
+      </div>
+                  
+      <div class="tab-pane" id="labrequest">
+                    <div class="row">                            
+                      <div class="col-md-3">
+                        <div class="form-group row">
+                          <div class="col-12">
+                              <label>Group</label>
+                              <input list="demo4" id="lab" name="group" onchange="subgrpfetch()" class="form-control form-control-sm" />
+                              <datalist name="group" id="demo4">
+                                {% for user in lab1 %}
+                                <option  value="{{user.groupname}}"></option>
+                                {% endfor %}
+                              </datalist> 
+                          </div>
+                          </div>
+                          <div class="form-group row">
+                          <div class="col-12">
+                              <label>SubGroup</label>
+                              <input list="demo6" name="supgroup" id='sgid' onchange="checkfetched()"class="form-control form-control-sm">
+                                  <datalist name="supgroup" id="demo6">
+                                  </datalist>
+                          </div>
+                          </div>
+                          <div class="row form-group">
+                            <div class="col-12">
+                              <div class="form-control" id="tid" name="checklist" style="height: 250px; overflow:scroll;">
+                              </div>
+                              
+                           </div>
+                          </div>
+                          <div class="row form-group">
+                            <div class="col-12">
+                              <label>&nbsp;</label><br><br>
+                              <button type="submit" class="btn-sml btn btn-success" id="sublab">Add</button>
+                           </div>                         
+                          </div>
+                    </div>  
+                                          
+                      <div class="col-md-6">    
+                        <div class="col-12 table-responsive p-0" style="height: 450px;">                              
+                          <table id="usertable3" name="usertable3" class="table table-dark">
+                            <thead style="text-align:center;font-size:14px;">
+                              <tr>                          
+                                <th>GroupName</th>
+                                <th>SubGroupName</th>
+                                <th>Test</th>
+                                <th>ReferRange</th>
+                                <th style="display:none;">Amount</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody id="tabtbody3" style="font-size:12px;">   
+                            </tbody>
+                          </table>
+                          </div><br>
+                          <div class="form-group row">
+                            <div class="col-6">
+                              <label>Total Test:</label>
+                              <input type="text" id="totaltest" class="form-control-sm" style="width:42px;" disabled/>
+                            </div>
+                         <div class="col-6">
+                          <label>Amount:</label>                          
+                          <input type="text" class="form-control-sm" id="totsum" style="width:52px;" disabled>                         
+                       </div>
+                          </div>
+                      </div>  
+                      <div class="col-md-3">
+                        <div class="col-12 table-responsive p-0" style="height:430px;">                              
+                          <table id="usertable4" class="table table-dark">
+                            <thead style="text-align:center;font-size:14px;">
+                              <tr>                          
+                                <th>Name</th>
+                                <th>Amount</th>                                
+                              </tr>
+                            </thead>
+                            <tbody id="tabtbody4" style="font-size:12px;">   
+                            </tbody>
+                          </table>
+                          </div> &nbsp;&nbsp;
+                          <div class="row form-group">
+                            <div class="col-12"> <br>  
+                              <button type="submit" class="btn-sml btn btn-success" id="sbtn">Save</button>                              
+                              <input type="hidden" class="form-control form-control-sm" id="tbl1" name="grpdata"  required >                                      
+                               <input type="hidden" class="form-control form-control-sm" id="tbl2" name="supdata"  required>                                
+                            </div>
+                            </div>                            
+                    </div> 
+                  </div>         
+      </div>
+
+      <div class="tab-pane" id="prescription">  
+            <div class="row">
+              <div class="col-md-6">
+                <div class="row form-group">
+                  <div class="col-8">
+                  <label style="text-align:center;font-size:14px;">Product</label>
+                  <input list="demo7" id="Product" name="Product"  class="form-control form-control-sm" />
+                  <datalist name="Product" id="demo7">
+                    {% for user in product %}
+                    <option  value="{{user.name}}">{{user.name}}</option>
+                    {% endfor %}                   
+                  </datalist> 
+                  </div>
+                  <div class="col-4">
+                  <label style="font-size:14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KOM</label>
+                  <input type="checkbox" id="komcheck" style="text-align:center;" class="form-control form-control-sm">
+                  </div>
+                </div>            
+              </div>
+              <div class="col-md-6">
+                <form action="{% url 'inkA4' %}" method="POST">
+                  {% csrf_token %} 
+                  <input type="hidden" name="pidname" value="{{galist}}">                 
+                  <div class="row form-group">                    
+                    <div class="col-md-3">
+                      <label style="text-align:center;font-size:14px;">BR</label>
+                      <input type="text" name="pb" class="form-control form-control-sm" >
+                   </div> 
+                   <div class="col-md-2">
+                    <label style="text-align:center;font-size:14px;">BP</label>
+                    <input type="text"  name="bp" class="form-control form-control-sm" >
+                 </div> 
+                    <div class="col-md-2">
+                         <label style="text-align:center;font-size:14px;">SPO2</label>
+                         <input type="text"  name="spo2" class="form-control form-control-sm" >
+                      </div>                
+                      <div class="col-md-2">
+                             <label style="text-align:center;font-size:14px;">Temp</label>
+                             <input type="text"  name="temp" class="form-control form-control-sm" >
+                             </div>
+                    <div class="col-md-3"> 
+                         <label style="text-align:center;font-size:14px;">Wt</label><br>
+                        <input type="text" name="wt" class="form-control form-control-sm" >
+                    </div>
+                 </div>
+                </form>                        
+              </div>
+            </div>
+            <hr/>  
+            <div class="row">
+              <div class="col-md-8">               
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label style="text-align:center;font-size:14px;">QTY</label>
+                        <input type="text" id="qty" class="form-control form-control-sm">
+                      </div>                
+                      <div class="col-md-3">
+                       <label style="text-align:center;font-size:14px;">M</label>
+                      <input type="text" id="mor" name="" class="form-control form-control-sm">
+                      </div>
+                    <div class="col-md-3"> 
+                        <label style="text-align:center;font-size:14px;">A</label><br>
+                        <input type="text"  id="aftn"  class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-3"> 
+                      <label style="text-align:center;font-size:14px;">N</label><br>
+                    <input type="text"  id="nit"  class="form-control form-control-sm">
+                  </div>                   
+               </div>          
+            </div> 
+            <div class="col-md-4"> 
+              <div class="row form-group">
+                <div class="col-4" style="text-align:center">
+              <label style="text-align:center;font-size:14px;">&nbsp;B</label><br>
+            <input type="checkbox" value="No" id="befcheck"  class="form-control form-control-sm">
+            </div>
+            <div class="col-4" style="text-align:center">
+              <label style="text-align:center;font-size:14px;">&nbsp;A</label><br>
+            <input type="checkbox" value="No"  id="aftcheck"  class="form-control form-control-sm">
+            </div>
+            <div class="col-4" style="text-align:center">
+              <label>&nbsp;</label><br>
+             <button type="button" id="productsub"  class="btn btn-success btn-sml">ADD</button>                    
+            </div>
+            </div>
+          </div>           
+            </div> 
+            <hr/>
+            <div class="table-responsive p-0" style="height: 270px;">
+              <table id="productusertable" class="table table-dark danger">
+                <thead style="text-align:center;font-size:12px;">
+                  <tr>                          
+                    <th style="display:none">Id</th>
+                    <th style="text-align:center">Product Name</th>
+                    <th style="text-align:center">Qty</th>
+                    <th style="text-align:center">Morning</th>
+                    <th style="text-align:center">AfterNoon</th>
+                    <th style="text-align:center">Night</th>
+                    <th style="text-align:center">Before Food</th>
+                    <th style="text-align:center">After Food</th>
+                    <th style="text-align:center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="prouserbody" style="font-size:12px;">  
+                </tbody>
+              </table>
+          </div> 
+            <div class="row">
+              <div class="col-md-12">               
+                <div class="row form-group">
+                    <div class="col-md-3">
+                      <label>Count:</label>
+                      <input type="text" id="procount" class="form-control ">
+                      </div>                
+                      <div class="col-6 col-md-4">
+                        <label>&nbsp;</label><br>
+                        <input type="hidden" class="form-control" id="prohidid" name="prohidname"  required> 
+                        <button type="button" id="perscriptionsave"  class="btn btn-success btn-sml">SAVE</button>
+                      </div>
+                    <div class="col-3 col-md-1"> 
+                      <label>&nbsp;</label><br>
+                      <input type="hidden" class="form-control" name="pidname" value="{{galist}}">                      
+                      <button type="submit" class="btn btn-primary" style="size:15px;"><i class="fa fa-print"></i></button>
+                    </div>
+                    <div class="col-md-4"> 
+                      <label>&nbsp;</label><br>
+                     <button type="button" id="prerecord"  class="btn btn-info btn-sml"  data-toggle="modal" data-target="#modal-xl">PreRecord</button>                   
+                  </div>                   
+               </div>          
+            </div>         
+          </div> 
+         <hr/>             
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <div class="col-md-12">
+                        <div class="table-responsive p-0" style="height: 180px;">
+                          <table id="procomtbl" class="table table-dark">
+                            <thead style="text-align:center;font-size:12px;">
+                              <tr>                          
+                                <th >Id</th>
+                                <th >Complaints</th>   
+                                <th >Action</th>                              
+                                </tr>
+                            </thead>
+                            <tbody id="procomtbltbody" style="font-size:12px;">  
+                            </tbody>
+                          </table>
+                      </div> 
+                      </div> 
+                    </div> 
+                  </div> 
+
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <div class="col-md-12">
+                        <div class="table-responsive p-0" style="height: 180px;">
+                          <table id="prodiatbl" class="table table-dark">
+                            <thead style="text-align:center;font-size:12px;">
+                              <tr>                          
+                                <th >Id</th>
+                                <th >Diagnosis</th>   
+                                <th >Action</th>                              
+                                </tr>
+                            </thead>
+                            <tbody id="prodiatblbody" style="font-size:14px;">  
+                            </tbody>
+                          </table>
+                      </div> 
+                      </div> 
+                    </div> 
+                  </div> 
+                </div> 
+      
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <div class="table-responsive p-0" style="height: 180px;">
+                      <table id="prodremarktbl" class="table table-dark">
+                        <thead style="text-align:center;font-size:12px;">
+                          <tr>                          
+                            <th >Id</th>
+                            <th >Remarks</th>   
+                            <th >Action</th>                              
+                            </tr>
+                        </thead>
+                        <tbody id="prodremarktblbody" style="font-size:12px;">  
+                        </tbody>
+                      </table>
+                  </div> 
+                  </div> 
+                </div> 
+              </div> 
+              
+              <div class="col-md-6">               
+                <div class="row form-group">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Appoin-Date:</label>    
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">
+                            <i class="far fa-calendar-alt" style="padding:4px;" class="form-control"></i>
+                          </span>
+                        </div>
+                        <input type="date" name="datepicker" id="datepicker" class="form-control float-right">
+                      </div>
+                      <!-- /.input group -->
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-4">
+                    <label>Session:</label>
+                    <input list="demo8"  name="psession"  id="psession" class="form-control"/>
+                    <datalist name="psession" id="demo8">
+                      <option  value="Morning">Morning</option>
+                      <option  value="Evening">Evening</option>            
+                    </datalist>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <div class="form-group">
+                      <label>&nbsp;</label><br>
+                      <button type="submit" id="appoinmentsave"  class="btn btn-primary btn-sml">Appoinment</button>
+                      </div>
+                      </div>
+                  </div>
+                </div>               
+              </div>
+      
+     <!-- complaint pop-up    -->
+        <div class="modal fade" id="modal-default">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Edit Complaint</h4>
+                </button>
+              </div>
+              <div class="modal-body">
+              <label>ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+               <input type="text" id="form-id" ><br><br>
+               <label>Complaints:&nbsp;&nbsp;&nbsp;</label>
+               <input type="text" id="form-complaint">
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="editcomplaint">Update</button>
+              </div>
+            </div>            
+          </div>          
+        </div>
+
+        <!-- -------Diagnosis pop-up--------- -->
+
+        <div class="modal fade" id="modal-default1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Edit Diagnosis</h4>
+                </button>
+              </div>
+              <div class="modal-body">
+                <label>ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <input type="text" id="form-ids" ><br><br>
+                <label>Diagnosis:&nbsp;&nbsp;&nbsp;</label>
+                <input type="text" id="form-diagnosis">
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="editdiagnosis" >Update</button>               
+              </div>
+            </div>           
+          </div> 
+        </div>
+
+        <!-- Remark pop-up    -->
+        <div class="modal fade" id="modal-default2">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Edit Remarks</h4>
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span> -->
+                </button>
+              </div>
+              <div class="modal-body">
+              <label>ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+               <input type="text" id="form-idr1" ><br><br>
+               <label>Remarks:&nbsp;&nbsp;&nbsp;</label>
+               <input type="text" id="form-remark">
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="editremark" >Update</button>
+              </div>
+            </div>            
+          </div>          
+        </div>
+      </div>
+
+      <div class="tab-pane" id="others">
+             <div class="row">
+              <div class="col-md-8">               
+                <div class="row form-group">
+                    <div class="col-md-6">
+                      <label>Status:</label>    
+                      <input list="ttypes" id="otherid" name="othername" class="form-control form-control-sm">
+                           <datalist style="display:none;text-align:center;" id="ttypes"  class="form-control form-control-sm">
+                           <option value="Waiting">Waiting</option>
+                           <option value="Lab">Lab</option>
+                           <option value="Finished">Finished</option>
+                           <option value="Admit">Admit</option>
+                           </datalist>
+                      </div>                
+                      <div class="col-md-6">
+                       <label>&nbsp;</label><br>
+                       <button type="submit" id="others" class="btn btn-success btn-sml">Update</button>                     
+                      </div>                  
+               </div>          
+            </div> 
+            </div>
+      </div>
+
+      <div class="tab-pane" id="todaylab">        
+        {% for user in users %} 
+        <input type="hidden" name="opid" value="{{user.pk}}">          
+        {% endfor %}        
+        <div class="table-responsive p-0" style="height: 270px;">
+            <table id="labidfetch1" class="table table-dark table-head-fixed">
+              <thead style="text-align:center;font-size:14px;">
+                <tr>                          
+                  <th>Group</th>
+                  <th>SubGroup</th>
+                  <th>Test</th>
+                  <th>Result</th>
+                  <th>Refrange</th>                                                                                                                
+                </tr>
+              </thead>
+              <tbody id="labidfetch" style="font-size:10px">                                                                 
+              </tbody>
+            </table>
+        </div>       
+      </div>
+      </div>
+      </div>               
+      </div>
+      </div>
+      </section>
+
+
+      
+
+<div class="modal fade" id="modal-xl">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <h4 class="modal-title">Extra Large Modal</h4> -->
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <div class="row ">                            
+        <div class="col-lg-5">
+      <div class="table-responsive p-0">
+      <table  class="table table-dark" >
+        <thead style="text-align:center;font-size:12px;">
+          <tr>                          
+            <th style="display:none;">Id</th>
+            <th>Date</th>
+            <th>RegId</th>
+            <th>TokenId</th>
+            <th>DoctorName</th>
+            <th>Action</th>
+            </tr>
+        </thead>
+        <tbody  style="font-size:12px;">  
+          {% for user in productobj1 %} 
+          {% for blog in tokenlist %} 
+                <tr id="user-{{user.id}}">
+                <td style="display:none;">{{user.id}}</td>
+                <td style="text-align:center">{{user.dt}}</td>
+                <td style="text-align:center">{{user.perid}}</td>
+                <td style="text-align:center">{{user.tokenid}}</td>
+                <td style="text-align:center">{{blog.consult}}</td>
+                <td style="text-align:center"><button type="button" onClick="nxtpre({{user.id}})" id="nxtpre" ><i class="fas fa-hand-point-right" style="color:rgb(4, 3, 17);font-size:20px"></i></button></td>
+         </tr>
+         {% endfor %}  
+         {% endfor %} 
+        </tbody>
+      </table>
+    </div>
+          
+</div>          
+ <div class="col-lg-7">
+  <div class="table-responsive p-0">
+      <table id="appendpretbl" class="table table-dark">
+        <thead style="text-align:center;font-size:12px;">
+          <tr>                          
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Morn</th>
+            <th>Aftn</th>
+            <th>Night</th>
+            <th>B-Food</th>
+            <th>A-Food</th>
+            <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="prebdy" style="font-size:12px;">            
+        </tbody>
+      </table>
+    </div>
+</div>    
+</div>
+      </div>
+      <!-- <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block javascript %}
+<script>
+var getproductkom;
+
+/*---------PATIENT Total Visit---------------*/
+
+$( document ).ready(function patientcount() { 
+    var rowCount = $('#pcount tr').length;    //document.getElementById("totalnormal1").value=rowCount;
+    document.getElementById("totalnormal").value=rowCount; 
+});
+
+/*---------PATIENT Complaints appendTable-----------*/
+
+$("#addUser2").click(function(){
+    var empty = true;
+    if(!this.snNo) this.snNo = 1;  
+    var task = $('#first_name').val();
+    var type = $('#ttype').val();
+    var type1 = $('#ttype4').val();
+    if ($.trim($("#ttype").val()) != "" || $.trim($("#first_name").val()) != ""|| $.trim($("#ttype2").val()) != "") {
+      $("#usertable > tbody:last-child").append(`
+      <tr  style="height:10px;" >
+        <td  style="height:5px;" >${this.snNo}</td>
+        <td  style="height:5px;" >${type}-${task} ${type1}</td>
+        <td><button type="button" class="deletebtn form-control-sm" style="background-color:black;height:30px;"><i class="fas fa-trash" style="color:red;"></i></button></td>
+      </tr>`)
+    this.snNo += 1; 
+    $('#first_name').empty();
+    $('#ttype4').empty();
+    $('#ttype').empty();   
+    }  
+    else{
+        swal("Oh noes!", "Fill the all fields!", "error");
+    }
+    document.getElementById("first_name").value = ""; 
+    document.getElementById("ttype").value = ""; 
+    document.getElementById("ttype4").value = ""; 
+    });
+
+/*---------PATIENT Complaints EnterKey Operation-----------*/    
+
+$(document).ready(function() {
+  $('#ttype').keypress(function (e) {
+    if (e.keyCode == 13) {
+
+        if ($('#ttype').val() == "") {
+            return false;
+        }
+        else {
+          $('#first_name').focus();         
+        }
+    }
+});
+
+$('#first_name').keypress(function (e) {
+  if (e.keyCode == 13) {
+      if ($('#first_name').val() == "") {
+          return false;
+      }
+      else {
+        $('#ttype4').focus();         
+      }
+  }
+});
+
+$('#ttype4').keypress(function (e) {
+  if (e.keyCode == 13) {
+      if ($('#ttype4').val() == "") {
+          return false;
+      }
+      else {
+        $('#addUser2').focus();               
+      }
+  }
+});
+
+$('#addUser2').keypress(function (e) {
+  if (e.keyCode == 13) {   // $('#addUser2').click();      
+    $('#ttype2').focus();            
+  }  
+  });
+
+  $('#tettbl').keypress(function (e) {
+    if (e.keyCode == 13) {   
+      $('#subtbl').click();   
+    }
+});
+
+$('#ttype2').keypress(function (e) {
+  if (e.keyCode == 13) {   
+    $('#addUser3').click();      
+    $('#tettbl').focus();                
+  }
+});
+});
+
+/*---------PATIENT Perscription EnterKey Operation------------------*/    
+
+$(document).ready(function() {
+
+$('#Product').keypress(function (e) {
+    if (e.keyCode == 13) {
+
+        if ($('#Product').val() == "") {
+            return false;
+        }
+        else {
+          $('#komcheck').click();         
+        }
+    }
+});
+
+$('#komcheck').keypress(function (e) {
+  if (e.keyCode == 13) {
+      if ($('#komcheck').val() == "") {
+          return false;
+      }
+      else {
+        $('#qty').focus();         
+      }
+  }
+});
+
+$('#qty').keypress(function (e) {
+  if (e.keyCode == 13) {
+      if ($('#qty').val() == "") {
+          return false;
+      }
+      else {
+        $('#mor').focus();               
+      }
+  }
+});
+
+$('#mor').keypress(function (e) {
+  if (e.keyCode == 13) {     
+    $('#mor').focus();            
+  }  
+  else {
+    $('#aftn').focus();               
+  }
+  });
+
+$('#aftn').keypress(function (e) {
+    if (e.keyCode == 13)  {     
+      $('#aftn').focus();            
+    }  
+    else {
+      $('#nit').focus();               
+    }
+    });
+
+$('#nit').keypress(function (e) {
+  if (e.keyCode == 13)  {     
+    $('#nit').focus();            
+}  
+  else {
+     $('#befcheck').click();               
+      }
+   });
+
+$('#befcheck').keypress(function (e) {
+    if (e.keyCode == 13)  {     
+      $('#befcheck').focus();            
+}  
+    else {
+       $('#aftcheck').click();               
+        }
+});
+   $('#aftcheck').keypress(function (e) {
+      if (e.keyCode == 13)  {     
+        $('#aftcheck').focus(); 
+        $('#productsub').click();            
+    }  
+});
+$('#productsub').keypress(function (e) {
+  if (e.keyCode == 13)  {     
+    $('#productsub').focus(); 
+    $('#perscriptionsave').click();            
+}  
+  
+});
+});
+
+/*---------PATIENT Complaints appendTable Delete operation-----------*/
+
+$(document).on('click', 'button.deletebtn', function () { 
+    $(this).closest('tr').remove();
+    return false;
+});
+
+/*---------PATIENT Diagnosis appendTable-----------------------------*/
+
+$("#addUser3").click(function(){ //e.preventDefault();
+      if(!this.snNo) this.snNo = 1;
+      var type2 = $('#ttype2').val();  
+      if ($.trim($("#ttype2").val()) != "") { 
+      $("#usertable1 > tbody:last-child").append(`
+        <tr  style="height:10px;" >
+        <td  style="height:10px;" >${this.snNo}</td>
+        <td  style="height:10px;" >${type2}</td>
+        <td><button type="button" class="deletebtn1 form-control-sm" style="background-color:black;height:30px;"><i class="fas fa-trash" style="color:red;"></i></button></td>
+        </tr>`)    
+        this.snNo += 1;     
+    }
+    else{
+      swal("Oh noes!", "Fill the all fields!", "error");
+    }
+    document.getElementById("ttype2").value = ""; 
+   });
+
+
+$("#addUser4").click(function(){ //e.preventDefault();
+    if(!this.snNo) this.snNo = 1;
+    var type3 = $('#ttype3').val();  
+    console.log(type3)
+    if ($.trim($("#ttype3").val()) != "") { 
+    $("#usertablere > tbody:last-child").append(`
+      <tr style="height:10px;"><td style="height:10px;">${this.snNo}</td>
+      <td style="height:10px;">${type3}</td>
+      <td><button type="button" class="deletebtn1 form-control-sm" style="background-color:black;height:30px;""><i class="fas fa-trash" style="color:red;"></i></button></td>
+      </tr>`)    
+      this.snNo += 1;     
+  }
+  else{
+    swal("Oh noes!", "Fill the all fields!", "error");
+  }
+  document.getElementById("ttype3").value = ""; 
+ });
+
+/*-----------PATIENT Diagnosis appendTable Delete operation-----------*/
+
+$(document).on('click', 'button.deletebtn1', function () {
+      $(this).closest('tr').remove();      
+      return false;      
+});
+
+
+$(function () {
+        $('#subtbl').click(function () {
+          var table = $('#usertable').tableToJSON();               //console.log(table); 
+          $("#output").val(JSON.stringify(table));                //Convert the table into a javascript object
+
+          var table1 = $('#usertable1').tableToJSON();           //console.log(JSON.stringify(table));
+          $("#diatbl").val(JSON.stringify(table1));
+
+          var table2 = $('#usertablere').tableToJSON();           //console.log(JSON.stringify(table));
+          $("#remarkid1").val(JSON.stringify(table2));           //console.log(JSON.stringify(table2));
+
+          var jcdatainput = $('input[name="jcdata"]').val()     //console.log(jcdatainput)
+
+          var pid = $('input[name="galist"]').val()           // console.log(pid)  //alert(jcdatainput)
+          var jddatainput= $('input[name="jddata"]').val()   //console.log(jddatainput)
+
+          var jrem = $('input[name="jremark"]').val()       //console.log(jrem)  //alert(jddatainput)
+        
+          if ($.trim($("#output").val()) != "" && $.trim($("#diatbl").val()) != "" && $.trim($("#remarkid1").val()) != ""){//jcdatainput || jddatainput || jrem Array.isArray(jcdatainput) && jcdatainput.length|| Array.isArray(jddatainput) && jddatainput.length || Array.isArray(jrem) && jrem.length   ) {//jcdatainput != "" jrem != ""|| jddatainput != "" ||
+        // Create Ajax Call
+            $.ajax({
+                url: '{% url "jdatasave" %}',
+                type: 'get',
+                data: {
+                    'jcdata' :  jcdatainput ,
+                    'galist' :  pid,
+                    'jddata' :  jddatainput,
+                    'jremark':  jrem,  
+                },
+                dataType: 'json',       
+                success: function(data) { //alert("Save SuceessFully! ");  alert(data.comfil) console.log("success");  //alert(data.comfil)
+                if (data.comfil) {           
+                  $('#tbodyid').empty();
+                  $('#procomtbltbody').empty();
+                  norFun(data.comfil);                 
+                }
+                if (data.diafil) {           
+                  $('#tbodyid1').empty();
+                  $('#prodiatblbody').empty();
+                  norFun1(data.diafil);                 
+                }
+                if (data.remfil) {           
+                  $('#tbodyid2').empty();
+                  $('#prodremarktblbody').empty();
+                  norFun2(data.remfil);                 
+                }           
+                //swal("Good job!", "You clicked the button!", "success")              
+                }                        
+            });
+        }
+          //else{
+            //swal("Oh noes!", "Fill the  fields!", "error");
+          //}
+        $('#complaintbody').empty();  
+        $('#diagnosisbody').empty();    //$('textarea').empty()
+        $('#remarkbody').empty();  
+        });
+      //}
+}); 
+//});
+
+/*---------PATIENT ComplaintForm SAVE Operation-----------*/
+
+/*---------PATIENT Complaintfrom  Old Complaint TableFunction-------*/
+
+function norFun(comfil){
+  var rawmetrial = JSON.parse(comfil);  //console.log(rawmetrial);
+  appendToUsrTable(rawmetrial);   
+  appendToUsrTablepro(rawmetrial); 
+}
+
+/*---------PATIENT Complaintfrom  Old Complaint AppendTable----------*/
+
+function appendToUsrTable(rawmetrial) {  //console.log(rawmetrial)
+  for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields;
+   $("#userTable > tbody:last-child").append(`
+     <tr>               
+     <td >${i}</td>
+     <td>${data2.complaint}</td>
+     </tr>   
+     `);             
+} 
+}
+
+/*---------PATIENT Complaintfrom  Old Diagnosis TableFunction--------*/
+
+function norFun1(diafil){
+  var rawmetrial = JSON.parse(diafil);  //console.log(rawmetrial);
+  appendToTable(rawmetrial); 
+  appendToTblpro(rawmetrial);   
+}
+
+/*---------PATIENT Complaintfrom  Old Diagnosis AppendTable-----------*/
+
+function appendToTable(rawmetrial) {  //console.log(rawmetrial)
+  for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields;
+   $("#userTable1 > tbody:last-child").append(`
+     <tr>               
+      <td>${i}</td>
+      <td>${data2.diagnosis}</td>
+   </tr>   
+      `);             
+} 
+}
+
+/*---------PATIENT Complaintfrom  Old Remarks TableFunction-----------*/
+
+function norFun2(remfil){
+  var rawmetrial = JSON.parse(remfil);  //  console.log(rawmetrial);
+  appendToTbl(rawmetrial);     
+  appendToTblproremark(rawmetrial); 
+}
+
+/*---------PATIENT Complaintfrom  Old Remarks AppendTable-------------*/
+
+function appendToTbl(rawmetrial) {  //  console.log(rawmetrial)
+  for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields;
+   $("#userTable2 > tbody:last-child").append(`
+     <tr>               
+      <td>${i}</td>
+      <td>${data2.remark}</td>
+     </tr>   
+  `);             
+} 
+}
+
+//Enter Key operation register jQuery extension
+
+jQuery.extend(jQuery.expr[':'], {
+  focusable: function (el, index) {
+      return $(el).is('a, button, :input');
+  }
+});
+
+/*---------PATIENT Labrequest Group-----------*/
+
+function subgrpfetch() {
+  var gsdata = $('input[name="group"]').val() // console.log(gsdata) 
+  $.ajax({
+      url: '{% url "labdatafetch" %}',
+      type: 'get',
+      data: {
+         'group' :   gsdata,
+    },
+      dataType: 'json',       
+      success: function(data) {
+        if(data.lab){   //console.log(data.lab);
+          var sublist = data.lab;
+          $("#demo6").empty()
+          for(var i=0; i<sublist.length; i++){     
+          $("#demo6").append(`<option>${sublist[i].SubGroupName}</option>`);
+          } //swal("Success", "display  SuceessFully", "success");
+        } 
+    } 
+  });
+};
+
+/*------------PATIENT Labrequest Sub-Group and <Div> list----------------------*/
+
+function checkfetched() {
+  var checkdata = $('input[name="supgroup"]').val() // console.log(gsdata) 
+  $.ajax({
+      url: '{% url "labdatafetch1" %}',
+      type: 'get',
+      data: {
+         'supgroup' :   checkdata,
+    },
+      dataType: 'json',       
+      success: function(data) {     //alert("success"); 
+        if(data.chfil){   //console.log(data.chfil);
+          var checklist = JSON.parse(data.chfil);
+          var reflist = JSON.parse(data.chfil);  //console.log(checklist);  //$("#checkfetched").empty()
+          var amtlist = JSON.parse(data.chfil);
+          $vv = checklist;
+          $ss = reflist;
+          $amt = amtlist;
+          $("#tid").empty();
+          for(var i=0; i<checklist.length; i++){
+            var cclist =  checklist[i].fields;    //console.log(cclist);
+            if(cclist){   
+            $("#tid").append(`<div class="icheck-primary d-inline">
+            <input type="checkbox" id="checkPri${i}" name="checkPri${i}" class="fresher_checked" checked value="${cclist.TestName}"/>
+            <label for="checkPri" style="font-size:10px;">${cclist.TestName}-checkPri${i}</label>
+            </div><br><input type="hidden" id="strfy${i}" name="strfy${i}" value="${cclist.RefRange}">
+            <input type="hidden" id="strfy1${i}"  name="strfy1${i}"value="${cclist.Amount}">`);           
+          }
+              //$cb1 = $('input#checkPri'+i); //var checkbox1 = $cb1.prop('checked'); //console.log(checkbox1);
+          }   //$cb1 = $('input#checkPri1'); var checkbox1 = $cb1.prop('checked'); console.log(checkbox1);
+      }         
+    } 
+  });
+};
+
+var amt = [];
+
+/*------------PATIENT Labrequest First Table AppendTable----------------------*/
+
+$("#sublab").click(function(){ //e.preventDefault(); //if(!this.labtype) this.labtype = 1;
+  var randno = Math.floor((Math.random() * 100) + 1);  //console.log(randno)
+  var labtype = $('#lab').val();// console.log(labtype);      
+  var suptype = $('#sgid').val(); // console.log(suptype);    
+  var checktype = $('#checkPri').val(); // console.log(checktype);   
+  var refertype = $('#strfy').val();   //$("#tbl3").val(JSON.stringify(refertype));  console.log(refertype);
+  var checklist =  $vv; //  console.log(checklist);
+  var reflist = $ss;   //$("#tbl1").val(JSON.stringify(reflist));  console.log(reflist);
+  var amtlist = $amt;  //$("#tbl2").val(JSON.stringify(amtlist));    console.log(amtlist);
+  for(var i=0; i<checklist.length; i++){// && i<reflist.length && i<amtlist.length;
+    //var cclist =  checklist[i].fields;  //console.log(cclist.length) 
+    //var cclist1 =  reflist[i].fields; 
+    //var cclist2 =  amtlist[i].fields; console.log('input#checkPri'+i);     
+    $cb1 = $('input#checkPri'+i); //    console.log($cb1)
+    $cb2 = $('input#strfy'+i);   
+    $cb3 = $('input#strfy1'+i);   //console.log($cb1) 
+    var checkbox1 = $cb1.prop('checked');  // console.log(checkbox1);    
+    if (checkbox1 == true){
+      var ch5 = $('input#checkPri'+i).val();  
+      var ch6 = $('input#strfy'+i).val(); 
+      var ch7 = $('input#strfy1'+i).val();    //console.log(ch7);
+      var num = parseInt(ch7, 10);          //console.log(num)
+      amt.push(num);   
+     if ($.trim($("#lab").val()) != "" || $.trim($("#sgid").val()) != "") { 
+        $("#usertable3 > tbody:last-child").append(`
+         <tr id="${randno}"><td>${labtype}</td>
+         <td>${suptype}</td>
+         <td>${ch5}</td>
+         <td>${ch6}</td>
+         <td style="display:none;">${ch7}</td>
+         <td style="display:none;">${randno}</td>
+         <td><button type="button" class="deletebtn2 form-control" ><i class="fas fa-trash" style="color:red;"></i></button></td>
+       </tr>`)       
+       CountRows();        
+     }   
+  } 
+}//console.log(amt); 
+
+var total = 0;
+for (var i = 0; i < amt.length; i++){
+    total += amt[i]; } //console.log(total);   
+  $("#usertable4 > tbody:last-child").append(`
+    <tr id="${randno}">  
+    <td class="userData" name="subtype">${suptype}</td>
+    <td class="userData" name="total">${total}</td>
+    <td class="userData" name="randno" style="display:none;">${randno}</td>    
+  </tr>`)    
+ amt =[];
+ var index = $('#usertable4 th:contains(Amount)').index(),
+      sum1 = 0;
+      $('#usertable4 tbody tr').each(function() {
+      sum1 += parseFloat( $.trim( $('td:eq('+ index +')', this).text() ), 10);   //console.log(sum1);
+      });
+      document.getElementById("totsum").value=sum1;
+document.getElementById("lab").value = ""; 
+document.getElementById("sgid").value = "";
+$("#tid").empty();     
+});
+
+/*------------PATIENT Labrequest Second Table AppendTable----------------------*/
+
+$(document).on('click', 'button.deletebtn2', function () {    
+  var gtid = $(this).closest('tr').find('td:eq(5)').text();
+  var gtamt = $(this).closest('tr').find('td:eq(4)').text();
+  var num = parseInt(gtid, 10);  //console.log(num)    //console.log($("#usertable4 #" + num).find('td:eq(1)').text());
+  var getamt4 =  $("#usertable4 #" + num).find('td:eq(1)').text();
+  var getamount3 = parseInt(gtamt,10);
+  var getamount4 = parseInt(getamt4,10);
+  var sub =   getamount4-getamount3;
+  $("#usertable4 #" + num).children(".userData").each(function() {
+    var attr = $(this).attr("name");
+    if (attr == "total") {
+      $(this).text(sub);
+    } 
+    });  //console.log(sub); 
+  var index = $('#usertable4 th:contains(Amount)').index(),
+  sum1 = 0;
+  $('#usertable4 tbody tr').each(function() {
+    sum1 += parseFloat( $.trim( $('td:eq('+ index +')', this).text() ), 10);   //console.log(sum1);
+  });
+  document.getElementById("totsum").value=sum1;  //alert("Rows = " + ($('table#usertable3 tr:last').index() + 1));
+
+/*------------PATIENT Labrequest First-Table (Total-Test)----------------------*/
+
+  var rowCount = $('#tabtbody3 tr').length;    
+  document.getElementById("totaltest").value=rowCount;  
+  $(this).closest('tr').remove(); 
+  CountRows(); 
+  return false;
+});
+
+/*------------PATIENT Labrequest First-Table (Total-Test)----------------------*/
+
+function CountRows() {
+  var rowCount = $('table#usertable3 tbody#tabtbody3 tr:last').index() + 1; 
+  document.getElementById("totaltest").value=rowCount;    //console.log(rowcount)
+ if (rowCount == 0){
+   $('#tabtbody4').empty();
+ }
+}
+
+/*------------PATIENT Labrequest From SAVE----------------------*/
+
+$("#sbtn").click(function() {
+  var table = $('#usertable3').tableToJSON();  
+  $("#tbl1").val(JSON.stringify(table));   //console.log(JSON.stringify(table1))
+  var table1 = $('#usertable4').tableToJSON();  
+  $("#tbl2").val(JSON.stringify(table1));   //console.log(JSON.stringify(table1))
+  var tbl1datainput = $('input[name="grpdata"]').val(); // console.log(tbl1datainput)   
+  var tbl2datainput= $('input[name="supdata"]').val(); // console.log(tbl2datainput)
+  var pid = $('input[name="galist"]').val();
+  var name = $('input[name="namelist"]').val();
+  var token = $('input[name="tokenlist"]').val();
+  var genter = $('input[name="genterlist"]').val();
+  var age = $('input[name="agelist"]').val();
+  var grpname = $('input[name="group"]').val();
+  var supgrpname = $('input[name="supgroup"]').val();
+  if (tbl1datainput || tbl2datainput){//$.trim($("#tbl1").val()) != "" && $.trim($("#tbl2").val()) != ""
+  // Create Ajax Call
+        $.ajax({
+            url: '{% url "labdatasave" %}',
+            type: 'get',
+            data: {
+                'grpdata'   :   tbl1datainput,
+                'supdata'   :   tbl2datainput,  
+                'galist'    :   pid, 
+                'namelist'  :   name,                
+                'tokenlist' :   token, 
+                'genterlist':   genter, 
+                'agelist'   :   age, 
+                'group'     :   grpname, 
+                'supgroup'  :   supgrpname, 
+            },
+            dataType: 'json',       
+            success: function(data) {
+              if(data.comfil){   //alret(data.comfil)                                     
+               //swal("Good job!", "You clicked the button!", "success");
+              }             
+            }            
+        });
+    } 
+  //else{
+    //swal("Oh noes!", "Fill the all fields!", "error");    
+  //}       
+  $('#tabtbody3').empty();  
+  document.getElementById("totaltest").value = "";   //document.getElementById("totsum").value = "";  
+});
+
+/*------------PATIENT Perscription Product----------------------*/
+
+function productfunction(product1){
+var getkindpro = product1; //console.log(getkindpro);
+}
+
+
+$("#productsub").click(function(){
+  var checkbox = $cb.prop('checked');  // console.log(checkbox); 
+  if (checkbox==true){
+    var product1 =  $('#Product').val(); //  console.log(getproductkom); 
+    var getproductkomcheck = getproductkom;   
+    for(var i=0;i<getproductkomcheck.length;i++){ 
+      if(getproductkomcheck[i].name==product1){    //console.log(getproductkomcheck[i].kindprod)
+      var tab = getproductkomcheck[i].kindprod;
+      var kindpro = product1 + '-' + tab;   //  console.log(kindpro);      
+      } 
+    }  
+    product1 = kindpro;
+  }
+  else{
+    var product1 = $('#Product').val();
+  }
+  var empty = true;
+  if(!this.snNo) this.snNo = 1;
+  var qty1 = $('#qty').val();
+  var mor1 = $('#mor').val();
+  var aftn1 = $('#aftn').val();
+  var nit1 = $('#nit').val();
+  var befcheck1 = $('#befcheck').val();
+  var aftcheck1 = $('#aftcheck').val();
+  if ($.trim($("#Product").val()) != "" || $.trim($("#qty").val()) != "") {
+    $("#productusertable > tbody:last-child").append(`
+    <tr>
+      <td>${this.snNo}</td>
+      <td>${product1}</td>     
+      <td>${qty1}</td>
+      <td>${mor1}</td>
+      <td>${aftn1}</td>      
+      <td>${nit1}</td>
+      <td>${befcheck1}</td>      
+      <td>${aftcheck1}</td>       
+      <td><button type="button" id="deletebtn3" class="form-control"><i class="fas fa-trash" style="color:red;"></i></button></td>
+    </tr>`)
+    this.snNo += 1;
+  CountRows1();    
+  }  
+  else{
+      swal("Oh noes!", "Fill the all fields!", "error");
+ }
+ document.getElementById("Product").value = ""; 
+ $('#komcheck').removeAttr('checked'); 
+ //document.getElementById("komcheck").value = "";  
+ document.getElementById("qty").value = "";  
+ document.getElementById("mor").value = "";  
+ document.getElementById("aftn").value = "";  
+ document.getElementById("nit").value = "";  
+ $('#befcheck').removeAttr('checked'); 
+ $('#aftcheck').removeAttr('checked'); 
+ //document.getElementById("befcheck").value = "";  
+ //document.getElementById("aftcheck").value = "";  
+
+});
+
+/*------------PATIENT Perscription Checked Befer And After----------------------*/
+
+
+$(document).ready(function(){
+  $cb = $('input#komcheck'); //console.log($cb)   
+  $('#befcheck').click(function(){    
+      if($(this).prop("checked") == true){ 
+        $(this).val('Yes').appendTo('#befcheck');        
+      }
+      else if($(this).prop("checked") == false){
+        $(this).val('No').appendTo('#befcheck');
+      }
+  });  
+  $('#aftcheck').click(function(){   
+      if($(this).prop("checked") == true){
+        $(this).val('Yes').appendTo('#aftcheck');
+      }
+      else if($(this).prop("checked") == false){
+        $(this).val('No').appendTo('#aftcheck');
+      }
+  });  
+});
+
+/*------------PATIENT Perscription Table Delete Button ----------------------*/
+
+$(document).on('click', 'button#deletebtn3', function () { //  console.log('hi') 
+  $(this).closest('tr').remove();
+  var rowCount1 = $('#prouserbody tr').length; //  console.log('hi' + rowCount1)   
+  document.getElementById("procount").value=rowCount1;    //CountRows1();
+});
+
+/*------------PATIENT Perscription form Table Count Input----------------------*/
+
+function CountRows1() {
+var rowCount1 = $('table#productusertable tbody#prouserbody tr:last').index() + 1; //console.log(rowCount1)
+console.log(rowCount1)
+    document.getElementById("procount").value=rowCount1;
+    if (rowCount1 == 0){
+      $('#procount').empty(); 
+    }  
+  }
+
+/*------------PATIENT Perscription form Complaint appendTable ----------------------*/
+
+function appendToUsrTablepro(rawmetrial) {   //console.log(rawmetrial)  
+  for(var i=0; i<rawmetrial.length; i++){    
+    data2=rawmetrial[i].fields;    //console.log(data2)  run pannava  console.log(rawmetrial[i].pk)
+    $("#procomtbl > tbody:last-child").append(`
+     <tr id="user-${rawmetrial[i].pk}">                 
+      <td class="userData" name="sno">${i}</td>
+        <td class="usercomplaint userData" name="complaint">${data2.complaint}</td>         
+        <td><button type="button" onClick="editcomplaint(${rawmetrial[i].pk})" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
+         Edit
+        </button></td>
+      </tr>`);                
+} 
+} 
+
+/*-----Perscription form Complaint appendTable get values from Pop-up----------------------*/
+
+function editcomplaint(id) {
+if (id) {  //alert(id);
+  tr_id = "#user-" + id;
+  complaint = $(tr_id).find(".usercomplaint").text();  //console.log(complaint)
+  $('#form-id').val(id);
+  $('#form-complaint').val(complaint);
+}
+}
+
+
+function updateToUserTabel(user){  //console.log(user);   //alert("helo suki"); run panuu alo
+var user = JSON.parse(user);  //  console.log(user); 
+for (var i = 0; i < user.length; i++) {
+  var data = user[i].fields;
+  var uid = user[i].pk;
+}   //console.log(data.complaint);  //console.log(uid);
+$("#procomtbltbody #user-" + uid).children(".userData").each(function() {
+      var attr = $(this).attr("name");
+      if (attr == "complaint") {
+        $(this).text(data.complaint);      
+      } 
+    });
+  }
+
+/*------------PATIENT Perscription form Complaint appendTable //Ajax call//----------------------*/
+
+$("#editcomplaint").click(function(){
+  var idInput = $('#form-id').val().trim(); //  console.log(idInput);
+  var complaint = $('#form-complaint').val().trim(); //console.log(complaint);
+  var pid = $('input[name="galist"]').val()  
+  // Create Ajax Call
+    $.ajax({
+      url: '{% url "productsavecomplaint" %}',
+      data: {
+        'id'        : idInput,
+        'galist'    : pid, 
+        'complaint' : complaint,
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.to_updatenewcomplaint) { 
+          var user = data.to_updatenewcomplaint;
+          updateToUserTabel(user);      // alert(data.oldcomplaint)          
+          //swal("Good job!", "Update Successfully", "success")   
+        }
+      }
+    });    
+    $('#modal-default').modal('hide');
+    return false;
+  });
+
+/*------------PATIENT Perscription form diagnosis appendTable----------------------*/
+
+function appendToTblpro(rawmetrial) {  //console.log(rawmetrial)
+    for(var i=0; i<rawmetrial.length; i++){
+      data2=rawmetrial[i].fields;
+     $("#prodiatbl > tbody:last-child").append(`
+       <tr id="user-${rawmetrial[i].pk}">               
+        <td>${i}</td>
+        <td class="userdiagnosis userData" name="diagnosis">${data2.diagnosis}</td>
+        <td style="display:none;" class ="userdiagnosisid userData"  name="diagnosisid" >${rawmetrial[i].pk}</td>  
+        <td><button type="button" onClick="editdiagnosis(${rawmetrial[i].pk})" class="btn btn-default" data-toggle="modal" data-target="#modal-default1">
+          Edit
+         </button></td>
+       </tr>   
+        `);             
+  } 
+  } 
+
+/*---------- Perscription form diagnosis get values from Pop-up----------------------*/
+
+function editdiagnosis(id) {
+if (id) {  //alert(id);
+  tr_id = "#user-" + id;
+  diagnosis = $(tr_id).find(".userdiagnosis").text();  //console.log(diagnosis)
+
+  $('#form-ids').val(id);
+  $('#form-diagnosis').val(diagnosis);
+}
+}
+
+
+function updateToUserTabeldia(user){ //  console.log(user);   alert("helo suki"); run panuu alo
+  var user = JSON.parse(user); //  console.log(user); 
+  for (var i = 0; i < user.length; i++) {
+    var data = user[i].fields;
+    var uid = user[i].pk;
+  }  //  console.log(data.complaint);   console.log(uid);
+  $("#prodiatblbody #user-" + uid).children(".userData").each(function() {
+        var attr = $(this).attr("name");
+        if (attr == "diagnosis") {
+          $(this).text(data.diagnosis);      
+        } 
+      });
+  }
+
+/*------------PATIENT Perscription form diagnosis appendTable //Ajax call//----------------------*/
+
+$("#editdiagnosis").click(function(){
+  var idInputdia = $('#form-ids').val().trim(); //  console.log(idInput);
+  var diagnosis = $('#form-diagnosis').val().trim(); //console.log(diagnosis); 
+  var pid = $('input[name="galist"]').val()
+
+  // Create Ajax Call
+    $.ajax({
+      url: '{% url "productsavediagnosis" %}',
+      data: {
+        'ids'       : idInputdia,
+        'galist'    : pid, 
+        'diagnosis' : diagnosis,        
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.to_updatenewdiagnosis) {
+          var user = data.to_updatenewdiagnosis;
+          updateToUserTabeldia(user);
+          //swal("Good job!", "Update Successfully", "success")   
+        }
+      }
+    });    
+    $('#modal-default1').modal('hide');  
+    return false;
+  });
+
+/*---------PATIENT Complaintfrom  Old Remarks AppendTable-----------*/
+
+function appendToTblproremark(rawmetrial) {  //console.log(rawmetrial)
+  for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields;
+   $("#prodremarktbl > tbody:last-child").append(`
+     <tr id="user-${rawmetrial[i].pk}">               
+      <td>${i}</td>
+      <td class="userremark userData" name="remark">${data2.remark}</td>
+      <td style="display:none;" class ="userremarkid userData"  name="remarkid" >${rawmetrial[i].pk}</td>  
+      <td><button type="button" onClick="editremark(${rawmetrial[i].pk})" class="btn btn-default" data-toggle="modal" data-target="#modal-default2">
+        Edit
+       </button></td>     
+     </tr>   
+      `);           
+} 
+}
+
+/*---------- Perscription form remark get values from Pop-up----------------------*/
+
+function editremark(id) {
+  if (id) {  // alert(id);
+    tr_id = "#user-" + id;
+    remark = $(tr_id).find(".userremark").text();  //console.log(remark)
+  
+    $('#form-idr1').val(id);
+    $('#form-remark').val(remark);
+  }
+  }
+
+/*------------PATIENT Perscription form remark appendTable----------------------*/
+
+function updateToUserTabelremark(user){ //  console.log(user);   //alert("helo suki"); run panuu alo
+  var user = JSON.parse(user); //  console.log(user); 
+  for (var i = 0; i < user.length; i++) {
+    var data = user[i].fields;
+    var uid = user[i].pk;
+ }  // console.log(data.remark); // console.log(uid);
+  $("#prodremarktblbody #user-" + uid).children(".userData").each(function() {
+        var attr = $(this).attr("name");
+        if (attr == "remark") {
+          $(this).text(data.remark);      
+        } 
+      });
+  }
+
+$("#editremark").click(function(){
+  var idInputremark = $('#form-idr1').val().trim(); //console.log(idInput);
+  var remark = $('#form-remark').val().trim(); 
+  console.log(remark); 
+  var pid = $('input[name="galist"]').val()   
+  // Create Ajax Call
+    $.ajax({
+      url: '{% url "productsaveremark" %}',
+      data: {
+        'idr1'      : idInputremark,
+        'galist'    :  pid, 
+        'remark'    :  remark,
+        
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.to_updatenewremark) { 
+          var user = data.to_updatenewremark;
+          updateToUserTabelremark(user);         
+          //swal("Good job!", "Update Successfully", "success")   
+        }
+      }
+    });    
+    $('#modal-default2').modal('hide');  
+    return false;
+  });
+
+$(document).ready(function(){     
+    $("#prescriptiontab").click(function(){  // console.log("testing")
+      $.getJSON('{% url "perscrproduct" %}', 
+        function (data) {        
+        if (data.product) {    
+          //console.log(data.product)
+          getproductkom = data.product;                   
+        }
+      });      
+    });
+  });
+
+/*------------PATIENT Perscription form Submit(Save)---------------------------*/
+
+$("#perscriptionsave").click(function() {
+    var protable = $('#productusertable').tableToJSON();
+    $("#prohidid").val(JSON.stringify(protable));       //console.log(JSON.stringify(protable))
+    var protbldatainput = $('input[name="prohidname"]').val();//    console.log(protbldatainput)  
+    var pid = $('input[name="galist"]').val();//    console.log(pid)
+    var name = $('input[name="namelist"]').val();       // console.log(name)
+    var token = $('input[name="tokennolist"]').val();      //    console.log(token)
+    if (protbldatainput){ //if ($.trim($("#productusertable").val()) != ""){
+    //Create Ajax Call
+          $.ajax({
+              url: '{% url "perscrpitionsave" %}',              
+              data: {                 
+                  'prohidname'  :   protbldatainput,
+                  'galist'      :   pid, 
+                  'namelist'    :   name,               
+                  'tokennolist' :   token,                   
+              },
+              dataType: 'json',       
+              success: function(data) {
+                if(data.save==true){    //alert(data.save) 
+                  //swal("Good job!","You Saved Perscription!", "success")
+                }
+                //else{
+                  //swal("Oh noes!","Fill the all fields!", "error");
+                //}
+              }            
+          });
+      }      
+      $('#prouserbody').empty();
+  });
+ 
+$("#appoinmentsave").click(function() {    
+    var mobileno = $('input[name="mobileno"]').val()      //console.log(mobileno)
+    var consult = $('input[name="consult"]').val()        //console.log(consult)
+    var datepicker = $('input[name="datepicker"]').val()  //console.log(datepicker)
+    var psession = $('input[name="psession"]').val()      //console.log(psession)
+    var namelist = $('input[name="namelist"]').val() 
+    if ($.trim($("#datepicker").val()) != "" || $.trim($("#psession").val()) != ""){
+    //Create Ajax Call
+          $.ajax({
+              url: '{% url "appoinmentsave" %}',              
+              data: {
+                  'mobileno'  :  mobileno,
+                  'consult'   :  consult, 
+                  'datepicker':  datepicker,
+                  'psession'  :  psession,
+                  'namelist'  :  namelist,                                
+              },
+              dataType: 'json',       
+              success: function(data){
+                if(data.asave){
+                  document.getElementById("datepicker").value = ""; 
+                  document.getElementById("psession").value = "";
+                  swal("Good job!","You Saved Appoinment date","Success");
+                }
+                //else{
+                  //swal("Oh noes!","Please Select Appoinment date","Error")
+               // }
+              }            
+          });  
+        }
+        else{
+          swal("Oh noes!","Please Select Appoinment date","Error")
+        }        
+ 
+  });
+
+$("#others").click(function(){
+  var pid = $('input[name="galist"]').val()
+  var consult = $('input[name="consult"]').val()  
+  var token = $('input[name="tokennolist"]').val(); 
+  var othername= $('input[name="othername"]').val(); 
+  if(othername){
+  $.ajax({
+    url: '{% url "otherupdate" %}',              
+    data: {
+        'galist'     :   pid, 
+        'consult'    :  consult, 
+        'tokennolist':   token,
+        'othername'  :   othername,
+                                 
+    },
+    dataType: 'json',       
+    success: function(data){
+      if (data.save) {     
+        swal("Good job!","You Saved Perscription!", "success")
+      }     
+    } 
+  });
+}
+else{swal("Oh noes!","Select the  fields!", "error");}
+});
+
+$("#todaylabid").click(function(){
+  var tid = $('input[name="peropno"]').val() //console.log(tid)
+  var opid = $('input[name="opid"]').val()  //console.log(opid) 
+  $.ajax({
+    url: '{% url "todaylabupdate" %}',              
+    data: {
+        'peropno'     :   tid, 
+        'opid'        :  opid,
+      },
+      dataType: 'json',       
+      success: function(data) {
+        if(data.labresult){   
+          //console.log(data.labresult);
+          var labtbl =  data.labresult;//console.log(labtbl);console.log(labtbl.length);           
+          $("#labidfetch").empty();
+          for (var i=0; i<labtbl.length; i++) {           
+            $("#labidfetch1 > tbody:last-child").append(`
+              <tr>
+                <td>${labtbl[i].groupname}</td>
+                <td>${labtbl[i].subgroupname}</td>
+                <td>${labtbl[i].testname}</td>
+                <td>${labtbl[i].result}</td>
+                <td>${labtbl[i].refrange}</td>                             
+              </tr>`);
+          }   
+        }   
+        else{
+          if(data.save==true){
+            $("#labidfetch").empty();
+          }
+        }
+      }
+      
+    });
+});
+
+function nxtpre(id) {//console.log(id)
+  var ipid=id;// console.log(ipid)  
+  $.ajax({
+    url: '{% url "nxtpreget" %}',
+    data: {
+      'ipid'      : ipid,      
+    },
+    dataType: 'json',
+    success: function (data) {
+      if (data.productitem) {     
+        var rawmetrial = JSON.parse(data.productitem);  
+        appendToUsrTablepre(rawmetrial,ipid); 
+      }
+    }
+  });    
+}
+
+function appendToUsrTablepre(rawmetrial,ipid) { //console.log(rawmetrial) //console.log(ipid)
+  var ipid1=ipid;
+  console.log(ipid1)
+  $("#prebdy").empty();
+  for(var i=0; i<rawmetrial.length; i++){
+  data2=rawmetrial[i].fields;//data2=user; console.log(data2)
+  $("#appendpretbl > tbody:last-child").append(`
+  <tr id="user-${data2.pk}">    
+  <td  align="center" style="width:250px" class="userproduct userData"  name="product">${data2.product}</td>
+  <td  align="center" style="width:250px" class="userqty userData"  name="qty">${data2.qty}</td>
+  <td  align="center" style="width:250px" class="usermorn userData"  name="morn">${data2.morn}</td>
+  <td  align="center" style="width:250px" class="userafter userData"  name="after">${data2.after}</td>
+  <td  align="center" style="width:250px" class="usernight userData"  name="night">${data2.night}</td>
+  <td  align="center" style="width:250px" class="userbeforefood userData"  name="beforefood">${data2.beforefood}</td>
+  <td  align="center" style="width:250px" class="userafterfood userData"  name="afterfood">${data2.afterfood}</td>
+  <td align="center"><button type="button" id="preappend" name="preappend"  onClick="prescrappend(${ipid1})"
+  class="usercomplaint userData btn btn-default">
+  <i class="fas fa-prescription-bottle-alt" style="font-size:20px;color:black" ></i></button></td>                          
+  </tr>   
+ `);          
+  }
+}
+
+function prescrappend(ipid) {//console.log(id)
+  var ipid=ipid;// console.log(ipid)
+  $.ajax({
+    url: '{% url "pushprescr" %}',
+    data: {
+      'ipid'      : ipid,      
+    },
+    dataType: 'json',
+    success: function (data) {
+      if (data.productitem) {     
+        var rawmetrial = JSON.parse(data.productitem);// var dict = {rawmetrial};//  console.log(dict)
+        appendToUsrpushtbl(rawmetrial);
+      }
+    }
+  });
+}
+
+function appendToUsrpushtbl(rawmetrial) { //console.log(rawmetrial) //console.log(ipid)
+  //var ipid1=ipid;console.log(ipid1)
+  //$("#prebdy").empty();
+  for(var i=0; i<rawmetrial.length; i++){
+  data2=rawmetrial[i].fields;//data2=user; console.log(data2)
+  //if(!this.snNo) this.snNo = 1;<td>${this.this.snNo}</td>
+  $("#productusertable > tbody:last-child").append(`
+      <tr id="user-${data2.pk}">
+        <td style="text-align:center">${data2.product}</td>     
+        <td style="text-align:center">${data2.qty}</td>
+        <td style="text-align:center">${data2.morn}</td>
+        <td style="text-align:center">${data2.after}</td>      
+        <td style="text-align:center">${data2.night}</td>
+        <td style="text-align:center">${data2.beforefood}</td>      
+        <td style="text-align:center">${data2.afterfood}</td> 
+        <td style="text-align:center"><button type="button" id="deletebtn3" class="form-control"><i class="fas fa-trash" style="color:red;"></i></button></td>
+      </tr>`)
+     // this.snNo += 1;    
+  }
+  CountRows1();   
+}
+
+</script>
+{% endblock javascript%}
+
+  

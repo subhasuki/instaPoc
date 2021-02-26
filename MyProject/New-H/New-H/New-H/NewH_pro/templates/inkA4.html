@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load static %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Ink-A4</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap 4 -->
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <style>
+    body{
+      counter-reset: Serial;   
+      }
+      #example1 {
+        box-sizing: content-box;  
+        width: 90%;
+        height: 90%;
+        
+        border: 2px solid rgb(31, 30, 30);
+      }
+      #example2 {
+        box-sizing: content-box;  
+        width: 85%;
+        height: 85%;
+        
+        border: 2px solid rgb(228, 22, 56);
+      }
+      
+    tbody tr td:first-child:before{
+      counter-increment: Serial;     
+      content: counter(Serial);
+      font-size: .7em;
+    }
+    table{
+      border-collapse: collapse;
+    }
+    .tabletitle{
+      /*padding: 5px;*/
+      /*font-size: .5em;*/
+      background: #EEE;
+      border-bottom: 1px solid #EEE;
+    }
+    .service{ border-bottom: 1px solid #EEE;}
+    .wrapper{
+      border: black;
+      right:0%;
+    }
+    .vertical { 
+      border-left: 2px solid rgb(122, 122, 122); 
+      height: 125px; 
+      position:absolute; 
+      left: 50%; 
+      top:11%;
+  } 
+  .verticalmrg { 
+    border-left: 2px solid rgb(122, 122, 122); 
+    height: 980px; 
+    position:absolute; 
+    right: 64%; 
+    top:-1.6%;
+} 
+.verticalbmrg { 
+  border-left: 2px solid rgb(122, 122, 122); 
+  height: 980px; 
+  position:absolute; 
+  right: 97%; 
+  top:-1.6%;
+  
+}
+.verticalaftn { 
+  border-left: 2px solid rgb(122, 122, 122); 
+  height: 980px; 
+  position:absolute; 
+  right: 36%; 
+  top:-1.6%;
+} 
+
+.footer2 { 
+  height: 950px; 
+    
+}
+  </style>
+</head>
+<body>
+<div class="wrapper" id="example1">
+  <!-- Main content  -->
+  <section class="invoice" >
+
+    <div class="row invoice-info">   
+      <div class="col-sm-12 invoice-col" style="text-align: center;">  
+        <h2>SM HOSPITAL</h2>
+        <h6>Anaikarai Street,<b>Tenkasi, Ph-222560</b></h6>
+      </div>
+    </div> 
+
+    <hr style="width:100%;text-align:left;margin-left:0;border: 1px solid rgb(122, 122, 122); ">
+
+    <div class="row invoice-info">
+      <div class="col-sm-10 invoice-col" style="text-align: center;"> 
+        <h4>DR.S.M.A.KUTHOOS<small> M.D Reg No:23352</small> </h4>       
+      </div>
+      <div class="col-sm-2 invoice-col">        
+        <p style="float: right;">Date:{{today}}</p> 
+       </div>
+    </div>  
+
+    <hr style="width:100%;text-align:left;margin-left:0;border: 1px solid rgb(122, 122, 122); ">
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="row">
+          <div class="col-12">
+            <address>Dr.S.M.A.Kuthoos M.D <br>
+                    Reg.No 23352<br>
+                    Herat,Nerve,Diabetes,General Physician</address>
+          </div>              
+        </div>      
+      </div>
+      <div class = "vertical"></div> 
+      <div class="col-sm-6">
+        <address>
+          <small>Mrs.</small>Dr.S.SAMINAYASMIN M.D(O.G) <br>
+          Reg.No 82498<br>
+          Gynecologist
+        </address>
+      </div>     
+    </div>
+
+    <hr style="width:100%;text-align:left;margin-left:0;border: 1px solid rgb(122, 122, 122); ">
+
+    <div class="row footer2">
+      <div class="col-sm-9">        
+            <address> {% for user in tokenlist %} 
+              {% for user in detail %} 
+              <p>{{user.name}}&nbsp;&nbsp;&nbsp;&nbsp;Age:{{user.age}}/{{user.gender}}&nbsp;&nbsp;&nbsp;
+              {% endfor %}{% endfor %}
+              PR:{{pb}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              BP: {{bp}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              RR: {{spo2}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              Temp: {{temp}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              Wt: {{wt}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</address></p>           
+              ---------------------------------------------------------------------------------------------------------------------------------------<br>
+        {% for user in productobj1 %} 
+        <p>{{user.product}}
+        {% if user.beforefood == 'Yes' %}
+        <b style="float:right">Before Food</b> 
+        {% endif %}
+        {% if user.afterfood == 'Yes' %}
+        <b style="float:right"> After Food</b>        
+        {% endif %}</p>
+        {% endfor %}
+        ---------------------------------------------------------------------------------------------------------------------------------------<br>
+        {% for user in  Complaintlist %}     
+        <p><b>Complaint:</b><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{user.complaint}}</p>
+        {% endfor %} <br>     
+        {% for user in  Diagnosislist %}     
+        <p>Diagnosis:&nbsp;&nbsp;&nbsp;{{user.diagnosis}}</p> 
+        {% endfor %}  <br>
+        {% for user in  Remarkslist %}     
+        <p>Remark:&nbsp;&nbsp;&nbsp;{{user.remark}}</p>
+        {% endfor %} <br>  
+        <p>{{pid}}</p>   
+        </div> 
+     
+        <div class="col-sm-3">
+          <div id="table">
+          <table class="table" style=" border:none;">
+            <thead>
+            <tr class="tabletitle">
+              <div class = "verticalbmrg"></div> 
+              <th>Mrg</th>
+              <div class = "verticalmrg"></div> 
+              <th>Aftn</th>
+              <div class = "verticalaftn"></div> 
+              <th>Nit</th>           
+            </tr>
+            </thead>            
+            <tbody class="service">                
+            {% for user in productobj1 %} 
+            <tr>                          
+            <td>{{user.morn}}</td>
+            <td>{{user.after}}</td>
+            <td>{{user.night}}</td>
+          </tr>
+            {% endfor %}            
+            </tbody>
+          </table>
+        </div>
+        </div>
+    </div>
+   
+    <hr style="height:100%;width:100%;text-align:left;margin-left:0;border: 1px solid rgb(122, 122, 122); ">
+
+    <div class="row footer">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-12">
+            <input type="checkbox" value="">
+            <label style="font-size:14px;">&nbsp;&nbsp;AC Operation Theatre</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" value="">
+            <label style="font-size:14px;">&nbsp;&nbsp;Computer Blood Test</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" value="">
+            <label style="font-size:14px;text-align:right;">&nbsp;&nbsp;X-ray</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+            <input type="checkbox" value="">
+            <label style="font-size:14px;">&nbsp;&nbsp;Intensive Care Unit</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" value="">
+            <label style="font-size:14px;">&nbsp;&nbsp;24 hrs Medical</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" value="">
+            <label style="font-size:14px;text-align:right;">&nbsp;&nbsp;Physiotherapy Unid</label>&nbsp;&nbsp;&nbsp;
+           </div> 
+        </div>
+      </div>
+    </div>
+
+    <hr style="height:100%;width:100%;text-align:left;margin-left:0;border: 1px solid rgb(122, 122, 122); ">
+
+    <div class="row invoice-info footer1" >
+      <div class="col-sm-2 invoice-col">        
+        <p style="float: left;"><b>Phone.No:224441</b></p> 
+      </div>
+      <div class="col-sm-10 invoice-col" style="text-align: center;">  
+        <h6>Time to watch:Morning 9.00 to 1.00 Evening 6.00 to 9.00</h6>
+        <h2>Rumsey Medical</h2>
+        {% for user in productobj1 %} 
+        <input type="hidden" id="befcheck'" value="{{user.beforefood}}">
+        <input type="hidden" id="aftcheck" value="{{user.afterfood}}">
+        {% endfor %}
+      </div>   
+    </div> 
+  </section>  
+</div>
+<script type="text/javascript"> 
+  window.addEventListener("load", window.print()); 
+</script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <h3 >Update Form</h3>
+      </div><!-- /.container-fluid -->
+    </section>
+  
+    <!-- Main content -->
+    <section class="content">
+  
+            <div class="row" >
+              <div class="col-md-12">
+                <div class="card card-default">   
+                    <div class="card-body">
+                        <div class="row form-group">
+                            <div class="col-md-4">
+                               <label>Per.OP.ID</label>                                     
+                               <input type="text" name="peropid" id="peropids" class="form-control">       
+                            </div>
+                            <div class="col-md-1"> 
+                            <label >&nbsp;</label><br>
+                            <button type="submit" id="peropid" class="btn btn-info btn-sml"><i class="fas fa-search"></i></button>
+                            </div> 
+                            <div class="col-md-1"> 
+                              <label >&nbsp;</label><br>
+                              <button type="submit" id="updateformprint" class="btn btn-dark btn-sml" ><i class="fas fa-print"></i></button>
+                              </div>
+                              <div class="col-md-1"> 
+                                <label >&nbsp;</label><br>
+                                <button type="submit" id="newupdateform" class=" btn btn-success btn-sml"><i class="fas fa-sync-alt"></i></button>    
+                             
+                                </div>
+                          </div>
+                       <div class="row form-group">
+                         <div class="col-md-4">
+                            <label>Name</label>
+                            <input type="hidden" class="form-control" id="tnid1" name="tnid1">   
+                            <input type="text"  class="form-control" id="tnname1" name="tnname1">  
+                            <input type="hidden" name="pid" id="pid" class="form-control">       
+                         </div>
+                         <div class="col-md-4"> 
+                         <label >Address</label>
+                         <input type="text" class="form-control" id="tnplace1" name="tnplace1">                      
+                         </div>
+                         <div class="col-md-4"> 
+                         <label>Gender</label>
+                         <input type="text"  class="form-control" id="tgenter1" name="tgenter1">      
+                         </div>
+                       </div>
+                       <div class="row form-group">
+                        <div class="col-md-4">
+                           <label>DOB</label>
+                           <input type="text" class="form-control" id="tndob1" name="tndob1">         
+                        </div>
+                        <div class="col-md-4"> 
+                        <label >Age</label>
+                        <input type="text" class="form-control" id="tnage1" name="tnage1">                      
+                        </div>
+                        <div class="col-md-4"> 
+                        <label>Mobile Number</label>
+                        <input type="text" class="form-control" id="tnmobile1" name="tnmobile1">   
+                        </div>
+                      </div><br>
+                      <div class="row form-group">
+                        <div class="col-md-6">                           
+                        
+                        </div>
+                      
+                      </div>
+                     </div>
+                    </div>
+                    </div>
+                    </div>
+                   
+</section>
+</div>
+
+{% endblock %}
+{% block javascript %}
+<script>
+
+$("#peropid").click(function(){     
+  var peropid = $('input[name="peropid"]').val()  //console.log(peropid)         
+  if(peropid){
+  $.ajax({
+      url: '{% url "peropid" %}',
+      type: 'get',
+      data: {
+          'peropid': peropid,         
+      },
+      dataType: 'json',
+      success: function(data)  { 
+        if(data.oldlist){ //console.log(data.oldlist);
+          var oldlistgt =  data.oldlist;//console.log(labtbl);console.log(labtbl.length);                    
+          for (var i=0; i<oldlistgt.length; i++) { 
+            var pid= oldlistgt[i].id;
+            var name= oldlistgt[i].name;//  console.log(name)
+            var age = oldlistgt[i].age;// console.log(age)
+            var address = oldlistgt[i].addrs;//   console.log(address)
+            var gender = oldlistgt[i].gender;//    console.log(gender)
+            var dob = oldlistgt[i].dob;//        console.log(dob)
+            var mobileno = oldlistgt[i].mobileno;//  console.log(mobileno)
+            var address = oldlistgt[i].addrs;
+            var id = oldlistgt[i].id;
+
+          }   
+          document.getElementById("updateformprint").value=pid;  
+          document.getElementById("tnname1").value=name;  
+          document.getElementById("tnage1").value=age;  
+          document.getElementById("tgenter1").value=gender;  
+          document.getElementById("tndob1").value=dob;  
+          document.getElementById("tnmobile1").value=mobileno;  
+          document.getElementById("tnplace1").value=address; 
+          document.getElementById("tnid1").value=id; 
+          //document.getElementById("tnid1").value=id;
+
+        }
+      }
+  }); 
+}
+else
+{
+  swal("Oh noes!", "Enter Per.op.id ", "error");   
+}  
+});
+
+$("#newupdateform").click(function() {    
+    var tnid1 = $('input[name="tnid1"]').val()// console.log(tnid) 
+    var peropid = $('input[name="peropid"]').val()// console.log(tnid)    
+    var tnname1 = $('input[name="tnname1"]').val() // console.log(tnname)
+    var tgenter1 = $('select[name="tgenter1"]').val() //console.log(tgenter) 
+    var tnage1 = $('input[name="tnage1"]').val() // console.log(tnage)   
+    var tnplace1 = $('input[name="tnplace1"]').val() // console.log(tnplace)
+    var tndob1 = $('input[name="tndob1"]').val() // console.log(tndob)
+    var tnmobile1 = $('input[name="tnmobile1"]').val()  //console.log(tnmobile)     
+    if(tnid1!='' && peropid!='' && tnname1!='' && tgenter1!='' && tnage1!=''
+    && tnplace1!='' && tndob1!='' && tnmobile1!=''){
+          $.ajax({
+              url: '{% url "newupdateform" %}',              
+              type: 'get',
+              data: {
+                  'tnid1'       :  tnid1,
+                  'peropid'    :  peropid,                  
+                  'tnname1'    :  tnname1,  
+                  'tgenter1'   :  tgenter1,  
+                  'tnage1'     :  tnage1,                  
+                  'tnplace1'   :  tnplace1,  
+                  'tndob1'     :  tndob1,    
+                  'tnmobile1'  :  tnmobile1, 
+                                          
+              },
+              dataType: 'json',       
+                  success: function(data) { 
+                    if(data.save){   //console.log(data.feestatus);
+                      swal("Good job!", "Update Successfully!", "success"); 
+                    }       
+              }            
+          });  
+        }else{ swal("Oh noes!", "Please enter all fields !", "error");  }
+  });
+
+$("#updateformprint").click(function(){    
+    var tnid1 = $('button[name="updatename"]').val()  //console.log(tnid1) 
+    if(tnid1){
+    $('<iframe>', {src: '/searchidprint/'+tnid1 ,id:'myFrame',frameborder:0,scrolling:'no'}).appendTo('.printarea');               
+      document.getElementById('peropids').value = ""; 
+      document.getElementById('tnid1').value = ""; 
+      document.getElementById('tnname1').value = ""; 
+      document.getElementById('pid').value = ""; 
+      document.getElementById('tnplace1').value = ""; 
+      document.getElementById('tgenter1').value = ""; 
+      document.getElementById('tndob1').value = ""; 
+      document.getElementById('tnage1').value = ""; 
+      document.getElementById('tnmobile1').value = "";  
+    }
+    else{ swal("Oh noes!", "Please enter all fields !", "error"); }     
+          
+});
+
+</script> 
+{% endblock javascript%}

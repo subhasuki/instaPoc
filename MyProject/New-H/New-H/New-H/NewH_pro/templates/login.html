@@ -1,0 +1,204 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>SR | Login</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>		 -->        
+        <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <style>
+          .content-wrapper{
+            background-repeat: no-repeat;            
+            display: flex;
+            overflow:hidden;    
+            background-image: url('/static/dist/img/hospital4.jpg');                     
+          }
+            body{
+                margin: 0;
+                padding: 0;
+                font-family: sans-serif;
+                background: #000000;
+              }
+              .box{
+                width: 300px;
+                height: auto;
+                padding: 40px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                background: #ffffff;
+                text-align: center;                
+              }
+              .box h1{
+                color: rgb(0, 0, 0);
+                text-transform: uppercase;
+                font-weight: 1000;
+              }
+              .box input[type = "text"],.box input[type = "password"]{
+                border:0;
+                background: none;
+                display: block;
+                margin: 20px auto;
+                text-align: center;
+                border: 2px solid #3498db;
+                padding: 14px 10px;
+                width: 200px;
+                outline: none;
+                color: rgb(0, 0, 0);
+                border-radius: 24px;
+                transition: 0.25s;
+              }
+              .box input[type = "text"]:focus,.box input[type = "password"]:focus{
+                width: 280px;
+                border-color: #2ecc71;
+              }
+              .box input[type = "submit"]{
+                border:0;
+                background: none;
+                display: block;
+                margin: 20px auto;
+                text-align: center;
+                border: 2px solid #2ecc71;
+                padding: 14px 40px;
+                outline: none;
+                color: rgb(6, 80, 12);
+                border-radius: 24px;
+                transition: 0.25s;
+                cursor: pointer;
+              }
+              .box input[type = "submit"]:hover{
+                background: #2ecc71;
+              }
+    
+        </style>
+	</head>
+
+	<body  class="content-wrapper">   
+            <form class="box" id="my_login" enctype="multipart/form-data">
+              {% csrf_token %} 
+              <h1>Login</h1>                   
+             <div class="spd">                
+              <input type="text" placeholder="Mail-Id" id="mailid" name="mailid"  onchange="mailcal()" required>   
+              <input type="text" placeholder="HospitalName" id="hosname" name="hosname" required>              
+              <!-- <datalist name="drtoken" id="demo4">
+              {% for user in rolelist %} 
+              <option value="{{user.role}}">{{user.role}}</option>
+              {% endfor %}                                                                                                       
+              </datalist> -->
+              <input type="text" placeholder="Username" id="username" name="username" onchange="usernamecal()" required>   
+              <input type="text" placeholder="Role" id="role" name="role" required>         
+              <input type="password" placeholder="Password" id="password" name="password" required>             
+              <input type="submit" value="Sign In" id="">
+              </div>
+              <hr>
+              <div class="crtacc"><a href="{% url 'registerform'%}" style="color:rgb(5, 73, 150);text-decoration: none;">Create Account</a></div><br>
+              <div class="crtacc"><a href="{% url 'forgotpassword'%}" style="color:rgb(5, 73, 150);text-decoration: none;">Forgot Password</a></div>
+            </form>        
+  </body>
+  <script>
+ var validateEmail = function(elementValue) {
+    var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(elementValue);
+}
+$('#mailid').keyup(function() {
+    var value = $(this).val();
+    var valid = validateEmail(value);
+    if (!valid) {
+        $(this).css('color', 'red');
+    } else {
+        $(this).css('color', '#000');
+    }
+});
+
+$("form#my_login").submit(function(event){//alert("hi login")
+  event.preventDefault();			
+  var mailid = $('input[name="mailid"]').val()	 
+  var role = $('input[name="role"]').val()	 
+  var hosname = $('input[name="hosname"]').val()	   
+  var username = $('input[name="username"]').val()	  
+  var password = $('input[name="password"]').val() //console.log(password)  
+  var formData = new FormData();
+  formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+  formData.append('mailid',mailid);
+  formData.append('role',role);
+  formData.append('hosname',hosname);
+  formData.append('username',username);
+  formData.append('password',password);  
+    $.ajax({
+        url: '/my_login',
+        type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,   
+      dataType: 'json',       
+      success: function(data) {      
+        if(data.index){ 
+          swal("Good job!", "Login successfully!", "success");
+          top.location.href ='index'
+        }  
+        if(data.login){ 
+          swal("Invalid password ", {
+            buttons: ["Oh noez!", "ok!"],
+          }); //top.location.href ='login'
+        }     
+      } 
+    });   
+  });
+
+  
+function mailcal() {     
+  var mailid = $('input[name="mailid"]').val()  
+  console.log(mailid)    
+  $.ajax({
+      url: '{% url "mailcal" %}',
+      type: 'get',
+      data: {
+          'mailid': mailid,         
+      },
+      dataType: 'json',
+      success: function(data)  {          
+        if(data.maillist){ 
+          var mailsht1 =  data.maillist;//      console.log(mailsht1)
+          var mailsht2 =  data.maillist[0];
+          document.getElementById("hosname").value=mailsht2["hosname"]             
+        }
+        if(data.ermail){
+        swal("Invalied mailid ", {
+          buttons: ["Oh noez!", "ok!"],
+        });
+      }
+      }
+  });   
+}
+
+function usernamecal() {  
+  var mailid = $('input[name="mailid"]').val()   
+  var username = $('input[name="username"]').val()  //console.log(username)    
+  $.ajax({
+      url: '{% url "usernamecal" %}',
+      type: 'get',
+      data: {
+           'mailid': mailid,    
+          'username': username,         
+      },
+      dataType: 'json',
+      success: function(data)  {          
+        if(data.userlist){ 
+          var mailsht1 =  data.userlist;//      console.log(mailsht1)
+          var mailsht2 =  data.userlist[0];         
+          document.getElementById("role").value=mailsht2["role"]      
+        }
+        if(data.username){
+        swal("Invalied username ", {
+          buttons: ["Oh noez!", "ok!"],
+        });
+      }
+      }
+  });   
+}
+  </script>
+</html>
+

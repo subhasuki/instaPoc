@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load static %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Appoinment Print</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap 4 -->
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <style>
+    body{
+      width:288px;
+      height: auto;
+  } 
+</style>
+</head>
+<body onload="window.print()">      
+  <!-- onload="window.print();"  -->
+              <div class="col-md-12" >
+                <div class="card card-default">   
+                    <div class="card-body">
+                      <div id="printbdy">
+                        <div id="invoice-POS">        
+                              <div class="info"> 
+                                <h2>S.M HOSPITAL</h2>
+                                <p>Anaikarai Street,Tenkasi-627811</p>                               
+                              </div><!--End Info--> <hr/>                           
+                            <div id="bot">   
+                                <h3>Appoinment</h3>
+                                    <div id="legalcopy">
+                                        <small>App No:&nbsp;{{user.serialno}}</small><br>                                                
+                                        <small>Doctor Name:&nbsp;{{user.doctorname}}</small><br>
+                                        <small>App Date:&nbsp;{{user.dt}}</small><br>                                                
+                                        <small>App Session:&nbsp;{{user.session}}</small><br>  
+                                    </div>
+                            </div><!--End Invoice-->
+                     </div>
+                     </div>
+                   </div>
+                   </div>
+</div>
+</body>
+</html>
+

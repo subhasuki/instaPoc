@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .custom-control-label{
+        position: unset; 
+    }
+</style>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <h3>TokenStatus Report</h3>
+      </div><!-- /.container-fluid -->
+    </section>
+  
+    <!-- Main content -->
+    <section class="content">
+      
+            <div class="row" >
+              <div class="col-md-12">
+                <div class="card card-default">   
+                    <div class="card-body">
+                       <div class="row">
+                         <div class="col-md-4">
+                            <label style="text-align:center;font-size:14px;">Dr.Name:</label>
+                            <input list="demo5" class="form-control" name="docname" id="docname" />
+                            <datalist name="drtoken" id="demo5">
+                            {% for user in docname %} 
+                            <option value="{{user.drname}}">{{user.drname}}</option>
+                            {% endfor %}                                                                                                       
+                            </datalist>
+                         </div>
+                         <div class="col-6 col-md-4">
+                              <div class="form-group">
+                                <label>&nbsp;</label><br>
+                                <div class="custom-control custom-radio">
+                                    <input class="custom-control-input" type="radio" id="customRadio1" name="customRadio1" value="Normal">
+                                    <label for="customRadio1" class="custom-control-label" onclick="normalcheck()">Normal</label>
+                                  </div> 
+                              </div>
+                            </div>
+                            <div class="col-6 col-md-4">
+                              <div class="form-group">
+                                <label>&nbsp;</label><br>
+                              <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" id="customRadio2" name="customRadio2" value="Emergency">
+                                <label for="customRadio2" class="custom-control-label"  onclick="emergencycheck()">Emergency</label>
+                              </div> 
+                              </div>                             
+                            </div>
+                       </div>  
+                       <hr/>                       
+                       <div class="table-responsive p-0" style="height: 270px;">
+                         <table id="statustable" class="table table-dark danger">
+                           <thead style="text-align:center;font-size:12px;">
+                             <tr>                          
+                               <th>Id</th>                               
+                               <th>PerOpId</th>
+                               <th>TokenNo</th>
+                               <td>Date</td>
+                               <td>Consult</td>
+                               <td>Name</td>
+                               <td>Amount</td>
+                               <td>Status</td>
+                               <td>Type</td>
+                               <td>Cstatus</td>
+                               <td>Diagnosis</td>
+                               <td></td>
+                               </tr>
+                           </thead>
+                           <tbody id="combody" style="font-size:12px;" >  
+                            {% for user in pdltfetch %} 
+                            <tr  id="user-{{user.id}}"> 
+                              <td align="center" style="display:none;" class="userData" >{{user.id}}</td>                                 
+                              <td align="center"  name="peropno" class="userData userperopno" >{{user.peropno}}</td> 
+                              <td align="center"  name="tokenno" class="userData usertokenno" >{{user.tokenno}}</td> 
+                              <td align="center"  name="date" class="userData userdate" >{{user.date}}</td> 
+                              <td align="center"  name="consult" class="userData userconsult" >{{user.consult}}</td> 
+                              <td align="center"  name="opname" class="userData username" >{{user.name}}</td> 
+                              <td align="center"  name="amount" class="userData useramount" >{{user.amount}}</td> 
+                              <td align="center"  name="status" class="userData userstatus" >{{user.status}}</td> 
+                              <td align="center"  name="ctype" class="userData userctype" >{{user.ctype}}</td> 
+                              <td align="center"  name="cstatus" class="userData usercstatus" >{{user.cstatus}}</td> 
+                              <td align="center"  name="cstatus" class="userData usercstatus" >{{user.cstatus}}</td> 
+                              <td align="center"  name="diagnosis" class="userData userdiagnosis" >{{user.diagnosis}}</td> 
+                            </tr>
+                            {% endfor %}
+                           </tbody>
+                         </table>
+                     </div>                    
+                     </div>
+                   </div>
+                      </div>
+            </div>
+                   
+  </section>
+</div>
+  {% endblock %}
+  {% block javascript %}
+<script>
+function normalcheck() {
+  var docname = $('input[name="docname"]').val()  
+  var customRadio1 = $('input[name="customRadio1"]').val()   
+  if(docname!='' && customRadio1!=''){
+    $.ajax({
+        url: '{% url "normalcheck" %}',
+        type: 'get',
+        data: { 
+          'docname'    : docname,
+          'customRadio1'   :  customRadio1,          
+        },
+        dataType: 'json',
+        success: function(data)  { 
+          if (data.user) {   
+            appendToUserTabel(data.user);           
+            //swal("Good job!", "Save Successfully", "success")
+          } 
+          document.getElementById("docname").value="";  
+          $('input[type=checkbox]').each(function() 
+          { 
+                  this.checked = false; 
+          });           
+    }
+    }); 
+  }    
+    else
+      swal("Oh noes!", "Enter the value", "error");  
+      $('input[type=checkbox]').each(function() 
+      { 
+              this.checked = false; 
+      });
+}
+
+function appendToUserTabel(user) {  //console.log(user)
+  //user =JSON.parse(user);// console.log(user.length)
+  if(!this.snNo) this.snNo = 1;  
+  for (i=0; i<user.length; i++) {
+    data2=user[i]//  console.log(data2);console.log(data2.peropno);  
+    $("#statustable > tbody:last-child").append(`
+    <tr id="user-${user[i].pk}">  
+      <td  style="height:5px;" >${this.snNo}</td>
+    <td  align="center" style="display:none;" class="userData" >${user[i].pk}</td>
+    <td  align="center"  class="userData userperopno"  name="peropno">${data2.peropno}</td>
+    <td  align="center"  class="userData usertokenno"  name="tokenno">${data2.tokenno}</td>
+    <td  align="center"  class="userData userdate"  name="date">${data2.date}</td>
+    <td  align="center"  class="userData userconsult"  name="consult">${data2.consult}</td>
+    <td  align="center"  class="userData useropname"  name="opname">${data2.name}</td>
+    <td  align="center"  class="userData useramount"  name="amount">${data2.amount}</td>
+    <td  align="center"  class="userData userstatus"  name="status">${data2.status}</td>
+    <td  align="center"  class="userData userctype"  name="ctype">${data2.ctype}</td>
+    <td  align="center"  class="userData usercstatus"  name="cstatus">${data2.cstatus}</td>
+     <td  align="center"  class="userData userdiagnosis"  name="diagnosis">${data2.diagnosis}</td>
+    </tr>  
+   `);   
+   this.snNo += 1;   
+  }       
+}
+
+function emergencycheck() {
+  var docname = $('input[name="docname"]').val()  
+  var customRadio2 = $('input[name="customRadio2"]').val()  
+  $('input:checkbox').removeAttr('checked');
+  if(docname!='' && customRadio2!=''){
+    $.ajax({
+        url: '{% url "emergencycheck" %}',
+        type: 'get',
+        data: { 
+          'docname'    : docname,
+          'customRadio2'   :  customRadio2,          
+        },
+        dataType: 'json',
+        success: function(data)  { 
+          if (data.user) {    
+            appendToUserTbl(data.user);          
+            //swal("Good job!", "Save Successfully", "success")
+          }    
+          document.getElementById("docname").value="";    
+          $('input[type=checkbox]').each(function() 
+          { 
+                  this.checked = false; 
+          });  
+    }
+    });   
+}
+  else
+  swal("Oh noes!", "Enter the value", "error"); 
+  $('input[type=checkbox]').each(function() 
+  { 
+          this.checked = false; 
+  }); 
+}
+
+function appendToUserTbl(user) {  //console.log(user)
+  //user =JSON.parse(user);// console.log(user.length)
+  if(!this.snNo) this.snNo = 1;  
+  for (i=0; i<user.length; i++) {
+    data2=user[i]//  console.log(data2);console.log(data2.peropno);  
+    $("#statustable > tbody:last-child").append(`
+    <tr id="user-${user[i].pk}">  
+      <td  style="height:5px;" >${this.snNo}</td>
+    <td  align="center" style="display:none;" class="userData" >${user[i].pk}</td>
+    <td  align="center"  class="userData userperopno"  name="peropno">${data2.peropno}</td>
+    <td  align="center"  class="userData usertokenno"  name="tokenno">${data2.tokenno}</td>
+    <td  align="center"  class="userData userdate"  name="date">${data2.date}</td>
+    <td  align="center"  class="userData userconsult"  name="consult">${data2.consult}</td>
+    <td  align="center"  class="userData useropname"  name="opname">${data2.name}</td>
+    <td  align="center"  class="userData useramount"  name="amount">${data2.amount}</td>
+    <td  align="center"  class="userData userstatus"  name="status">${data2.status}</td>
+    <td  align="center"  class="userData userctype"  name="ctype">${data2.ctype}</td>
+    <td  align="center"  class="userData usercstatus"  name="cstatus">${data2.cstatus}</td>
+    <td  align="center"  class="userData userdiagnosis"  name="diagnosis">${data2.diagnosis}</td>
+    </tr>  
+   `);   
+   this.snNo += 1;   
+  }       
+}
+ 
+</script>
+{% endblock javascript%}
+

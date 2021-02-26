@@ -1,0 +1,636 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  .card-header{
+    padding: .25rem 0.5rem;
+  }
+ 
+  
+  /* Button used to open the contact form - fixed at the bottom of the page */
+  .open-button {
+    background-color: #555;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.8;
+    width: 180px;
+
+  }
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+</style>
+
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h3>Monitor</h3>
+      <div class="container-fluid">
+        <div class="row mb-2">               
+          <div class="col-md-6">
+            <form action="" method="POST">
+              {% csrf_token%}
+          <div class="form-group" style="padding:2px;width:220px;">
+            <label for="cars" >Choose Doctor:</label>
+            <select class="form-control" id="drselect" name="drselect" onchange="drselectcal()">
+            <option value="0">Select</option>
+            <option value="Dr.S.A.NIHMATHULLAH">DR.S.A.NIHMATHALLAM</option>
+            <option value="Dr.S.SAMINA YASMIN">DR.S.SAMINAYASMIN</option>
+            <option value="Dr.S.M.A.KUTHOOS">DR.S.M.A.KUTHOOS</option>
+            </select>
+            </div> 
+          </form>   
+        </div> 
+        <div class="col-12 col-md-6">
+          <label>&nbsp;</label><br>
+          <button class="open-button" id="myBtn"><b>To See status</b></button>                           
+          </div>
+        <div id="myModal" class="modal">
+          <!-- Modal content -->
+          <div class="modal-content">
+            <span class="close" style="text-align:right;">&times;</span>
+            <h5>Status</h5>
+            <div class="form-group">
+              <label for="lname">Date</label>
+              <input type="text" class="form-control form-control-md" id="theDate"/>
+              </div>
+             
+          <div class="form-group">
+              <!-- <input type="button" id="btnGetCount" value="Count Rows" onclick = "CountRows()" /> -->
+              <label for="lname">Total Normal</label>
+              <input type="text" id="totalnormal" class="form-control form-control-md" >
+              
+          </div>
+          <div class="form-group">
+              <label for="lname">Total Emergency</label>
+              <input type="text"  id="totalemergency" class="form-control form-control-md">
+          </div>
+          <div class="span7 form-group">
+              <label for="lname">Total Amount</label>
+              <input type="text" id="totamt" class="input-mini form-control form-control-md" >
+          </div>
+          </div>                      
+        </div>           
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card card-solid ">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card-body pb-0">
+                  
+                    <div class="row">
+                      <div class="col-12 col-sm-12">
+                        <div class="col-12">
+                            <h4>Waiting Status</h4>
+                            </div>
+                            
+                            <hr/>
+                            <br>
+                          <div class="row d-flex align-items-stretch ">                            
+                            <div class="col-md-6">                              
+                              <div class="card">
+                                <div class="card-header">
+                                  <label>Normal</label>
+                                  </div>
+                                  <div class=" card-body table-responsive p-0" style="height: 270px;width:100%;">
+                                   
+                                    <table id="normalTable" class="table table-dark">
+                                      <thead style="text-align:center;font-size:14px;">
+                                        <tr>  
+                                          <th style="display:none;"> ID</th>                        
+                                          <th style="display:none;"> NO</th>
+                                          <th style="display:none;">TokenNo</th>
+                                          <th >Name</th>
+                                          <th >Type</th>
+                                          <th style="display:none;">Status</th>
+                                          <th >Disease</th> 
+                                          <th style="display:none;">Amount</th>
+                                          <th >Action</th>                                          
+                                        </tr>                                        
+                                      </thead>
+                                      <tbody id="normal" style="font-size:14px;"> 
+                                                                               
+                                      </tbody>
+                                    </table>
+                                   
+                                </div>
+                                <div class="card-footer">
+                                  <div class="text-right">
+                                    <div class="input-group mb-2 mr-sm-2">
+                                        <div class="input-group-prepend">
+                                          <div class="input-group-text form-control-sm">NO.OF</div>
+                                        </div>
+                                        <input type="text" class="form-control form-control-sm"  id="totalnormal1" name="" >
+                                      </div>  
+                                  </div>
+                                </div>
+                              </div>
+                              </div>                              
+                            <div class="col-md-6">
+                                <div class="card">
+                                  <div class="card-header">
+                                    <label>Emergency</label>
+                                    </div>
+                                    <div class=" card-body table-responsive p-0" style="height: 270px;">
+                                      
+                                      <table id="emergencyTable" class="table table-dark">
+                                        <thead style="text-align:center;">
+                                          <tr style="font-size:14px;">
+                                            <!-- <th > ID</th>                           
+                                            <th > NO</th> -->
+                                            <th style="display:none;">TokenNo</th>
+                                            <th >Name</th>
+                                            <th >Type</th>
+                                            <th style="display:none;">Status</th>
+                                            <th >Disease</th>
+                                            <th style="display:none;">Amount</th>
+                                            <th >Action</th>                                         
+                                          </tr>
+                                        </thead>
+                                         <tbody id="emergency" style="font-size:14px;"> 
+                                        </tbody>
+                                      </table>
+                                      
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="text-right">
+                                      <div class="input-group mb-2 mr-sm-2">
+                                          <div class="input-group-prepend">
+                                            <div class="input-group-text form-control-sm">NO.OF</div>
+                                          </div>
+                                          <input type="text" class="form-control form-control-sm" id="totalemergency1" name="" >
+                                        </div>  
+                                    </div>
+                                  </div>
+                                </div>
+                                </div>    
+                           
+                          </div>
+                          <hr/>
+                          <h4>Finished Status</h4>
+                         <hr/>
+                          <div class="row d-flex align-items-stretch ">
+                            <div class="col-md-6">
+                              <div class="card">
+                                <div class="card-header">
+                                  <label>Normal</label>
+                                  </div>
+                                  <div class="card-body table-responsive p-0" style="height: 270px;">
+                                    <table id="normalTablefinish" class="table table-dark">
+                                      <thead style="text-align:center;font-size:14px;">
+                                        <tr>  
+                                          <th style="display:none;"> ID</th>                        
+                                          <th style="display:none;"> NO</th>
+                                          <th style="display:none;">TokenNo</th>
+                                          <th >Name</th>
+                                          <th >Type</th>
+                                          <th style="display:none;">Status</th>
+                                          <th >Disease</th> 
+                                          <th style="display:none;">Amount</th>                                                                               
+                                        </tr>  
+                                      </thead>
+                                      <tbody id="tbodyidfinish" style="font-size:14px;">                                                                 
+                                        
+                                      </tbody>
+                                    </table>
+                                </div>
+                                <div class="card-footer">
+                                  <div class="text-right">
+                                    <div class="input-group mb-2 mr-sm-2">
+                                        <div class="input-group-prepend">
+                                          <div class="input-group-text form-control-sm">NO.OF</div>
+                                        </div>
+                                        <input type="text" class="form-control form-control-sm" id="totalnormalfinish" >
+                                      </div>  
+                                  </div>
+                                </div>
+                              </div>
+                              </div>              
+                              <div class="col-md-6">
+                                <div class="card">
+                                  <div class="card-header">
+                                    <label>Emergency</label>
+                                    </div>
+                                    <div class=" card-body table-responsive p-0" style="height: 270px;">
+                                      <table id="emergencyTablefinish" class="table table-dark">
+                                        <thead style="text-align:center;font-size:14px;">
+                                          <tr >                          
+                                            <th style="display:none;"> NO</th>
+                                            <th style="display:none;">TokenNo</th>
+                                            <th >Name</th>
+                                            <th >Type</th>
+                                            <th style="display:none;">Status</th>
+                                            <th >Disease</th>                                          
+                                          </tr>
+                                        </thead>
+                                        <tbody id="tbodyidfinishemergency" style="font-size:14px;">                                                                 
+                                          
+                                        </tbody>
+                                      </table>
+                                  </div>
+                                  <div class="card-footer">
+                                    <div class="text-right">
+                                      <div class="input-group mb-2 mr-sm-2">
+                                          <div class="input-group-prepend">
+                                            <div class="input-group-text form-control-sm">NO.OF</div>
+                                          </div>
+                                          <input type="text" class="form-control form-control-sm" id="totalemergencyfinish" >
+                                        </div>  
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                          </div>                        
+                      </div>  
+                      <hr/>
+            </div>         
+        </div>   
+        </div>
+        <!-- /.card -->  
+    </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->    
+    <div class="card">
+    </div>
+  {% endblock %}
+  {% block javascript %}
+  
+  <script type="text/javascript">
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    
+    // When the user clicks the button, open the modal 
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+    
+    // -------------------checkbox hide ------------
+    $(function () {
+        $("#chkPassport").click(function () {
+            if ($(this).is(":checked")) {
+                $("#dvPassport").show();
+            } else {
+                $("#dvPassport").hide();
+            }
+        });
+    });
+
+    $(document).ready(function () {   
+      $('body').on('change','#drselect', function() {
+           $('#show_selected').val(this.value);
+      });
+  }); 
+
+ // -------------------Date time display------------
+var date = new Date();
+var day = date.getDate();
+var month = date.getMonth() + 1;
+var year = date.getFullYear();
+
+if (month < 10) month = "0" + month;
+if (day < 10) day = "0" + day;
+var today = year + "-" + month + "-" + day;
+document.getElementById('theDate').value = today;
+
+// -------------------select doctocr->show patient ------------
+function  drselectcal(){     
+      var drselectInput = $('select[name="drselect"]').val()  //   console.log(drselectInput)       
+      $.ajax({
+          url: '{% url "doclist" %}',
+          type: 'get',
+          data: {
+              'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data)  {           
+            if (data.docsearch) { //console.log(data.docsearch)   console.log("success normal table")
+              $('#normal').empty();
+              norFun(data.docsearch);                 
+            }
+            if (data.docsearch1) {  
+              $('#emergency').empty();
+              console.log(data.docsearch1)
+              norFun1(data.docsearch1);                 
+            }     
+            if (data.Finishnoprmal) {  //  console.log("success finishnormal table")
+              $('#tbodyidfinish').empty();
+              norFunfinish(data.Finishnoprmal);                 
+            }         
+            if (data.Finishemergency) {  
+              $('#tbodyidfinishemergency').empty();// console.log("success  finishemergency table")
+              norFunfinishem(data.Finishemergency);                 
+            } 
+          }
+      });
+  } 
+
+function norFun(docsearch){
+    var rawmetrial = JSON.parse(docsearch); // console.log(rawmetrial);
+    appendToUsrTable(rawmetrial);   
+  }
+
+function norFun1(docsearch1){
+    var rawmetrial = JSON.parse(docsearch1);   //console.log(rawmetrial);
+    appendToTable(rawmetrial);   
+  }
+
+function norFunfinish(Finishnoprmal){
+    var rawmetrial = JSON.parse(Finishnoprmal);   // console.log(rawmetrial);
+    appendToTablefinish(rawmetrial);   
+  }
+
+function norFunfinishem(Finishemergency){
+    var rawmetrial = JSON.parse(Finishemergency);  //console.log(rawmetrial);
+    appendToTablefinishem(rawmetrial);   
+  }
+
+function appendToUsrTable(rawmetrial) {    //console.log(rawmetrial)
+    for(var i=0; i<rawmetrial.length; i++){
+      data2=rawmetrial[i].fields; 
+     $("#normalTable > tbody:last-child").append(`
+       <tr id="users-${rawmetrial[i].pk}">
+        <td style="display:none;">${rawmetrial[i].pk}</td>                
+        <td style="display:none;">${data2.peropno}</td>
+        <td style="display:none;">${data2.tokenno}</td>
+        <td align="center">${data2.name}</td>
+        <td align="center">${data2.ctype}</td>
+        <td style="display:none;">${data2.cstatus}</td>  
+        <td align="center">${data2.diagnosis}</td>
+        <td style="display:none;">${data2.amount}</td>        
+        <td align="center"><a href="#" onClick="patientid(${rawmetrial[i].pk})" ><i class="far fa-eye" style="color:red"></i></a></td>    
+      </tr>   
+        `);             
+  } 
+  CountRows();  
+  TotalAmount();
+}
+
+function appendToTable(rawmetrial) {  //console.log(rawmetrial)
+  for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields; 
+   $("#emergencyTable > tbody:last-child").append(`
+   <tr id="users-${rawmetrial[i].pk}">                  
+    <td style="display:none;">${data2.tokenno}</td>
+    <td align="center">${data2.name}</td>
+    <td align="center">${data2.ctype}</td>
+    <td style="display:none;">${data2.cstatus}</td>  
+    <td align="center">${data2.diagnosis}</td>
+    <td style="display:none;">${data2.amount}</td>        
+    <td align="center"><a href="#" onClick="patientid(${rawmetrial[i].pk})" ><i class="far fa-eye" style="color:red"></i></a></td>    
+  </tr>   
+    `);             
+} 
+CountRows1();
+TotalAmount();
+}
+
+function appendToTablefinish(rawmetrial) {  //  console.log(rawmetrial)
+  for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields; 
+   $("#normalTablefinish > tbody:last-child").append(`
+   <tr id="users-${rawmetrial[i].pk}">
+    <td style="display:none;">${rawmetrial[i].pk}</td>                
+    <td style="display:none;">${data2.peropno}</td>
+    <td style="display:none;">${data2.tokenno}</td>
+    <td align="center">${data2.name}</td>
+    <td align="center">${data2.ctype}</td>
+    <td style="display:none;">${data2.cstatus}</td>  
+    <td align="center">${data2.diagnosis}</td>
+    <td style="display:none;">${data2.amount}</td> 
+   </tr>    
+    `);             
+} 
+CountRows2();
+TotalAmount();
+}
+
+function appendToTablefinishem(rawmetrial) {  //  console.log(rawmetrial)
+  for(var i=0; i<rawmetrial.length; i++){
+    data2=rawmetrial[i].fields; 
+   $("#emergencyTablefinish > tbody:last-child").append(`
+   <tr id="users-${rawmetrial[i].pk}">
+    <td style="display:none;">${rawmetrial[i].pk}</td>                
+    <td style="display:none;">${data2.peropno}</td>
+    <td style="display:none;">${data2.tokenno}</td>
+    <td align="center">${data2.name}</td>
+    <td align="center">${data2.ctype}</td>
+    <td style="display:none;">${data2.cstatus}</td>  
+    <td align="center">${data2.diagnosis}</td>
+    <td style="display:none;">${data2.amount}</td> 
+   </tr>    
+    `);             
+} 
+CountRows3();
+TotalAmount();
+}
+
+//--------------normal table every 5 sec referch--------------- 
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "doclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) { //console.log("success");
+              if (data.docsearch) {  
+                $('#normal').empty();
+                norFun(data.docsearch);      
+                TotalAmount();           
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+//emergency table every 5 sec referch--------------- 
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "doclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) {              //console.log("success");
+              if (data.docsearch1) { 
+                console.log(data.docsearch1)
+                $('#emergency').empty();
+                norFun1(data.docsearch1);                 
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+//normalfinish table every 5 sec referch--------------- 
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "doclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) {           
+              if (data.Finishnoprmal) { //console.log("success"); 
+                $('#tbodyidfinish').empty();
+                norFunfinish(data.Finishnoprmal);   
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+//normalfinish table every 5 sec referch--------------- 
+$( document ).ready(function() {
+  setInterval(function(){
+    var drselectInput = $('select[name="drselect"]').val() 
+      $.ajax({
+          url:'{% url "doclist" %}' ,
+          type: "get",
+          cache: true,
+          timeout: 30000,
+          data: {
+            'select': drselectInput,
+          },
+          dataType: 'json',
+          success: function(data) {           
+              if (data.docsearchfinishem) { // console.log("success"); 
+                  $('#tbodyidfinishemergency').empty();    // console.log("success  finishemergency table")
+                  norFunfinishem(data.docsearchfinishem);     
+              }
+              //$('#normalTable').html(data);
+          },
+          error: function(data) {
+              alert("Got an error dude "+data);
+          }
+      });
+  },5000);
+});
+
+//normal patient total --------------- 
+function CountRows() {
+  var rowCount = $('#normal tr').length;
+  document.getElementById("totalnormal1").value=rowCount;
+  document.getElementById("totalnormal").value=rowCount;
+}
+
+//emergency patient total --------------- 
+function CountRows1() {
+  var rowCount1 = $('#emergency tr').length;
+  document.getElementById("totalemergency1").value=rowCount1;
+  document.getElementById("totalemergency").value=rowCount1;
+  
+  //document.getElementById("totalemergencyfinish").value=rowCount1;
+}
+
+function CountRows2() {
+  var rowCount2 = $('#tbodyidfinish tr').length;
+  document.getElementById("totalnormalfinish").value=rowCount2;  
+}
+
+function CountRows3() {
+  var rowCount3 = $('#tbodyidfinishemergency tr').length;
+  document.getElementById("totalemergencyfinish").value=rowCount3;  
+}
+
+function TotalAmount(){
+var index = $('#normalTable th:contains(Amount)').index(),
+sum = 0;
+$('#normalTable tbody tr').each(function() {
+var value1 = $(".value1").text();
+sum += parseFloat( $.trim( $('td:eq('+ index +')', this).text() ), 10);//console.log(sum);
+});//document.getElementById("totamt").value=sum;
+var index = $('#emergencyTable th:contains(Amount)').index(),
+sum1 = 0;
+$('#emergencyTable tbody tr').each(function() {
+sum1 += parseFloat( $.trim( $('td:eq('+ index +')', this).text() ), 10);//console.log(sum1);
+});//document.getElementById("totamt").value=sum1;
+var total=sum+sum1;
+document.getElementById("totamt").value=total;
+}
+
+function patientid(pk) {  //console.log(pk);
+  var url = "{% url 'patientdetails' %}";  //alert(id);  //console.log(id);
+  document.location.href = url + "/" + pk;
+}
+
+</script>
+
+{% endblock javascript%}
+ 
